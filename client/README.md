@@ -16,6 +16,7 @@
   <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   <img src="https://img.shields.io/badge/Zep-2C2F33?style=for-the-badge&logoColor=white" alt="Zep" />
 </div>
+
 ## 네이밍 컨벤션
 
 1. **변수 네이밍**
@@ -50,3 +51,94 @@
      - `Test`: 테스트 코드 추가 및 수정
      - `Chore`: 기타
      - `Init`: 프로젝트 생성
+
+
+
+## ESLint 및 Prettier 설정
+
+### ESLint 설정
+
+이 프로젝트에서는 ESLint를 사용하여 코드 품질을 관리합니다. 아래는 ESLint 설정 파일의 내용입니다.
+
+1. **ESLint 설치**
+
+   ESLint와 관련 패키지를 설치하세요.
+
+   ```bash
+   npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-refresh eslint-config-prettier
+   ```
+
+2. **eslintrc.js 파일**
+
+   프로젝트 루트에 `eslintrc.js` 파일을 생성하고 아래 내용을 추가합니다.
+
+   ```javascript
+   import js from '@eslint/js';
+   import globals from 'globals';
+   import reactHooks from 'eslint-plugin-react-hooks';
+   import reactRefresh from 'eslint-plugin-react-refresh';
+   import tseslint from '@typescript-eslint/eslint-plugin';
+
+   export default {
+     env: {
+       browser: true,
+       es2021: true,
+     },
+     extends: [
+       'eslint:recommended',
+       'plugin:react/recommended',
+       'plugin:@typescript-eslint/recommended',
+       'plugin:react-hooks/recommended',
+       'prettier',
+     ],
+     parser: '@typescript-eslint/parser',
+     parserOptions: {
+       ecmaFeatures: {
+         jsx: true,
+       },
+       ecmaVersion: 'latest',
+       sourceType: 'module',
+     },
+     plugins: ['react', '@typescript-eslint', 'react-hooks', 'react-refresh'],
+     rules: {
+       'react-refresh/only-export-components': [
+         'warn',
+         { allowConstantExport: true },
+       ],
+       'react-hooks/exhaustive-deps': 'warn',
+       'react/react-in-jsx-scope': 'off',
+       'no-unused-vars': 'off',
+       '@typescript-eslint/no-unused-vars': [
+         'error',
+         {
+           vars: 'all',
+           args: 'after-used',
+           ignoreRestSiblings: true,
+           argsIgnorePattern: '^_',
+           varsIgnorePattern: '^_',
+         },
+       ],
+     },
+     settings: {
+       react: {
+         version: 'detect',
+       },
+       'import/resolver': {
+         typescript: {},
+       },
+     },
+     ignorePatterns: ['dist'],
+   };
+   ```
+
+### Prettier 설정
+
+Prettier를 사용하여 코드 포맷팅을 관리합니다. 아래와 같이 `.prettierrc` 파일을 생성합니다.
+
+```json
+{
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 4,
+  "trailingComma": "es5"
+}
