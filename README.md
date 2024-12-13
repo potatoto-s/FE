@@ -2,20 +2,18 @@
 
 ## FRONTEND
 
-<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 10px;">
-  <div style="background-color: #5C6BC0; color: blue; padding: 10px 15px; border-radius: 5px;">TypeScript</div>
-  <div style="background-color: #000; color: white; padding: 10px 15px; border-radius: 5px;">React</div>
-  <div style="background-color: #4B9CD3; color: white; padding: 10px 15px; border-radius: 5px;">Vite</div>
-  <div style="background-color: #CA4246; color: white; padding: 10px 15px; border-radius: 5px;">React Router</div>
-  <div style="background-color: #5C6BC0; color: white; padding: 10px 15px; border-radius: 5px;">Axios</div>
-  <div style="background-color: #38B2AC; color: pink; padding: 10px 15px; border-radius: 5px;">Tailwind CSS</div>
-  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">Zustand</div>
-  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">React Query</div>
-  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">ESLint</div>
-  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">Prettier</div>
-  <div style="background-color: #B0BEC5; color: purple; padding: 10px 15px; border-radius: 5px;">Discord</div>
-  <div style="background-color: #B0BEC5; color: purple; padding: 10px 15px; border-radius: 5px;">Zep</div>
-</div>
+- ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+- ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+- ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+- ![React Router](https://img.shields.io/badge/React_Router-CA4246?style=for-the-badge&logo=react-router&logoColor=white)
+- ![Axios](https://img.shields.io/badge/Axios-5A29E3?style=for-the-badge&logo=axios&logoColor=white)
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+- ![Zustand](https://img.shields.io/badge/Zustand-B0BEC5?style=for-the-badge&logoColor=black)
+- ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+- ![ESLint](https://img.shields.io/badge/ESLint-4B9CD3?style=for-the-badge&logo=eslint&logoColor=white)
+- ![Prettier](https://img.shields.io/badge/Prettier-F7B93C?style=for-the-badge&logo=prettier&logoColor=black)
+- ![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)
+- ![Zep](https://img.shields.io/badge/Zep-2C2F33?style=for-the-badge&logoColor=white)
 
 ## 네이밍 컨벤션
 
