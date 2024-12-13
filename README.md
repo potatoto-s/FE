@@ -1,5 +1,21 @@
-# FE
-fe git
+# STACK
+
+## FRONTEND
+
+<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 10px;">
+  <div style="background-color: #5C6BC0; color: blue; padding: 10px 15px; border-radius: 5px;">TypeScript</div>
+  <div style="background-color: #000; color: white; padding: 10px 15px; border-radius: 5px;">React</div>
+  <div style="background-color: #4B9CD3; color: white; padding: 10px 15px; border-radius: 5px;">Vite</div>
+  <div style="background-color: #CA4246; color: white; padding: 10px 15px; border-radius: 5px;">React Router</div>
+  <div style="background-color: #5C6BC0; color: white; padding: 10px 15px; border-radius: 5px;">Axios</div>
+  <div style="background-color: #38B2AC; color: pink; padding: 10px 15px; border-radius: 5px;">Tailwind CSS</div>
+  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">Zustand</div>
+  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">React Query</div>
+  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">ESLint</div>
+  <div style="background-color: #B0BEC5; color: black; padding: 10px 15px; border-radius: 5px;">Prettier</div>
+  <div style="background-color: #B0BEC5; color: purple; padding: 10px 15px; border-radius: 5px;">Discord</div>
+  <div style="background-color: #B0BEC5; color: purple; padding: 10px 15px; border-radius: 5px;">Zep</div>
+</div>
 
 ## 네이밍 컨벤션
 
