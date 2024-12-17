@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import Main from './pages/main/Main';
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Community from './pages/community/Community';
+import CommunityDetail from './pages/community/CommunityDetail';
+import Contact from './pages/contact/Contact';
+import Mypage from './pages/mypage/MyPage';
+import MypageEditor from './pages/mypage/MyPageEditor';
+import SingUp from './pages/singup/SingUp';
+import SingUpForm from './pages/singup/SingUpForm';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
     <>
+      <Header />
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Hello?</h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <Routes>
+        <Route path="/main" element={<Main />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/communityDetail" element={<CommunityDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/mypageEditor" element={<MypageEditor />} />
+        <Route path="/singUp" element={<SingUp />} />
+        <Route path="/singUpForm" element={<SingUpForm />} />
+      </Routes>
+      <div>
+        <Route path="/Footer" element={<Footer />} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
