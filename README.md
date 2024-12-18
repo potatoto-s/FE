@@ -16,21 +16,26 @@
   <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   <img src="https://img.shields.io/badge/Zep-2C2F33?style=for-the-badge&logoColor=white" alt="Zep" />
 </div>
+
 ## 네이밍 컨벤션
 
 1. **변수 네이밍**
+
    - 카멜 케이스를 사용하여 변수 이름을 작성합니다.
    - 예) `userProfile`, `itemList`, `orderHistory`
 
 2. **커밋 메시지 작성**
+
    - 커밋 메시지 규칙에 따라 작성합니다. 이슈 번호와 타입, 내용을 명확하게 기재합니다.
    - 예) `#4 chore/README 파일 수정` 또는 `#5 chore/코드 주석 추가`
 
 3. **브랜치 이름**
+
    - 브랜치 이름은 작업 내용을 요약하여 타입/작업 내용 요약 형식으로 작성합니다.
    - 예) `chore/updateReadme` 또는 `chore/refactorCode`
 
 4. **PR 제목 및 내용**
+
    - PR 제목에는 작업 날짜를 포함하고, 내용에는 해당 날짜에 완료한 작업 목록을 나열합니다.
    - 예)
      ```
@@ -51,8 +56,21 @@
      - `Chore`: 기타
      - `Init`: 프로젝트 생성
 
+### 주의 사항
 
+## 초기 개발 설정
 
+이 프로젝트를 클론하거나 풀한 후,
+
+```bash
+npm install
+```
+
+합니다.
+
+만약 ESLint 오류 발생시 줄 스퀀스의 CRLF를 LF로 변경합니다.
+
+그래도 안될시 아래의 ESLint와 Prettier 설정을 참고해주세요.
 
 ## ESLint 및 Prettier 설정
 
@@ -65,71 +83,54 @@
    ESLint와 관련 패키지를 설치하세요.
 
    ```bash
-   npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-refresh eslint-config-prettier
+   npm install --save-dev eslint eslint-plugin-react eslint-plugin-react-hooks @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-prettier
+
    ```
 
-2. **eslintrc.js 파일**
+2. **eslint.config.js 파일**
 
-   프로젝트 루트에 `eslintrc.js` 파일을 생성하고 아래 내용을 추가합니다.
+   프로젝트 루트에 `eslint.config.js` 파일을 생성하고 아래 내용을 추가합니다.
 
-   ```javascript
-   import js from '@eslint/js';
-   import globals from 'globals';
-   import reactHooks from 'eslint-plugin-react-hooks';
-   import reactRefresh from 'eslint-plugin-react-refresh';
-   import tseslint from '@typescript-eslint/eslint-plugin';
+```javascript
+import eslintPluginReact from 'eslint-plugin-react';
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import prettierPlugin from 'eslint-plugin-prettier';
 
-   export default {
-     env: {
-       browser: true,
-       es2021: true,
-     },
-     extends: [
-       'eslint:recommended',
-       'plugin:react/recommended',
-       'plugin:@typescript-eslint/recommended',
-       'plugin:react-hooks/recommended',
-       'prettier',
-     ],
-     parser: '@typescript-eslint/parser',
-     parserOptions: {
-       ecmaFeatures: {
-         jsx: true,
-       },
-       ecmaVersion: 'latest',
-       sourceType: 'module',
-     },
-     plugins: ['react', '@typescript-eslint', 'react-hooks', 'react-refresh'],
-     rules: {
-       'react-refresh/only-export-components': [
-         'warn',
-         { allowConstantExport: true },
-       ],
-       'react-hooks/exhaustive-deps': 'warn',
-       'react/react-in-jsx-scope': 'off',
-       'no-unused-vars': 'off',
-       '@typescript-eslint/no-unused-vars': [
-         'error',
-         {
-           vars: 'all',
-           args: 'after-used',
-           ignoreRestSiblings: true,
-           argsIgnorePattern: '^_',
-           varsIgnorePattern: '^_',
-         },
-       ],
-     },
-     settings: {
-       react: {
-         version: 'detect',
-       },
-       'import/resolver': {
-         typescript: {},
-       },
-     },
-     ignorePatterns: ['dist'],
-   };
-   ```
+export default [
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    plugins: {
+      react: eslintPluginReact,
+      'react-hooks': eslintPluginReactHooks,
+      '@typescript-eslint': tsPlugin,
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'linebreak-style': 0,
+      'prettier/prettier': 'error',
+      'react/react-in-jsx-scope': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+  {
+    ignores: ['node_modules/', 'dist/', 'build/'],
+  },
+];
+```
 
 ### Prettier 설정
 
@@ -139,6 +140,53 @@ Prettier를 사용하여 코드 포맷팅을 관리합니다. 아래와 같이 `
 {
   "semi": true,
   "singleQuote": true,
-  "tabWidth": 4,
+  "tabWidth": 2,
   "trailingComma": "es5"
 }
+```
+
+### 프로젝트 구조(Tree)
+
+아래는 프로젝트의 파일 및 폴더 구조입니다.
+
+```bash
+── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── api
+│   │   ├── Api.tsx
+│   │   ├── AuthApi.tsx
+│   │   ├── CategoryApi.tsx
+│   │   ├── CommunityApi.tsx
+│   │   ├── ContactApi.tsx
+│   │   ├── PostApi.tsx
+│   │   └── UserApi.tsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── category
+│   │   │   └── Category.tsx
+│   │   ├── comment
+│   │   │   └── Comment.tsx
+│   │   ├── communitycard
+│   │   │   └── CommunityCard.tsx
+│   │   ├── footer
+│   │   │   └── Footer.tsx
+│   │   └── header
+│   │       └── Header.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── community
+│   │   │   ├── Community.tsx
+│   │   │   ├── CommunityDetail.tsx
+│   │   │   └── CommunityPost.tsx
+│   │   ├── contact
+│   │   │   ├── Contact.tsx
+│   │   │   └── ContactPost.tsx
+│   │   ├── main
+│   │   │   └── Main.tsx
+│   │   ├── mypage
+│   │   │   ├── MyPage.tsx
+│
+```
