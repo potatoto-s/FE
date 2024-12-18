@@ -8,29 +8,24 @@ import CommunityDetail from './pages/community/CommunityDetail';
 import Contact from './pages/contact/Contact';
 import Mypage from './pages/mypage/MyPage';
 import MypageEditor from './pages/mypage/MyPageEditor';
-import SingUp from './pages/singup/SingUp';
-import SingUpForm from './pages/singup/SingUpForm';
+import LogIn from './pages/login/LogIn';
+import SignUp from './pages/signup/SignUp';
 
 const App = () => {
   return (
     <>
       <Header />
-      <div>
-        <h1>Hello?</h1>
-      </div>
       <Routes>
         <Route path="/main" element={<Main />} />
         <Route path="/community" element={<Community />} />
-        <Route path="/communityDetail" element={<CommunityDetail />} />
+        <Route path="/communitydetail" element={<CommunityDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/mypage" element={<Mypage />} />
-        <Route path="/mypageEditor" element={<MypageEditor />} />
-        <Route path="/singUp" element={<SingUp />} />
-        <Route path="/singUpForm" element={<SingUpForm />} />
+        <Route path="/mypageeditor" element={<MypageEditor />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
-      <div>
-        <Route path="/Footer" element={<Footer />} />
-      </div>
+      <Footer />
     </>
   );
 };
