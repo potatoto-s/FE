@@ -10,6 +10,7 @@ import Mypage from './pages/mypage/MyPage';
 import MypageEditor from './pages/mypage/MyPageEditor';
 import LogIn from './pages/login/LogIn';
 import SignUp from './pages/signup/SignUp';
+import CommunityPost from './pages/community/CommunityPost';
 
 const App = () => {
   return (
