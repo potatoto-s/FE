@@ -14,7 +14,7 @@ import CommunityPost from './pages/community/CommunityPost';
 
 const App = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
       <Routes>
         <Route path="/main" element={<Main />} />
@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
       </Routes>
       <Footer />
-    </>
+    </div>
   );
 };
 
