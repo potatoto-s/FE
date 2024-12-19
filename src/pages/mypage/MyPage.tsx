@@ -18,6 +18,7 @@ const MyPage: React.FC<MyPageProps> = ({
   const navigate = useNavigate();
 
   const handleEditProfile = () => {
+    navigate('./MypageEditor');
     console.log('cliked the button of profileEditorPage');
   };
   return (
