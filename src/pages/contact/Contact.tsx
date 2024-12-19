@@ -7,7 +7,7 @@ const Contact = () => {
       style={{ height: 'calc(100vh - 3rem' }} //헤더,푸터 완성 시 수정 필요
     >
       <h1 className="w-[38rem] text-[#6E6E6E] text-[4.6rem] font-bold mb-[3.1rem]">
-        CONTACT
+        CONTACTaa
       </h1>
       <div className="w-[38rem] h-[0.2rem] bg-[#6E6E6E]"></div>
       <div className="flex justify-between w-[38rem]">
