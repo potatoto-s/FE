@@ -72,7 +72,7 @@ const ContactPost = () => {
           />
         </div>
       </div>
-      <button className="mt-[6rem] w-[7rem] h-[2.5rem] bg-[#F28749] text-[#FFFFFF] text-[1rem] font-bold rounded-[0.5rem]">
+      <button className="mt-[6rem] w-[7rem] h-[2.5rem] bg-[#F26749] text-[#FFFFFF] text-[1rem] font-bold rounded-[0.5rem]">
         문의하기
       </button>
     </div>

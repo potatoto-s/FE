@@ -20,7 +20,7 @@ const Contact = () => {
       </h1>
       <div className="w-[38rem] h-[0.2rem] bg-[#6E6E6E]"></div>
       <div className="flex justify-between w-[38rem]">
-        <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
+        <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F26749]">
           컨설팅 문의하기
         </p>
         <button onClick={() => handleNavigation('consulting')}>
@@ -29,7 +29,7 @@ const Contact = () => {
       </div>
       <div className="w-[38rem] h-[0.2rem] bg-[#6E6E6E]"></div>
       <div className="flex justify-between w-[38rem]">
-        <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
+        <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F26749]">
           공방 연결 문의하기
         </p>
         <button onClick={() => handleNavigation('studioConnection')}>
