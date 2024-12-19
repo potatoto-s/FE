@@ -5,6 +5,7 @@ const ContactPost = () => {
   const location = useLocation();
   const { type } = location.state || {};
   console.log(type);
+  const [errorMessage, setErrorMessage] = useState<string>(' ');
 
   //입력 폼 데이터
   const [formData, setFormData] = useState({
@@ -31,6 +32,23 @@ const ContactPost = () => {
   //폼 제출
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const requiredFields = [
+      'name',
+      'email',
+      'phone',
+      'organizationName',
+      'content',
+      'preferredContact',
+    ];
+
+    // 하나라도 비어 있으면 에러 메시지 출력
+    for (let field of requiredFields) {
+      if (!formData[field as keyof typeof formData]) {
+        setErrorMessage('필수 입력 값을 모두 입력해주세요');
+        return; // 필수 입력값이 부족하면 더 이상 진행하지 않음
+      }
+    }
+
     console.log(formData);
     setFormData({
       name: '',
@@ -41,6 +59,7 @@ const ContactPost = () => {
       preferredContact: '',
       inquiryType: type,
     });
+    setErrorMessage('');
   };
 
   return (
@@ -74,7 +93,7 @@ const ContactPost = () => {
               htmlFor="name"
               className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
             >
-              이름
+              이름*
             </label>
             <input
               id="name"
@@ -88,7 +107,7 @@ const ContactPost = () => {
               htmlFor="email"
               className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
             >
-              이메일
+              이메일*
             </label>
             <input
               id="email"
@@ -102,7 +121,7 @@ const ContactPost = () => {
               htmlFor="phone"
               className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
             >
-              전화번호
+              전화번호*
             </label>
             <input
               id="phone"
@@ -117,7 +136,7 @@ const ContactPost = () => {
                 htmlFor="organizationName"
                 className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
               >
-                기업 이름
+                기업 이름*
               </label>
             )}
             {type === 'consulting' && (
@@ -125,7 +144,7 @@ const ContactPost = () => {
                 htmlFor="organizationName"
                 className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
               >
-                공방 이름
+                공방 이름*
               </label>
             )}
             <input
@@ -142,7 +161,7 @@ const ContactPost = () => {
               htmlFor="content"
               className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE] mb-[2rem]"
             >
-              문의 내용
+              문의 내용*
             </label>
             <textarea
               id="content"
@@ -155,7 +174,7 @@ const ContactPost = () => {
               htmlFor="preferredContact"
               className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
             >
-              선호 연락 방법 (이메일 / 휴대전화)
+              선호 연락 방법 (이메일 / 휴대전화)*
             </label>
             <input
               id="preferredContact"
@@ -163,13 +182,14 @@ const ContactPost = () => {
               value={formData.preferredContact}
               onChange={handleChange}
               type="text"
-              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
+              className="pl-[0.3rem] mb-[6rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
             />
           </div>
         </div>
+        <p className="text-[1.2rem] text-[red] mb-[1rem]"> {errorMessage}</p>
         <button
           type="submit"
-          className="w-[7rem] mt-[6rem] h-[2.5rem] bg-[#F28749] text-[#FFFFFF] text-[1rem] font-bold rounded-[0.5rem]"
+          className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
         >
           문의하기
         </button>
