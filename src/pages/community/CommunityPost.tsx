@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 function CommunityPost() {
   const [formData, setFormData] = useState({
-    category: '',
+    category: '1',
     title: '',
     content: '',
     image: null,
@@ -41,22 +41,28 @@ function CommunityPost() {
 
   return (
     <div className="h-[100vh] w-[81.25rem] pt-[6.25rem] bg-[#BBBBBB]">
-      <div className="flex items-center">
+      <div className="flex items-center px-4">
         <IoChevronBackOutline /> 게시판
       </div>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="bg-white max-w-4xl mx-auto p-6 rounded-lg shadow"
+      >
         {/* 카테고리 선택 */}
-        <div>
+        <div className="mb-4">
           <select
             id="category"
             name="category"
-            value={formData.category}
-            onChange={handleChange}
+            defaultValue="1" // 초기값만 설정
+            onChange={(event) => {
+              console.log('Selected value:', event.target.value);
+            }}
             required
             aria-label="카테고리 선택"
+            className="block w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
           >
-            <option value="" disabled selected>
+            <option value="1" disabled>
               선택
             </option>
             <option value="balloon_art">풍선/페이퍼아트</option>
@@ -71,8 +77,7 @@ function CommunityPost() {
         </div>
 
         {/* 제목 입력 */}
-        <div>
-          <label htmlFor="title">제목</label>
+        <div className="mb-4">
           <input
             type="text"
             id="title"
@@ -80,26 +85,29 @@ function CommunityPost() {
             placeholder="제목을 입력하세요"
             value={formData.title}
             onChange={handleChange}
+            aria-label="제목"
             required
+            className="block w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] "
           />
         </div>
 
         {/* 내용 입력 */}
         <div>
-          <label htmlFor="content">내용</label>
           <textarea
             id="content"
             name="content"
             placeholder="내용을 입력하세요"
+            aria-label="내용용"
             value={formData.content}
             onChange={handleChange}
             required
+            className="block w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] resize-none h-[500px] overflow-auto"
           ></textarea>
         </div>
 
         <div className="flex">
           {/* 이미지 첨부 */}
-          <div className="ml-4">
+          <div className="mb-4 flex items-center">
             {fileInfo.fileName && (
               <div>
                 <p>
@@ -132,11 +140,20 @@ function CommunityPost() {
         )} */}
 
         {/* 등록/취소 버튼 */}
-        <div>
-          <button type="submit" onClick={handleSave}>
+        <div className="flex justify-center gap-4">
+          <button
+            type="submit"
+            onClick={handleSave}
+            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+          >
             등록
           </button>
-          <button type="reset">취소</button>
+          <button
+            type="reset"
+            className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
+          >
+            취소
+          </button>
         </div>
       </form>
     </div>
