@@ -10,23 +10,23 @@ import Mypage from './pages/mypage/MyPage';
 import MypageEditor from './pages/mypage/MyPageEditor';
 import LogIn from './pages/login/LogIn';
 import SignUp from './pages/signup/SignUp';
+import CommunityPost from './pages/community/CommunityPost';
 
 const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/main" element={<Main />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/communitydetail" element={<CommunityDetail />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/mypageeditor" element={<MypageEditor />} />
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-      </main>
+      <Routes>
+        <Route path="/main" element={<Main />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/communitypost" element={<CommunityPost />} />
+        <Route path="/communitydetail" element={<CommunityDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/mypageeditor" element={<MypageEditor />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
       <Footer />
     </div>
   );
