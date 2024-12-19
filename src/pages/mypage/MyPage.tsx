@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 interface MyPageProps {
   name: string;
   email: string;
@@ -13,6 +15,11 @@ const MyPage: React.FC<MyPageProps> = ({
   companyName = 'JennaCompany',
   workshopName = 'jennachu',
 }) => {
+  const navigate = useNavigate();
+
+  const handleEditProfile = () => {
+    console.log('cliked the button of profileEditorPage');
+  };
   return (
     <div className="flex flex-col items-center py-10 ">
       <div className="w-full max-w-screen-lg text-center ">
@@ -24,7 +31,7 @@ const MyPage: React.FC<MyPageProps> = ({
       <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-2xl mt-16 relative ">
         <div className="flex-shirnk-0 w-40 h-40 rounded-full overflow-hidden md:absolute md:left-10 md:mx-20">
           <img
-            src="/public/profileIcon.png"
+            src="/profileIcon.png"
             className="w-full h-full object-cover "
             alt="Profile Icon"
           />
@@ -50,7 +57,10 @@ const MyPage: React.FC<MyPageProps> = ({
       </div>
 
       <div className="mt-10 text-center md:text-right w-full max-w-4xl md:pr-16">
-        <button className="px-6 py-2 text-white bg-[#F28749] rounded hover:bg-[#F26749]">
+        <button
+          onClick={handleEditProfile}
+          className="px-6 py-2 text-white bg-[#F28749] rounded hover:bg-[#F26749]"
+        >
           프로필 수정
         </button>
       </div>
