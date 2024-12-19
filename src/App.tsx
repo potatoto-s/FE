@@ -13,20 +13,22 @@ import SignUp from './pages/signup/SignUp';
 
 const App = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <Routes>
-        <Route path="/main" element={<Main />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/communitydetail" element={<CommunityDetail />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/mypage" element={<Mypage />} />
-        <Route path="/mypageeditor" element={<MypageEditor />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/main" element={<Main />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/communitydetail" element={<CommunityDetail />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypageeditor" element={<MypageEditor />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
