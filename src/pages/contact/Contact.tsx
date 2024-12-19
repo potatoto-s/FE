@@ -3,7 +3,7 @@ import { GoArrowRight } from 'react-icons/go';
 const Contact = () => {
   return (
     <div
-      className="flex flex-col justify-center items-center mr-[40%]"
+      className="flex flex-col justify-center items-center lg:mr-[40%]"
       style={{ height: 'calc(100vh - 3rem' }} //헤더,푸터 완성 시 수정 필요
     >
       <h1 className="w-[38rem] text-[#6E6E6E] text-[4.6rem] font-bold mb-[3.1rem]">
