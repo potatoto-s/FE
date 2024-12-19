@@ -1,5 +1,3 @@
-import profileIcon from '../../../public/profileIcon.png';
-
 interface MyPageProps {
   name: string;
   email: string;
