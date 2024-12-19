@@ -1,8 +1,14 @@
+import { useState } from 'react';
 import { GoArrowRight } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 
 const Contact = () => {
   const navigate = useNavigate();
+  const [type, setType] = useState<string>('');
+  const handleNavigation = (typeValue: string) => {
+    setType(typeValue);
+    navigate('/contact/form', { state: { type: typeValue } }); // 상태로 전달
+  };
 
   return (
     <div
@@ -17,7 +23,7 @@ const Contact = () => {
         <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
           컨설팅 문의하기
         </p>
-        <button onClick={() => navigate('/contact/form')}>
+        <button onClick={() => handleNavigation('consulting')}>
           <GoArrowRight size={60} className="mr-[2rem]" />
         </button>
       </div>
@@ -26,7 +32,7 @@ const Contact = () => {
         <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
           공방 연결 문의하기
         </p>
-        <button onClick={() => navigate('/contact/form')}>
+        <button onClick={() => handleNavigation('studioConnection')}>
           <GoArrowRight size={60} className="mr-[2rem]" />
         </button>
       </div>
