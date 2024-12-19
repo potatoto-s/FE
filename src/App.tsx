@@ -6,6 +6,7 @@ import Footer from './components/footer/Footer';
 import Community from './pages/community/Community';
 import CommunityDetail from './pages/community/CommunityDetail';
 import Contact from './pages/contact/Contact';
+import ContactForm from './pages/contact/ContactPost';
 import Mypage from './pages/mypage/MyPage';
 import MypageEditor from './pages/mypage/MyPageEditor';
 import LogIn from './pages/login/LogIn';
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/community" element={<Community />} />
         <Route path="/communitydetail" element={<CommunityDetail />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/contact/form" element={<ContactForm />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/mypageeditor" element={<MypageEditor />} />
         <Route path="/login" element={<LogIn />} />
