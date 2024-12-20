@@ -23,7 +23,7 @@ const Contact = () => {
         <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
           컨설팅 문의하기
         </p>
-        <button onClick={() => handleNavigation('consulting')}>
+        <button onClick={() => handleNavigation('WORKSHOP')}>
           <GoArrowRight size={60} className="mr-[2rem]" />
         </button>
       </div>
@@ -32,7 +32,7 @@ const Contact = () => {
         <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
           공방 연결 문의하기
         </p>
-        <button onClick={() => handleNavigation('studioConnection')}>
+        <button onClick={() => handleNavigation('COMPANY')}>
           <GoArrowRight size={60} className="mr-[2rem]" />
         </button>
       </div>
