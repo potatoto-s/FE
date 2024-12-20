@@ -111,7 +111,7 @@ const ContactForm = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              type="text"
+              type="email"
               className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
             <label
@@ -183,13 +183,17 @@ const ContactForm = () => {
             />
           </div>
         </div>
-        <p className="text-[1.2rem] text-[red] mb-[1rem]"> {errorMessage}</p>
-        <button
-          type="submit"
-          className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
-        >
-          문의하기
-        </button>
+        <div className="flex flex-col items-center">
+          <p className="absolute bottom-[0.1rem] text-[1.2rem] text-[red] mb-[1rem]">
+            {errorMessage}
+          </p>
+          <button
+            type="submit"
+            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+          >
+            문의하기
+          </button>
+        </div>
       </form>
     </div>
   );
