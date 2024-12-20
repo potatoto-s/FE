@@ -63,12 +63,9 @@ const ContactForm = () => {
   };
 
   return (
-    <div
-      className="flex flex-col justify-center items-center"
-      //   style={{ height: 'calc(100vh - 3rem' }}
-    >
-      <div className="lg:flex lg:w-[81rem]">
-        <h1 className="text-[#6E6E6E] text-[4.6rem] font-bold mr-[2.3rem]">
+    <div className="flex flex-col justify-center items-center mt-[6rem]">
+      <div className="lg:flex lg:w-[81rem] mt-[7rem]">
+        <h1 className="text-[#6E6E6E] text-[4.6rem] font-bold mr-[2.3rem] ">
           CONTACT
         </h1>
         {type === 'studioConnection' && (
@@ -85,7 +82,7 @@ const ContactForm = () => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="lg:w-[80rem] w-[40rem] flex flex-col items-center"
+        className="lg:w-[80rem] w-[40rem] flex flex-col items-center mb-[6.8rem]"
       >
         <div className="lg:flex">
           <div className="flex flex-col">
