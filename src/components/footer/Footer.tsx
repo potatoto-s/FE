@@ -1,7 +1,7 @@
 function Footer() {
   return (
-    <footer className="w-full h-[300px] bg-gray-100 py-10">
-      <div className="mx-auto w-[1300px] h-full flex justify-between items-center text-sm text-[#0F0F0F]">
+    <footer className="w-full h-[18.75rem] bg-gray-100 py-10">
+      <div className="mx-auto w-[81.25rem] h-full flex justify-between items-center text-sm text-[#0F0F0F]">
         <div className="flex flex-col justify-center gap-4">
           <h2 className="font-bold text-lg">핸즈윗</h2>
           <p>
