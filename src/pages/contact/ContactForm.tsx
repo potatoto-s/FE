@@ -132,6 +132,7 @@ const ContactForm = () => {
               value={formData.phone}
               onChange={handleChange}
               type="tel"
+              pattern="^\d{9,11}$" //9~11개의 숫자만
               className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
             {type === 'COMPANY' && (
