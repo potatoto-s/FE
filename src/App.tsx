@@ -6,7 +6,8 @@ import Footer from './components/footer/Footer';
 import Community from './pages/community/Community';
 import CommunityDetail from './pages/community/CommunityDetail';
 import Contact from './pages/contact/Contact';
-import MyPage from './pages/mypage/MyPage';
+import ContactForm from './pages/contact/ContactForm';
+import Mypage from './pages/mypage/MyPage';
 import MypageEditor from './pages/mypage/MyPageEditor';
 import LogIn from './pages/login/LogIn';
 import SignUp from './pages/signup/SignUp';
@@ -14,21 +15,24 @@ import CommunityPost from './pages/community/CommunityPost';
 
 const App = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <Routes>
-        <Route path="/main" element={<Main />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/communitypost" element={<CommunityPost />} />
-        <Route path="/communitydetail" element={<CommunityDetail />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypageeditor" element={<MypageEditor />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/main" element={<Main />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/communitydetail" element={<CommunityDetail />} />
+          <Route path="/communitypost" element={<CommunityPost />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/contactform" element={<ContactForm />} />
+          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypageeditor" element={<MypageEditor />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
