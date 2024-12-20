@@ -6,6 +6,13 @@ const ContactForm = () => {
   const { type } = location.state || {};
   const [errorMessage, setErrorMessage] = useState<string>(' ');
 
+  const handleRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      preferredContact: e.target.value,
+    });
+  };
+
   //입력 폼 데이터
   const [formData, setFormData] = useState({
     name: '',
@@ -124,7 +131,7 @@ const ContactForm = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              type="text"
+              type="tel"
               className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
             {type === 'COMPANY' && (
@@ -149,7 +156,7 @@ const ContactForm = () => {
               value={formData.organizationName}
               onChange={handleChange}
               type="text"
-              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[6rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
           </div>
           <div className="flex flex-col">
@@ -168,18 +175,28 @@ const ContactForm = () => {
             />
             <label
               htmlFor="preferredContact"
-              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
+              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE] mb-[0.5rem]"
             >
               선호 연락 방법 (이메일 / 휴대전화)*
             </label>
-            <input
-              id="preferredContact"
-              name="preferredContact"
-              value={formData.preferredContact}
-              onChange={handleChange}
-              type="text"
-              className="pl-[0.3rem] mb-[6rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
-            />
+            <div className="flex">
+              <input
+                type="radio"
+                name="preferredContact"
+                value={'EMAIL'}
+                onChange={handleRadio}
+                className="mr-[1rem]"
+              />
+              <p className="text-[1.2rem] text-[#AEAEAE] mr-[12rem]">이메일</p>
+              <input
+                type="radio"
+                name="preferredContact"
+                value={'PHONE'}
+                onChange={handleRadio}
+                className="mr-[1rem]"
+              />
+              <p className="text-[1.2rem] text-[#AEAEAE]">휴대전화</p>
+            </div>
           </div>
         </div>
         <div className="flex flex-col items-center">
