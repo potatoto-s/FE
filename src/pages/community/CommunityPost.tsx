@@ -1,8 +1,15 @@
+type FormData = {
+  category: string;
+  title: string;
+  content: string;
+  image: File | null; // image는 null 또는 File 타입
+};
+
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { useState } from 'react';
 
 function CommunityPost() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
     content: '',
@@ -10,8 +17,13 @@ function CommunityPost() {
   });
 
   // 입력값 변경 처리
-  const handleChange = (event) => {
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = event.target;
+    //서버 제출 데이터
     setFormData({
       ...formData,
       [name]: value,
@@ -24,23 +36,28 @@ function CommunityPost() {
     // formData를 서버에 저장하거나 다른 작업 수행
   };
 
-  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태
+  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
   const [fileInfo, setFileInfo] = useState({ fileName: '', filePath: '' });
 
   // 이미지 파일이 선택될 때 호출되는 함수
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
     if (file) {
       setFileInfo({
         fileName: file.name, // 선택된 파일 이름
         filePath: URL.createObjectURL(file), // 선택된 파일의 경로
       });
+
+      setFormData({
+        ...formData,
+        image: file,
+      });
     }
   };
 
   return (
-    <div className="h-[100vh] w-[81.25rem] pt-[6.25rem] bg-[#BBBBBB]">
+    <div className="mx-auto min-h-screen w-[81.25rem] pt-[6.25rem] pb-20 bg-[#BBBBBB]">
       <div className="flex items-center px-4">
         <IoChevronBackOutline /> 게시판
       </div>
@@ -65,14 +82,14 @@ function CommunityPost() {
             <option value="1" disabled>
               선택
             </option>
-            <option value="balloon_art">풍선/페이퍼아트</option>
-            <option value="gift_wrapping">선물포장/보자기</option>
-            <option value="wood_clay_leather">목공/도자기/가죽</option>
-            <option value="resin_beads">레진/비즈공예</option>
-            <option value="diffuser_candle">디퓨져/캔들/석고방향제</option>
-            <option value="rattan_macrame">라탄/마크라메</option>
-            <option value="flower">플라워</option>
-            <option value="total_crafts">토탈공예</option>
+            <option value="BALLOON">풍선/페이퍼아트</option>
+            <option value="GIFT">선물포장/보자기</option>
+            <option value="WOOD">목공/도자기/가죽</option>
+            <option value="RESIN">레진/비즈공예</option>
+            <option value="DIFFUSER">디퓨져/캔들/석고방향제</option>
+            <option value="RATTAN">라탄/마크라메</option>
+            <option value="FLOWER">플라워</option>
+            <option value="TOTAL">토탈공예</option>
           </select>
         </div>
 
@@ -92,12 +109,12 @@ function CommunityPost() {
         </div>
 
         {/* 내용 입력 */}
-        <div>
+        <div className="mb-4">
           <textarea
             id="content"
             name="content"
             placeholder="내용을 입력하세요"
-            aria-label="내용용"
+            aria-label="내용"
             value={formData.content}
             onChange={handleChange}
             required
@@ -105,19 +122,19 @@ function CommunityPost() {
           ></textarea>
         </div>
 
-        <div className="flex">
+        <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
           {/* 이미지 첨부 */}
-          <div className="mb-4 flex items-center">
-            {fileInfo.fileName && (
-              <div>
-                <p>
-                  {fileInfo.fileName} && {fileInfo.filePath}
-                </p>
-              </div>
+          <div className="flex items-center">
+            {fileInfo.fileName ? (
+              <p className=" text-[#a9a9a9]">{fileInfo.fileName}</p>
+            ) : (
+              <p className=" text-[#a9a9a9]">선택된 파일 없음</p>
             )}
           </div>
-          <div>
-            <label htmlFor="image">이미지첨부</label>
+          <div className="ml-4 flex items-center">
+            <button className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer">
+              이미지첨부
+            </button>
             <input
               type="file"
               id="image"
