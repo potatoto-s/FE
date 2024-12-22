@@ -2,19 +2,31 @@ type FormData = {
   category: string;
   title: string;
   content: string;
-  image: File | null; // image는 null 또는 File 타입
+  images: File[] | null; // image는 null 또는 File 타입
 };
 
 import { IoChevronBackOutline } from 'react-icons/io5';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 function CommunityPost() {
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
     content: '',
-    image: null,
+    images: [],
   });
+
+  // input 요소와 button 연결
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
+  const [fileInfo, setFileInfo] = useState<
+    { fileName: string; filePath: string }[]
+  >([]); // 배열로 초기화
+
+  // 이미지 파일 배열 상태
+  const [files, setFiles] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   // 입력값 변경 처리
   const handleChange = (
@@ -35,25 +47,54 @@ function CommunityPost() {
     console.log('저장 데이터:', formData);
     // formData를 서버에 저장하거나 다른 작업 수행
   };
-
-  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
-  const [fileInfo, setFileInfo] = useState({ fileName: '', filePath: '' });
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // 파일 선택 다이얼로그 열기
+    }
+  };
 
   // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    if (!e.target.files) return;
+    const selectedFiles = Array.from(e.target.files);
 
-    if (file) {
-      setFileInfo({
-        fileName: file.name, // 선택된 파일 이름
-        filePath: URL.createObjectURL(file), // 선택된 파일의 경로
-      });
-
-      setFormData({
-        ...formData,
-        image: file,
-      });
+    // 유효성 검사: 이미지 파일만 허용
+    const invalidFiles = selectedFiles.filter(
+      (file) => !file.type.startsWith('image/')
+    );
+    if (invalidFiles.length > 0) {
+      setError('이미지 파일만 업로드 가능합니다.');
+      return;
     }
+
+    // 유효성 검사: 최대 3개의 파일만 업로드
+    const newFiles = [...files, ...selectedFiles];
+    if (newFiles.length > 3) {
+      setError('최대 3개의 파일만 업로드 가능합니다.');
+      return;
+    }
+
+    // 파일 정보 배열로 생성 (미리보기 URL 포함)
+    const fileArray = selectedFiles.map((file) => ({
+      fileName: file.name,
+      filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
+    }));
+
+    // 상태 업데이트: fileInfo는 배열로 저장
+    setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
+
+    // 파일 목록 상태 업데이트
+    setFiles(newFiles); // 새로운 파일 목록 상태로 설정
+
+    // formData.image 배열 업데이트
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      images: [
+        // prevFormData.image가 null이면 빈 배열로 처리
+        ...(prevFormData.images || []),
+        ...selectedFiles,
+      ],
+    }));
   };
 
   return (
@@ -125,14 +166,21 @@ function CommunityPost() {
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
           {/* 이미지 첨부 */}
           <div className="flex items-center">
-            {fileInfo.fileName ? (
-              <p className=" text-[#a9a9a9]">{fileInfo.fileName}</p>
+            {fileInfo.length > 0 ? (
+              fileInfo.map((file, index) => (
+                <div key={index} className="text-[#a9a9a9]">
+                  {file.fileName}
+                </div>
+              ))
             ) : (
               <p className=" text-[#a9a9a9]">선택된 파일 없음</p>
             )}
           </div>
           <div className="ml-4 flex items-center">
-            <button className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer">
+            <button
+              onClick={handleButtonClick}
+              className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer"
+            >
               이미지첨부
             </button>
             <input
@@ -140,21 +188,25 @@ function CommunityPost() {
               id="image"
               name="image"
               accept="image/*"
+              ref={fileInputRef}
               style={{ display: 'none' }}
               onChange={handleImageChange}
             />
           </div>
         </div>
         {/* 첨부된 이미지 미리보기 */}
-        {/* {imagePreview && (
-          <div id="image-preview" style={{ marginTop: '10px' }}>
-            <img
-              src={imagePreview}
-              alt="이미지 미리보기"
-              style={{ maxWidth: '100px', maxHeight: '100px' }}
-            />
+        {fileInfo.length > 0 && (
+          <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
+            {fileInfo.map((file, index) => (
+              <img
+                key={index}
+                src={file.filePath}
+                alt={file.fileName}
+                className="w-full h-full object-cover"
+              />
+            ))}
           </div>
-        )} */}
+        )}
 
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
