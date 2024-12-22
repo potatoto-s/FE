@@ -24,6 +24,10 @@ function CommunityPost() {
     { fileName: string; filePath: string }[]
   >([]); // 배열로 초기화
 
+  // 이미지 파일 배열 상태
+  const [files, setFiles] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
   // 입력값 변경 처리
   const handleChange = (
     event: React.ChangeEvent<
@@ -51,19 +55,46 @@ function CommunityPost() {
 
   // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    if (!e.target.files) return;
+    const selectedFiles = Array.from(e.target.files);
 
-    if (file) {
-      setFileInfo({
-        fileName: file.name, // 선택된 파일 이름
-        filePath: URL.createObjectURL(file), // 선택된 파일의 경로
-      });
-
-      setFormData({
-        ...formData,
-        images: [],
-      });
+    // 유효성 검사: 이미지 파일만 허용
+    const invalidFiles = selectedFiles.filter(
+      (file) => !file.type.startsWith('image/')
+    );
+    if (invalidFiles.length > 0) {
+      setError('이미지 파일만 업로드 가능합니다.');
+      return;
     }
+
+    // 유효성 검사: 최대 3개의 파일만 업로드
+    const newFiles = [...files, ...selectedFiles];
+    if (newFiles.length > 3) {
+      setError('최대 3개의 파일만 업로드 가능합니다.');
+      return;
+    }
+
+    // 파일 정보 배열로 생성 (미리보기 URL 포함)
+    const fileArray = selectedFiles.map((file) => ({
+      fileName: file.name,
+      filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
+    }));
+
+    // 상태 업데이트: fileInfo는 배열로 저장
+    setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
+
+    // 파일 목록 상태 업데이트
+    setFiles(newFiles); // 새로운 파일 목록 상태로 설정
+
+    // formData.image 배열 업데이트
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      images: [
+        // prevFormData.image가 null이면 빈 배열로 처리
+        ...(prevFormData.images || []),
+        ...selectedFiles,
+      ],
+    }));
   };
 
   return (
@@ -135,8 +166,12 @@ function CommunityPost() {
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
           {/* 이미지 첨부 */}
           <div className="flex items-center">
-            {fileInfo.fileName ? (
-              <p className=" text-[#a9a9a9]">{fileInfo.fileName}</p>
+            {fileInfo.length > 0 ? (
+              fileInfo.map((file, index) => (
+                <div key={index} className="text-[#a9a9a9]">
+                  {file.fileName}
+                </div>
+              ))
             ) : (
               <p className=" text-[#a9a9a9]">선택된 파일 없음</p>
             )}
