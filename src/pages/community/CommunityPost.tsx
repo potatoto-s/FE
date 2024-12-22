@@ -65,14 +65,14 @@ function CommunityPost() {
             <option value="1" disabled>
               선택
             </option>
-            <option value="balloon_art">풍선/페이퍼아트</option>
-            <option value="gift_wrapping">선물포장/보자기</option>
-            <option value="wood_clay_leather">목공/도자기/가죽</option>
-            <option value="resin_beads">레진/비즈공예</option>
-            <option value="diffuser_candle">디퓨져/캔들/석고방향제</option>
-            <option value="rattan_macrame">라탄/마크라메</option>
-            <option value="flower">플라워</option>
-            <option value="total_crafts">토탈공예</option>
+            <option value="BALLOON">풍선/페이퍼아트</option>
+            <option value="GIFT">선물포장/보자기</option>
+            <option value="WOOD">목공/도자기/가죽</option>
+            <option value="RESIN">레진/비즈공예</option>
+            <option value="DIFFUSER">디퓨져/캔들/석고방향제</option>
+            <option value="RATTAN">라탄/마크라메</option>
+            <option value="FLOWER">플라워</option>
+            <option value="TOTAL">토탈공예</option>
           </select>
         </div>
 
