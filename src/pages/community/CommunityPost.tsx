@@ -109,12 +109,12 @@ function CommunityPost() {
         </div>
 
         {/* 내용 입력 */}
-        <div>
+        <div className="mb-4">
           <textarea
             id="content"
             name="content"
             placeholder="내용을 입력하세요"
-            aria-label="내용용"
+            aria-label="내용"
             value={formData.content}
             onChange={handleChange}
             required
@@ -122,19 +122,19 @@ function CommunityPost() {
           ></textarea>
         </div>
 
-        <div className="flex">
+        <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
           {/* 이미지 첨부 */}
-          <div className="mb-4 flex items-center">
-            {fileInfo.fileName && (
-              <div>
-                <p>
-                  {fileInfo.fileName} && {fileInfo.filePath}
-                </p>
-              </div>
+          <div className="flex items-center">
+            {fileInfo.fileName ? (
+              <p className=" text-[#a9a9a9]">{fileInfo.fileName}</p>
+            ) : (
+              <p className=" text-[#a9a9a9]">선택된 파일 없음</p>
             )}
           </div>
-          <div>
-            <label htmlFor="image">이미지첨부</label>
+          <div className="ml-4 flex items-center">
+            <button className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer">
+              이미지첨부
+            </button>
             <input
               type="file"
               id="image"
