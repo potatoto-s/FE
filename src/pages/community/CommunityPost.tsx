@@ -195,15 +195,18 @@ function CommunityPost() {
           </div>
         </div>
         {/* 첨부된 이미지 미리보기 */}
-        {/* {imagePreview && (
-          <div id="image-preview" style={{ marginTop: '10px' }}>
-            <img
-              src={imagePreview}
-              alt="이미지 미리보기"
-              style={{ maxWidth: '100px', maxHeight: '100px' }}
-            />
+        {fileInfo.length > 0 && (
+          <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
+            {fileInfo.map((file, index) => (
+              <img
+                key={index}
+                src={file.filePath}
+                alt={file.fileName}
+                className="w-full h-full object-cover"
+              />
+            ))}
           </div>
-        )} */}
+        )}
 
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
