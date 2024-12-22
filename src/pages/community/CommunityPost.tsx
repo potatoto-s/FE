@@ -1,8 +1,15 @@
+type FormData = {
+  category: string;
+  title: string;
+  content: string;
+  image: File | null; // image는 null 또는 File 타입
+};
+
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { useState } from 'react';
 
 function CommunityPost() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
     content: '',
@@ -10,8 +17,13 @@ function CommunityPost() {
   });
 
   // 입력값 변경 처리
-  const handleChange = (event) => {
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = event.target;
+    //서버 제출 데이터
     setFormData({
       ...formData,
       [name]: value,
@@ -24,17 +36,22 @@ function CommunityPost() {
     // formData를 서버에 저장하거나 다른 작업 수행
   };
 
-  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태
+  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
   const [fileInfo, setFileInfo] = useState({ fileName: '', filePath: '' });
 
   // 이미지 파일이 선택될 때 호출되는 함수
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
     if (file) {
       setFileInfo({
         fileName: file.name, // 선택된 파일 이름
         filePath: URL.createObjectURL(file), // 선택된 파일의 경로
+      });
+
+      setFormData({
+        ...formData,
+        image: file,
       });
     }
   };
