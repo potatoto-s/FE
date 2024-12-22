@@ -40,7 +40,7 @@ function CommunityPost() {
   };
 
   return (
-    <div className="h-[100vh] w-[81.25rem] pt-[6.25rem] bg-[#BBBBBB]">
+    <div className="mx-auto min-h-screen w-[81.25rem] pt-[6.25rem] pb-20 bg-[#BBBBBB]">
       <div className="flex items-center px-4">
         <IoChevronBackOutline /> 게시판
       </div>
