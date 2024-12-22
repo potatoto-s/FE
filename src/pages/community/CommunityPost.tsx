@@ -2,19 +2,27 @@ type FormData = {
   category: string;
   title: string;
   content: string;
-  image: File | null; // image는 null 또는 File 타입
+  images: File[] | null; // image는 null 또는 File 타입
 };
 
 import { IoChevronBackOutline } from 'react-icons/io5';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 function CommunityPost() {
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
     content: '',
-    image: null,
+    images: [],
   });
+
+  // input 요소와 button 연결
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
+  const [fileInfo, setFileInfo] = useState<
+    { fileName: string; filePath: string }[]
+  >([]); // 배열로 초기화
 
   // 입력값 변경 처리
   const handleChange = (
@@ -35,9 +43,11 @@ function CommunityPost() {
     console.log('저장 데이터:', formData);
     // formData를 서버에 저장하거나 다른 작업 수행
   };
-
-  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
-  const [fileInfo, setFileInfo] = useState({ fileName: '', filePath: '' });
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // 파일 선택 다이얼로그 열기
+    }
+  };
 
   // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +61,7 @@ function CommunityPost() {
 
       setFormData({
         ...formData,
-        image: file,
+        images: [],
       });
     }
   };
@@ -132,7 +142,10 @@ function CommunityPost() {
             )}
           </div>
           <div className="ml-4 flex items-center">
-            <button className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer">
+            <button
+              onClick={handleButtonClick}
+              className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer"
+            >
               이미지첨부
             </button>
             <input
@@ -140,6 +153,7 @@ function CommunityPost() {
               id="image"
               name="image"
               accept="image/*"
+              ref={fileInputRef}
               style={{ display: 'none' }}
               onChange={handleImageChange}
             />
