@@ -40,10 +40,20 @@ function CommunityPost() {
       ...formData,
       [name]: value,
     });
+
+    // 에러 상태 초기화: 카테고리 선택 시 초기화
+    if (name === 'category' && value !== '1') {
+      setError(null);
+    }
   };
 
   // 저장 버튼 클릭 처리
   const handleSave = () => {
+    // 유효성 검사: 카테고리가 "1"이면 저장 불가
+    if (formData.category === '1') {
+      setError('카테고리를 선택해야 합니다.');
+      return;
+    }
     console.log('저장 데이터:', formData);
     // formData를 서버에 저장하거나 다른 작업 수행
   };
@@ -112,10 +122,8 @@ function CommunityPost() {
           <select
             id="category"
             name="category"
-            defaultValue="1" // 초기값만 설정
-            onChange={(event) => {
-              console.log('Selected value:', event.target.value);
-            }}
+            value={formData.category} // 현재 상태값에 맞게 설정
+            onChange={handleChange} // handleChange 함수 연결
             required
             aria-label="카테고리 선택"
             className="block w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
@@ -132,6 +140,7 @@ function CommunityPost() {
             <option value="FLOWER">플라워</option>
             <option value="TOTAL">토탈공예</option>
           </select>
+          {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
         </div>
 
         {/* 제목 입력 */}
@@ -163,8 +172,8 @@ function CommunityPost() {
           ></textarea>
         </div>
 
+        {/* 이미지 첨부 */}
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
-          {/* 이미지 첨부 */}
           <div className="flex items-center">
             {fileInfo.length > 0 ? (
               fileInfo.map((file, index) => (
