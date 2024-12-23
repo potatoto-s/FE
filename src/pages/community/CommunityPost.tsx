@@ -5,6 +5,11 @@ type FormData = {
   images: File[] | null; // image는 null 또는 File 타입
 };
 
+type ErrorState = {
+  category: string | null;
+  image: string | null;
+};
+
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
@@ -27,7 +32,17 @@ function CommunityPost() {
 
   // 이미지 파일 배열 상태
   const [files, setFiles] = useState<File[]>([]);
-  const [error, setError] = useState<string | null>(null);
+
+  const ERROR_MESSAGES = {
+    categoryRequired: '카테고리를 선택해야 합니다.',
+    maxFileLimit: '최대 3개의 파일만 업로드 가능합니다.',
+    imageFileOnly: '이미지 파일만 업로드 가능합니다.',
+  };
+
+  const [error, setError] = useState<ErrorState>({
+    category: null,
+    image: null,
+  });
 
   // 입력값 변경 처리
   const handleChange = (
@@ -44,7 +59,7 @@ function CommunityPost() {
 
     // 에러 상태 초기화: 카테고리 선택 시 초기화
     if (name === 'category' && value !== '1') {
-      setError(null);
+      setError((prevError) => ({ ...prevError, category: null }));
     }
   };
 
@@ -52,7 +67,10 @@ function CommunityPost() {
   const handleSave = () => {
     // 유효성 검사: 카테고리가 "1"이면 저장 불가
     if (formData.category === '1') {
-      setError('카테고리를 선택해야 합니다.');
+      setError((prevError) => ({
+        ...prevError,
+        category: ERROR_MESSAGES.categoryRequired,
+      }));
       return;
     }
     console.log('저장 데이터:', formData);
@@ -75,14 +93,20 @@ function CommunityPost() {
       (file) => !file.type.startsWith('image/')
     );
     if (invalidFiles.length > 0) {
-      setError('이미지 파일만 업로드 가능합니다.');
+      setError((prevError) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.imageFileOnly,
+      }));
       return;
     }
 
     // 유효성 검사: 최대 3개의 파일만 업로드
     const newFiles = [...files, ...selectedFiles];
     if (newFiles.length > 3) {
-      setError('최대 3개의 파일만 업로드 가능합니다.');
+      setError((prevError) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.maxFileLimit,
+      }));
       return;
     }
 
@@ -142,7 +166,9 @@ function CommunityPost() {
             <option value="FLOWER">플라워</option>
             <option value="TOTAL">토탈공예</option>
           </select>
-          {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+          {error.category && (
+            <div className="text-red-500 text-sm mt-2">{error.category}</div>
+          )}
         </div>
 
         {/* 제목 입력 */}
@@ -205,7 +231,10 @@ function CommunityPost() {
             />
           </div>
         </div>
-
+        {/* 사진 개수 오류 처리: 이미지 미리보기 영역 위에 */}
+        {error.image && (
+          <div className="text-red-500 text-sm mt-2">{error.image}</div>
+        )}
         {/* 첨부된 이미지 미리보기 */}
         <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
           {/* fileInfo 배열을 순회하여 이미지 미리보기 */}
