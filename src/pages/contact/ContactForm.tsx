@@ -69,19 +69,19 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-[6rem]">
-      <div className="lg:flex lg:w-[81rem] mt-[7rem]">
-        <h1 className="text-[#6E6E6E] text-[4.6rem] font-bold mr-[2.3rem] ">
+    <div className="flex flex-col justify-center items-center mt-[4rem]">
+      <div className="lg:flex lg:w-[75rem] mt-[7rem]">
+        <h1 className="text-[#6E6E6E] text-[4rem] font-bold mr-[2.3rem] ">
           CONTACT
         </h1>
         {type === 'COMPANY' && (
-          <p className="text-center lg:pt-[2.8rem] text-[2rem] lg:mb-[8.1rem] md:mb-[5rem] font-normal text-[#AEAEAE]">
+          <p className="text-center lg:pt-[2.8rem] text-[1.5rem] lg:mb-[6rem] md:mb-[4rem] font-normal text-[#AEAEAE]">
             공방 연결에 대한 문의를 남겨주시면 담당자가 확인 후
             연락드리겠습니다.
           </p>
         )}
         {type === 'WORKSHOP' && (
-          <p className="text-center lg:pt-[2.8rem] text-[2rem] lg:mb-[8.1rem] md:mb-[5rem] font-normal text-[#AEAEAE]">
+          <p className="text-center lg:pt-[2.8rem] text-[1.5rem] lg:mb-[6rem] md:mb-[4rem] font-normal text-[#AEAEAE]">
             컨설팅에 대한 문의를 남겨주시면 담당자가 확인 후 연락드리겠습니다.
           </p>
         )}
@@ -94,7 +94,7 @@ const ContactForm = () => {
           <div className="flex flex-col">
             <label
               htmlFor="name"
-              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
+              className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
             >
               이름*
             </label>
@@ -104,11 +104,11 @@ const ContactForm = () => {
               value={formData.name}
               onChange={handleChange}
               type="text"
-              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
             <label
               htmlFor="email"
-              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
+              className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
             >
               이메일*
             </label>
@@ -118,11 +118,11 @@ const ContactForm = () => {
               value={formData.email}
               onChange={handleChange}
               type="email"
-              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
             <label
               htmlFor="phone"
-              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
+              className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
             >
               전화번호*
             </label>
@@ -133,12 +133,12 @@ const ContactForm = () => {
               onChange={handleChange}
               type="tel"
               pattern="^\d{9,11}$" //9~11개의 숫자만
-              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
             {type === 'COMPANY' && (
               <label
                 htmlFor="organizationName"
-                className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
+                className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
               >
                 기업 이름*
               </label>
@@ -146,7 +146,7 @@ const ContactForm = () => {
             {type === 'WORKSHOP' && (
               <label
                 htmlFor="organizationName"
-                className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE]"
+                className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
               >
                 공방 이름*
               </label>
@@ -157,13 +157,13 @@ const ContactForm = () => {
               value={formData.organizationName}
               onChange={handleChange}
               type="text"
-              className="pl-[0.3rem] w-[38.5rem] h-[2.3rem] border-b-2 mb-[6rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[6rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
           </div>
           <div className="flex flex-col">
             <label
               htmlFor="content"
-              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE] mb-[2rem]"
+              className="w-[35rem] text-[1.4rem] text-[#AEAEAE] mb-[2rem]"
             >
               문의 내용*
             </label>
@@ -172,11 +172,11 @@ const ContactForm = () => {
               name="content"
               value={formData.content}
               onChange={handleChange}
-              className="pl-[0.3rem] w-[38.5rem] h-[14.4rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
+              className="pl-[0.3rem] w-[35rem] h-[14.4rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
             />
             <label
               htmlFor="preferredContact"
-              className="w-[38.5rem] text-[1.5rem] text-[#AEAEAE] mb-[0.5rem]"
+              className="w-[35rem] text-[1.4rem] text-[#AEAEAE] mb-[0.5rem]"
             >
               선호 연락 방법 (이메일 / 휴대전화)*
             </label>
