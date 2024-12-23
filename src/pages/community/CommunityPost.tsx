@@ -6,6 +6,7 @@ type FormData = {
 };
 
 import { IoChevronBackOutline } from 'react-icons/io5';
+import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
 
 function CommunityPost() {
@@ -57,6 +58,7 @@ function CommunityPost() {
     console.log('저장 데이터:', formData);
     // formData를 서버에 저장하거나 다른 작업 수행
   };
+
   const handleButtonClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click(); // 파일 선택 다이얼로그 열기
@@ -174,11 +176,11 @@ function CommunityPost() {
 
         {/* 이미지 첨부 */}
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
-          <div className="flex items-center">
+          <div className="flex flex-col items-start">
             {fileInfo.length > 0 ? (
               fileInfo.map((file, index) => (
                 <div key={index} className="text-[#a9a9a9]">
-                  {file.fileName}
+                  {`${index + 1}. ` + file.fileName}
                 </div>
               ))
             ) : (
@@ -203,19 +205,33 @@ function CommunityPost() {
             />
           </div>
         </div>
+
         {/* 첨부된 이미지 미리보기 */}
-        {fileInfo.length > 0 && (
-          <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
-            {fileInfo.map((file, index) => (
+        <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
+          {/* fileInfo 배열을 순회하여 이미지 미리보기 */}
+          {fileInfo.map((file, index) => (
+            <li
+              key={index}
+              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF]"
+            >
               <img
-                key={index}
                 src={file.filePath}
                 alt={file.fileName}
-                className="w-full h-full object-cover"
+                className="w-full h-full rounded object-cover"
               />
-            ))}
-          </div>
-        )}
+            </li>
+          ))}
+
+          {/* 기본 이미지 아이콘은 fileInfo.length가 3에 도달할 때까지 표시 */}
+          {[...Array(3 - fileInfo.length)].map((_, index) => (
+            <li
+              key={index}
+              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF]"
+            >
+              <GoFileSymlinkFile className="h-20 w-20" />
+            </li>
+          ))}
+        </div>
 
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
