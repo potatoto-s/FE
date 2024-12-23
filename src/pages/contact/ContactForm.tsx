@@ -157,7 +157,7 @@ const ContactForm = () => {
               value={formData.organizationName}
               onChange={handleChange}
               type="text"
-              className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[6rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              className="pl-[0.3rem] mb-[2.5rem] w-[35rem] h-[2.3rem] border-b-2 border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
             />
           </div>
           <div className="flex flex-col">
@@ -172,7 +172,7 @@ const ContactForm = () => {
               name="content"
               value={formData.content}
               onChange={handleChange}
-              className="pl-[0.3rem] w-[35rem] h-[14.4rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
+              className="resize-none pl-[0.3rem] w-[35rem] h-[14rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
             />
             <label
               htmlFor="preferredContact"
@@ -186,7 +186,7 @@ const ContactForm = () => {
                 name="preferredContact"
                 value={'EMAIL'}
                 onChange={handleRadio}
-                className="mr-[1rem]"
+                className="mr-[1.4rem]"
               />
               <p className="text-[1.2rem] text-[#AEAEAE] mr-[12rem]">이메일</p>
               <input
@@ -201,12 +201,12 @@ const ContactForm = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <p className="absolute bottom-[0.1rem] text-[1.2rem] text-[red] mb-[1rem]">
+          <p className="absolute text-[1.2rem] text-[red] md:mt-[1rem]">
             {errorMessage}
           </p>
           <button
             type="submit"
-            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300 lg:mt-[6rem] mt-[4rem]"
           >
             문의하기
           </button>
