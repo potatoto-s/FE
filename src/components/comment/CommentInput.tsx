@@ -2,6 +2,7 @@ interface CommentInputProps {
   newComment: string;
   onCommentChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCommentSubmit: () => void;
+  editingCommentText: string;
 }
 
 const CommentInput = ({
@@ -19,7 +20,7 @@ const CommentInput = ({
         value={newComment}
         onChange={onCommentChange}
         placeholder="댓글을 입력해요..."
-        className="border-0 rounded-l-none px-4 py-2 w-full ml-2"
+        className="border-0 rounded-l-none px-4 py-2 w-full ml-2 ${editingCommentText ? 'opacity-50}' : 'opacity-100'"
       />
       <button
         onClick={onCommentSubmit}
