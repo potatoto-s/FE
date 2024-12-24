@@ -1,17 +1,31 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface AuthState {
-  user: { id: number; email: string; nickname: string; role: string } | null;
   accessToken: string | null;
-  setUser: (user: AuthState['user']) => void;
+  refreshToken: string | null;
   setAccessToken: (token: string | null) => void;
+  setRefreshToken: (token: string | null) => void;
+  logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
-  setUser: (user) => set({ user }),
-  setAccessToken: (token) => set({ accessToken: token }),
-}));
+const useAuthStore = create(
+  persist<AuthState>(
+    (set) => ({
+      accessToken: null,
+      refreshToken: null,
+      setAccessToken: (token) => set({ accessToken: token }),
+      setRefreshToken: (token) => set({ refreshToken: token }),
+      logout: () =>
+        set({
+          accessToken: null,
+          refreshToken: null,
+        }),
+    }),
+    {
+      name: 'auth', // 로컬 스토리지 키
+    }
+  )
+);
 
 export default useAuthStore;
