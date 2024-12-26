@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 const ContactForm = () => {
   const location = useLocation();
@@ -13,37 +14,6 @@ const ContactForm = () => {
 
   const onSubmit = async (data: any) => {
     console.log(data);
-    // try {
-    //   const response = await axios.post(
-    //     "/api/contact/",
-    //     {
-
-    //     }
-    //   )
-    //   if (response.status === 201) {
-    //     alert('문의가 정상적으로 접수되었습니다.')
-    //   }
-    // } catch (error) {
-    //   alert('문의가 접수되지 않았습니다. 다시 시도해주세요.')
-    // }
-    // const requiredFields = [
-    //   'name',
-    //   'email',
-    //   'phone',
-    //   'organizationName',
-    //   'content',
-    //   'preferredContact',
-    // ];
-
-    // for (let field of requiredFields) {
-    //   if (!data[field]) {
-    //     setError(field, {
-    //       type: 'manual',
-    //       message: '필수 입력 값을 모두 입력해주세요',
-    //     });
-    //     return;
-    //   }
-    // }
   };
 
   return (
@@ -80,11 +50,11 @@ const ContactForm = () => {
             <input
               type="text"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
-              {...register('name', { required: '이름을 입력해주세요.' })}
+              {...register('name', { required: true })}
             />
             {errors.name && (
               <p className="text-[red] text-[1rem] absolute mt-[4.5rem]">
-                {errors.name.message}
+                이름을 입력해주세요.
               </p>
             )}
             {/* 이메일 */}
@@ -97,11 +67,11 @@ const ContactForm = () => {
             <input
               type="email"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
-              {...register('email', { required: '이메일을 입력해주세요.' })}
+              {...register('email', { required: true })}
             />
             {errors.email && (
               <p className="text-[red] text-[1rem] absolute mt-[11.5rem]">
-                {errors.email.message}
+                이메일을 입력해주세요.
               </p>
             )}
             {/* 전화번호 */}
@@ -116,16 +86,21 @@ const ContactForm = () => {
               // pattern="^\d{9,11}$"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
               {...register('phone', {
-                required: '전화번호를 입력해주세요.',
+                required: true,
                 maxLength: {
                   value: 20,
                   message: '전화번호는 20자 이하로 입력해주세요.',
                 },
               })}
             />
-            {errors.phone && (
+            {errors.phone?.type === 'required' && (
               <p className="text-[red] text-[1rem] absolute mt-[18.5rem]">
-                {errors.phone.message}
+                전화번호를 입력해주세요.
+              </p>
+            )}
+            {errors.phone?.type === 'maxLength' && (
+              <p className="text-[red] text-[1rem] absolute mt-[18.5rem]">
+                전화번호는 20자 이하로 입력해주세요.
               </p>
             )}
             {/* 기업이름/공방이름 */}
@@ -149,16 +124,21 @@ const ContactForm = () => {
               type="text"
               className="pl-[0.3rem] mb-[2.5rem] w-[35rem] h-[2.3rem] border-b-2 border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
               {...register('organizationName', {
-                required: '회사 이름을 입력해주세요.',
+                required: true,
                 maxLength: {
                   value: 100,
                   message: '회사 이름은 100자 이하로 입력해주세요.',
                 },
               })}
             />
-            {errors.organizationName && (
+            {errors.organizationName?.type === 'required' && (
               <p className="text-[red] text-[1rem] absolute mt-[25.5rem]">
-                {errors.organizationName.message}
+                회사 이름을 입력해주세요.
+              </p>
+            )}
+            {errors.organizationName?.type === 'maxLength' && (
+              <p className="text-[red] text-[1rem] absolute mt-[25.5rem]">
+                회사 이름은 100자 이하로 입력해주세요.
               </p>
             )}
           </div>
@@ -166,25 +146,25 @@ const ContactForm = () => {
           <div className="flex flex-col">
             {/* 문의 내용 */}
             <label
-              htmlFor="content"
+              htmlFor="message"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE] mb-[2rem]"
             >
               문의 내용*
             </label>
             <textarea
               className="resize-none pl-[0.3rem] w-[35rem] h-[14rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
-              {...register('content', {
-                required: '문의 내용을 입력해주세요.',
+              {...register('message', {
+                required: true,
               })}
             />
-            {errors.content && (
+            {errors.message && (
               <p className="text-[red] text-[1rem] absolute mt-[18.5rem]">
-                {errors.content.message}
+                문의 내용을 입력해주세요.
               </p>
             )}
             {/* 선호 연락 방법 */}
             <label
-              htmlFor="preferredContact"
+              htmlFor="prefered_reply"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE] mb-[0.5rem]"
             >
               선호 연락 방법 (이메일 / 휴대전화)*
@@ -194,7 +174,7 @@ const ContactForm = () => {
                 type="radio"
                 value="email"
                 className="mr-[1.4rem]"
-                {...register('preferredContact', {
+                {...register('prefered_reply', {
                   required: '선호 연락 방법을 입력해주세요.',
                 })}
               />
@@ -203,27 +183,25 @@ const ContactForm = () => {
                 type="radio"
                 value="phone"
                 className="mr-[1rem]"
-                {...register('preferredContact', {
-                  required: '선호 연락 방법을 입력해주세요.',
+                {...register('prefered_reply', {
+                  required: true,
                 })}
               />
               <p className="text-[1.2rem] text-[#AEAEAE]">휴대전화</p>
-              {errors.preferredContact && (
+              {errors.prefered_reply && (
                 <p className="text-[red] text-[1rem] absolute mt-[2.5rem]">
-                  {errors.preferredContact.message}
+                  선호 연락 방법을 입력해주세요.
                 </p>
               )}
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center">
-          <button
-            type="submit"
-            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300 lg:mt-[6rem] mt-[4rem]"
-          >
-            문의하기
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300 lg:mt-[6rem] mt-[4rem]"
+        >
+          문의하기
+        </button>
       </form>
     </div>
   );
