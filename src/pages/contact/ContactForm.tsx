@@ -14,6 +14,21 @@ const ContactForm = () => {
 
   const onSubmit = async (data: any) => {
     console.log(data);
+    try {
+      const response = await axios.post('/api/contact/', {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message,
+        organizationName: data.organizationName,
+        prefered_reply: data.prefered_reply,
+      });
+      if (response.status === 200) {
+        alert('문의가 정상적으로 접수되었습니다.');
+      }
+    } catch (error) {
+      alert('문의가 접수되지 않았습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
