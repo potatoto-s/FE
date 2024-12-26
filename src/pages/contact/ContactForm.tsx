@@ -1,43 +1,19 @@
-import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 const ContactForm = () => {
   const location = useLocation();
   const { type } = location.state || {};
-  const [errorMessage, setErrorMessage] = useState<string>(' ');
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
 
-  const handleRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      preferredContact: e.target.value,
-    });
-  };
-
-  //입력 폼 데이터
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    organizationName: '',
-    content: '',
-    preferredContact: '',
-    inquiryType: type,
-  });
-
-  // 입력 값 업데이트
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  //폼 제출
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: any) => {
+    console.log('a');
+    console.log(data);
     const requiredFields = [
       'name',
       'email',
@@ -47,25 +23,15 @@ const ContactForm = () => {
       'preferredContact',
     ];
 
-    // 하나라도 비어 있으면 에러 메시지 출력
     for (let field of requiredFields) {
-      if (!formData[field as keyof typeof formData]) {
-        setErrorMessage('필수 입력 값을 모두 입력해주세요');
-        return; // 필수 입력값이 부족하면 더 이상 진행하지 않음
+      if (!data[field]) {
+        setError(field, {
+          type: 'manual',
+          message: '필수 입력 값을 모두 입력해주세요',
+        });
+        return;
       }
     }
-
-    console.log(formData);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      organizationName: '',
-      content: '',
-      preferredContact: '',
-      inquiryType: type,
-    });
-    setErrorMessage('');
   };
 
   return (
@@ -87,11 +53,12 @@ const ContactForm = () => {
         )}
       </div>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="lg:w-[80rem] w-[40rem] flex flex-col items-center mb-[6.8rem]"
       >
         <div className="lg:flex">
           <div className="flex flex-col">
+            {/* 이름 */}
             <label
               htmlFor="name"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
@@ -99,13 +66,16 @@ const ContactForm = () => {
               이름*
             </label>
             <input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
               type="text"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              {...register('name', { required: '이름을 입력해주세요.' })}
             />
+            {errors.name && (
+              <p className="text-[red] text-[1rem] absolute mt-[4.5rem]">
+                {errors.name.message}
+              </p>
+            )}
+            {/* 이메일 */}
             <label
               htmlFor="email"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
@@ -113,13 +83,16 @@ const ContactForm = () => {
               이메일*
             </label>
             <input
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
               type="email"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              {...register('email', { required: '이메일을 입력해주세요.' })}
             />
+            {errors.email && (
+              <p className="text-[red] text-[1rem] absolute mt-[11.5rem]">
+                {errors.email.message}
+              </p>
+            )}
+            {/* 전화번호 */}
             <label
               htmlFor="phone"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE]"
@@ -127,14 +100,19 @@ const ContactForm = () => {
               전화번호*
             </label>
             <input
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
               type="tel"
-              pattern="^\d{9,11}$" //9~11개의 숫자만
+              // pattern="^\d{9,11}$"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              {...register('phone', {
+                required: '전화번호를 입력해주세요.',
+              })}
             />
+            {errors.phone && (
+              <p className="text-[red] text-[1rem] absolute mt-[18.5rem]">
+                {errors.phone.message}
+              </p>
+            )}
+            {/* 기업이름/공방이름 */}
             {type === 'COMPANY' && (
               <label
                 htmlFor="organizationName"
@@ -152,15 +130,21 @@ const ContactForm = () => {
               </label>
             )}
             <input
-              id="organizationName"
-              name="organizationName"
-              value={formData.organizationName}
-              onChange={handleChange}
               type="text"
               className="pl-[0.3rem] mb-[2.5rem] w-[35rem] h-[2.3rem] border-b-2 border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
+              {...register('organizationName', {
+                required: '회사 이름을 입력해주세요.',
+              })}
             />
+            {errors.organizationName && (
+              <p className="text-[red] text-[1rem] absolute mt-[25.5rem]">
+                {errors.organizationName.message}
+              </p>
+            )}
           </div>
+
           <div className="flex flex-col">
+            {/* 문의 내용 */}
             <label
               htmlFor="content"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE] mb-[2rem]"
@@ -168,12 +152,17 @@ const ContactForm = () => {
               문의 내용*
             </label>
             <textarea
-              id="content"
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
               className="resize-none pl-[0.3rem] w-[35rem] h-[14rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
+              {...register('content', {
+                required: '문의 내용을 입력해주세요.',
+              })}
             />
+            {errors.content && (
+              <p className="text-[red] text-[1rem] absolute mt-[18.5rem]">
+                {errors.content.message}
+              </p>
+            )}
+            {/* 선호 연락 방법 */}
             <label
               htmlFor="preferredContact"
               className="w-[35rem] text-[1.4rem] text-[#AEAEAE] mb-[0.5rem]"
@@ -183,27 +172,31 @@ const ContactForm = () => {
             <div className="flex">
               <input
                 type="radio"
-                name="preferredContact"
-                value={'EMAIL'}
-                onChange={handleRadio}
+                value="email"
                 className="mr-[1.4rem]"
+                {...register('preferredContact', {
+                  required: '선호 연락 방법을 입력해주세요.',
+                })}
               />
               <p className="text-[1.2rem] text-[#AEAEAE] mr-[12rem]">이메일</p>
               <input
                 type="radio"
-                name="preferredContact"
-                value={'PHONE'}
-                onChange={handleRadio}
+                value="phone"
                 className="mr-[1rem]"
+                {...register('preferredContact', {
+                  required: '선호 연락 방법을 입력해주세요.',
+                })}
               />
               <p className="text-[1.2rem] text-[#AEAEAE]">휴대전화</p>
+              {errors.preferredContact && (
+                <p className="text-[red] text-[1rem] absolute mt-[2.5rem]">
+                  {errors.preferredContact.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <p className="absolute text-[1.2rem] text-[red] md:mt-[1rem]">
-            {errorMessage}
-          </p>
           <button
             type="submit"
             className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300 lg:mt-[6rem] mt-[4rem]"
