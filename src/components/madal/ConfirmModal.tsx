@@ -1,4 +1,9 @@
-function ConfirmModal() {
+type ConfirmModalProps = {
+  handleDelete: () => void; // 함수 타입 정의
+  closeDeleteModal: () => void; // 함수 타입 정의
+};
+
+function ConfirmModal({ handleDelete, closeDeleteModal }: ConfirmModalProps) {
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -12,12 +17,14 @@ function ConfirmModal() {
           <div className="flex justify-center gap-2">
             <button
               type="submit"
+              onClick={closeDeleteModal}
               className="text-sm px-4 py-1 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
             >
               취소
             </button>
             <button
               type="reset"
+              onClick={handleDelete}
               className="text-sm px-4 py-1 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
             >
               삭제
