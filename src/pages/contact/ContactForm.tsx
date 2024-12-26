@@ -105,6 +105,10 @@ const ContactForm = () => {
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
               {...register('phone', {
                 required: '전화번호를 입력해주세요.',
+                maxLength: {
+                  value: 20,
+                  message: '전화번호는 20자 이하로 입력해주세요.',
+                },
               })}
             />
             {errors.phone && (
@@ -134,6 +138,10 @@ const ContactForm = () => {
               className="pl-[0.3rem] mb-[2.5rem] w-[35rem] h-[2.3rem] border-b-2 border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
               {...register('organizationName', {
                 required: '회사 이름을 입력해주세요.',
+                maxLength: {
+                  value: 100,
+                  message: '회사 이름은 100자 이하로 입력해주세요.',
+                },
               })}
             />
             {errors.organizationName && (
