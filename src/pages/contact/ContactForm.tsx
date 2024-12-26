@@ -7,31 +7,43 @@ const ContactForm = () => {
   const {
     register,
     handleSubmit,
-    setError,
+    // setError,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: any) => {
-    console.log('a');
+  const onSubmit = async (data: any) => {
     console.log(data);
-    const requiredFields = [
-      'name',
-      'email',
-      'phone',
-      'organizationName',
-      'content',
-      'preferredContact',
-    ];
+    // try {
+    //   const response = await axios.post(
+    //     "/api/contact/",
+    //     {
 
-    for (let field of requiredFields) {
-      if (!data[field]) {
-        setError(field, {
-          type: 'manual',
-          message: '필수 입력 값을 모두 입력해주세요',
-        });
-        return;
-      }
-    }
+    //     }
+    //   )
+    //   if (response.status === 201) {
+    //     alert('문의가 정상적으로 접수되었습니다.')
+    //   }
+    // } catch (error) {
+    //   alert('문의가 접수되지 않았습니다. 다시 시도해주세요.')
+    // }
+    // const requiredFields = [
+    //   'name',
+    //   'email',
+    //   'phone',
+    //   'organizationName',
+    //   'content',
+    //   'preferredContact',
+    // ];
+
+    // for (let field of requiredFields) {
+    //   if (!data[field]) {
+    //     setError(field, {
+    //       type: 'manual',
+    //       message: '필수 입력 값을 모두 입력해주세요',
+    //     });
+    //     return;
+    //   }
+    // }
   };
 
   return (
