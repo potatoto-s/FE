@@ -80,13 +80,21 @@ const ContactForm = () => {
               이메일*
             </label>
             <input
-              type="email"
+              type="text"
               className="pl-[0.3rem] w-[35rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none mr-[4.5rem] "
-              {...register('email', { required: true })}
+              {...register('email', {
+                required: true,
+                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+              })}
             />
-            {errors.email && (
+            {errors.email?.type === 'required' && (
               <p className="text-[red] text-[1rem] absolute mt-[11.5rem]">
                 이메일을 입력해주세요.
+              </p>
+            )}
+            {errors.email?.type === 'pattern' && (
+              <p className="text-[red] text-[1rem] absolute mt-[11.5rem]">
+                이메일 양식에 맞게 입력해주세요.
               </p>
             )}
             {/* 전화번호 */}
