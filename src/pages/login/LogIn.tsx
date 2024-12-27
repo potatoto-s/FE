@@ -77,7 +77,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일을 입력하세요"
-                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[20rem]"
+                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[15rem]"
               />
             </div>
             <div className="flex items-center w-full mb-6">
@@ -93,7 +93,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[20rem]"
+                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[15rem]"
               />
             </div>
             <div className="w-full flex justify-center">
