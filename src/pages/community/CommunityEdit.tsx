@@ -13,8 +13,9 @@ type ErrorState = {
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
+import ConfirmModal from '../../components/madal/ConfirmModal';
 
-function CommunityPost() {
+function CommunityEdit() {
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
@@ -78,8 +79,7 @@ function CommunityPost() {
     // formData를 서버에 저장하거나 다른 작업 수행
   };
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.preventDefault();
+  const handleButtonClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click(); // 파일 선택 다이얼로그 열기
     }
@@ -87,53 +87,68 @@ function CommunityPost() {
 
   // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
+    if (!e.target.files) return;
+    const selectedFiles = Array.from(e.target.files);
 
-      // 유효성 검사: 이미지 파일만 허용
-      const invalidFiles = selectedFiles.filter(
-        (file) => !file.type.startsWith('image/')
-      );
-      if (invalidFiles.length > 0) {
-        setError((prevError) => ({
-          ...prevError,
-          image: ERROR_MESSAGES.imageFileOnly,
-        }));
-        return;
-      }
-
-      // 유효성 검사: 최대 3개의 파일만 업로드
-      const newFiles = [...files, ...selectedFiles];
-      if (newFiles.length > 3) {
-        setError((prevError) => ({
-          ...prevError,
-          image: ERROR_MESSAGES.maxFileLimit,
-        }));
-        return;
-      }
-
-      // 파일 정보 배열로 생성 (미리보기 URL 포함)
-      const fileArray = selectedFiles.map((file) => ({
-        fileName: file.name,
-        filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
+    // 유효성 검사: 이미지 파일만 허용
+    const invalidFiles = selectedFiles.filter(
+      (file) => !file.type.startsWith('image/')
+    );
+    if (invalidFiles.length > 0) {
+      setError((prevError) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.imageFileOnly,
       }));
-
-      // 상태 업데이트: fileInfo는 배열로 저장
-      setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
-
-      // 파일 목록 상태 업데이트
-      setFiles(newFiles); // 새로운 파일 목록 상태로 설정
-
-      // formData.image 배열 업데이트
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        images: [
-          // prevFormData.image가 null이면 빈 배열로 처리
-          ...(prevFormData.images || []),
-          ...selectedFiles,
-        ],
-      }));
+      return;
     }
+
+    // 유효성 검사: 최대 3개의 파일만 업로드
+    const newFiles = [...files, ...selectedFiles];
+    if (newFiles.length > 3) {
+      setError((prevError) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.maxFileLimit,
+      }));
+      return;
+    }
+
+    // 파일 정보 배열로 생성 (미리보기 URL 포함)
+    const fileArray = selectedFiles.map((file) => ({
+      fileName: file.name,
+      filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
+    }));
+
+    // 상태 업데이트: fileInfo는 배열로 저장
+    setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
+
+    // 파일 목록 상태 업데이트
+    setFiles(newFiles); // 새로운 파일 목록 상태로 설정
+
+    // formData.image 배열 업데이트
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      images: [
+        // prevFormData.image가 null이면 빈 배열로 처리
+        ...(prevFormData.images || []),
+        ...selectedFiles,
+      ],
+    }));
+  };
+
+  // 모달
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDelete = async () => {
+    // 삭제 로직 (API 호출 등)
+    console.log('삭제 로직 실행');
+    closeDeleteModal(); // 삭제 후 모달 닫기
   };
 
   return (
@@ -269,20 +284,26 @@ function CommunityPost() {
         <div className="flex justify-center gap-4">
           <button
             type="submit"
-            // onClick={handleSave}
             className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
           >
-            등록
+            수정
           </button>
           <button
             type="reset"
+            onClick={handleDeleteClick}
             className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
           >
-            취소
+            삭제
           </button>
+          {showDeleteModal && (
+            <ConfirmModal
+              handleDelete={handleDelete}
+              closeDeleteModal={closeDeleteModal}
+            />
+          )}
         </div>
       </form>
     </div>
   );
 }
-export default CommunityPost;
+export default CommunityEdit;
