@@ -27,23 +27,23 @@ axiosAuthInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Access Token 만료 처리
+    // Access Token 만료 처리 (401 오류)
     if (
-      error.response?.status === 401 &&
-      !originalRequest._retry // 재시도 방지 플래그
+      error.response?.status === 401 && // Unauthorized
+      !originalRequest._retry // 이미 재시도한 요청인지 확인
     ) {
       originalRequest._retry = true;
 
       try {
-        // Refresh Token을 localStorage에서 가져옴
         const refreshToken = localStorage.getItem('refreshToken');
         if (!refreshToken) throw new Error('리프레시 토큰이 없습니다.');
 
+        // Refresh Token을 사용하여 Access Token 재발급 요청
         const { data } = await axios.post('/api/token/refresh/', {
           refresh: refreshToken,
         });
 
-        // 새 Access Token 저장
+        // 새로운 Access Token 저장
         const newAccessToken = data.access;
         useAuthStore.getState().setAccessToken(newAccessToken);
 
@@ -53,13 +53,13 @@ axiosAuthInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error('토큰 갱신 실패:', refreshError);
 
-        // 토큰 갱신 실패 시 로그아웃 처리 및 로그인 페이지로 이동
+        // 로그아웃 처리
         useAuthStore.getState().logout();
-        window.location.href = '/login';
+        window.location.href = '/login'; // 로그인 페이지로 이동
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error); // 그 외 에러 처리
   }
 );
 
