@@ -78,7 +78,8 @@ function CommunityPost() {
     // formData를 서버에 저장하거나 다른 작업 수행
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
     if (fileInputRef.current) {
       fileInputRef.current.click(); // 파일 선택 다이얼로그 열기
     }
@@ -86,52 +87,53 @@ function CommunityPost() {
 
   // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const selectedFiles = Array.from(e.target.files);
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
 
-    // 유효성 검사: 이미지 파일만 허용
-    const invalidFiles = selectedFiles.filter(
-      (file) => !file.type.startsWith('image/')
-    );
-    if (invalidFiles.length > 0) {
-      setError((prevError) => ({
-        ...prevError,
-        image: ERROR_MESSAGES.imageFileOnly,
+      // 유효성 검사: 이미지 파일만 허용
+      const invalidFiles = selectedFiles.filter(
+        (file) => !file.type.startsWith('image/')
+      );
+      if (invalidFiles.length > 0) {
+        setError((prevError) => ({
+          ...prevError,
+          image: ERROR_MESSAGES.imageFileOnly,
+        }));
+        return;
+      }
+
+      // 유효성 검사: 최대 3개의 파일만 업로드
+      const newFiles = [...files, ...selectedFiles];
+      if (newFiles.length > 3) {
+        setError((prevError) => ({
+          ...prevError,
+          image: ERROR_MESSAGES.maxFileLimit,
+        }));
+        return;
+      }
+
+      // 파일 정보 배열로 생성 (미리보기 URL 포함)
+      const fileArray = selectedFiles.map((file) => ({
+        fileName: file.name,
+        filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
       }));
-      return;
-    }
 
-    // 유효성 검사: 최대 3개의 파일만 업로드
-    const newFiles = [...files, ...selectedFiles];
-    if (newFiles.length > 3) {
-      setError((prevError) => ({
-        ...prevError,
-        image: ERROR_MESSAGES.maxFileLimit,
+      // 상태 업데이트: fileInfo는 배열로 저장
+      setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
+
+      // 파일 목록 상태 업데이트
+      setFiles(newFiles); // 새로운 파일 목록 상태로 설정
+
+      // formData.image 배열 업데이트
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        images: [
+          // prevFormData.image가 null이면 빈 배열로 처리
+          ...(prevFormData.images || []),
+          ...selectedFiles,
+        ],
       }));
-      return;
     }
-
-    // 파일 정보 배열로 생성 (미리보기 URL 포함)
-    const fileArray = selectedFiles.map((file) => ({
-      fileName: file.name,
-      filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
-    }));
-
-    // 상태 업데이트: fileInfo는 배열로 저장
-    setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
-
-    // 파일 목록 상태 업데이트
-    setFiles(newFiles); // 새로운 파일 목록 상태로 설정
-
-    // formData.image 배열 업데이트
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      images: [
-        // prevFormData.image가 null이면 빈 배열로 처리
-        ...(prevFormData.images || []),
-        ...selectedFiles,
-      ],
-    }));
   };
 
   return (

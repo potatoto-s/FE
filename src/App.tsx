@@ -10,6 +10,7 @@ import MypageEditor from './pages/mypage/MyPageEditor';
 import LogIn from './pages/login/LogIn';
 import SignUp from './pages/signup/SignUp';
 import CommunityPost from './pages/community/CommunityPost';
+import CommunityEdit from './pages/community/CommunityEdit';
 import Layout from './layout/Layout';
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route path="/community" element={<Community />} />
         <Route path="/communitydetail" element={<CommunityDetail />} />
+        <Route path="/communityedit" element={<CommunityEdit />} />
         <Route path="/communitypost" element={<CommunityPost />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/contactform" element={<ContactForm />} />
