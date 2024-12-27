@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosAuthInstance from '../../api/axiosAuthInstance';
+import { loginApi } from '../../api/AuthApi';
 import useAuthStore from '../../stores/authStore';
+import useUserStore from '../../stores/userStore';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { setAccessToken } = useAuthStore();
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -17,27 +19,27 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axiosAuthInstance.post('/api/login/', {
-        email,
-        password,
-      });
+      const {
+        access: accessToken,
+        refresh: refreshToken,
+        user,
+      } = await loginApi(email, password);
 
-      const { access: accessToken, refresh: refreshToken } = response.data;
-
-      // Access Token 저장
+      // 토큰 저장
       setAccessToken(accessToken);
+      localStorage.setItem('refreshToken', refreshToken); // refreshToken은 로컬스토리지에 저장
 
-      // Refresh Token을 localStorage에 저장
-      localStorage.setItem('refreshToken', refreshToken);
+      // 유저 정보 저장
+      setUser(user);
 
       // 메인 페이지로 이동
       navigate('/main');
     } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        setError('이메일 또는 비밀번호가 올바르지 않습니다.');
-      } else {
-        setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
+      const errorMessage =
+        error.response?.status === 401
+          ? '이메일 또는 비밀번호가 올바르지 않습니다.'
+          : '로그인 중 오류가 발생했습니다. 다시 시도해주세요.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -46,13 +48,11 @@ const Login = () => {
   return (
     <div className="flex flex-col items-center justify-center bg-white">
       {isLoading ? (
-        // 로딩 중 UI
         <div className="flex flex-col items-center justify-center">
           <div className="w-16 h-16 border-4 border-orange-500 border-dashed rounded-full animate-spin"></div>
           <p className="text-gray-500 mt-4">로딩 중...</p>
         </div>
       ) : (
-        // 로그인 UI
         <div className="w-full max-w-[81.25rem] flex flex-col items-center pb-16">
           <div className="flex flex-col items-center w-full mb-12">
             <div className="w-full h-[1px] bg-gray-300 mb-4"></div>
@@ -77,7 +77,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일을 입력하세요"
-                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[12rem]"
+                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[20rem]"
               />
             </div>
             <div className="flex items-center w-full mb-6">
@@ -93,13 +93,13 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[12rem]"
+                className="border border-gray-300 rounded px-3 py-2 focus:outline-none w-[20rem]"
               />
             </div>
             <div className="w-full flex justify-center">
               <button
                 type="submit"
-                className="w-[10rem] bg-[#F28749] text-white py-2 rounded mt-2 mb-2 hover:bg-orange-600"
+                className="w-[12rem] bg-[#F28749] text-white py-2 rounded mt-2 mb-2 hover:bg-orange-600"
               >
                 Login
               </button>
