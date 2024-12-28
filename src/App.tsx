@@ -20,7 +20,7 @@ const App = () => {
         <Route path="/community" element={<Community />} />
         <Route path="/communitydetail" element={<CommunityDetail />} />
         <Route
-          path="/communitypost:id"
+          path="/communitypost/:id"
           element={<CommunityPost type={'edit'} />}
         />
         <Route
