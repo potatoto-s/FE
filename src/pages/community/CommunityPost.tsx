@@ -14,6 +14,7 @@ import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
 import ConfirmModal from '../../components/madal/ConfirmModal';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [formData, setFormData] = useState<FormData>({
@@ -22,6 +23,21 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     content: '',
     images: [],
   });
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
+
+  // 버튼 클릭 시 type 전환
+  const toggleType = () => {
+    if (pagetype === 'post') {
+      setPageType('edit');
+      navigate(`/communitypost/${id || '123'}`);
+    } else {
+      setPageType('post');
+      navigate('/communitypost');
+    }
+  };
 
   // input 요소와 button 연결
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -281,12 +297,12 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             </li>
           ))}
         </div>
-
+        {pagetype === 'post' && <button onClick={toggleType}>edit 전환</button>}
+        {pagetype === 'edit' && <button onClick={toggleType}>post 전환</button>}
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
-          {type === 'post' ? (
+          {pagetype === 'post' ? (
             <>
-              {' '}
               <button
                 type="submit"
                 // onClick={handleSave}
@@ -303,7 +319,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             </>
           ) : (
             <>
-              {' '}
               <button
                 type="submit"
                 className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
