@@ -13,8 +13,9 @@ type ErrorState = {
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
+import ConfirmModal from '../../components/madal/ConfirmModal';
 
-function CommunityPost() {
+function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
@@ -134,6 +135,22 @@ function CommunityPost() {
         ],
       }));
     }
+  };
+
+  // 모달
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDelete = async () => {
+    // 삭제 로직 (API 호출 등)
+    console.log('삭제 로직 실행');
+    closeDeleteModal(); // 삭제 후 모달 닫기
   };
 
   return (
@@ -267,19 +284,47 @@ function CommunityPost() {
 
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            // onClick={handleSave}
-            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
-          >
-            등록
-          </button>
-          <button
-            type="reset"
-            className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
-          >
-            취소
-          </button>
+          {type === 'post' ? (
+            <>
+              {' '}
+              <button
+                type="submit"
+                // onClick={handleSave}
+                className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+              >
+                등록
+              </button>
+              <button
+                type="reset"
+                className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
+              >
+                취소
+              </button>
+            </>
+          ) : (
+            <>
+              {' '}
+              <button
+                type="submit"
+                className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+              >
+                수정
+              </button>
+              <button
+                type="reset"
+                onClick={handleDeleteClick}
+                className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
+              >
+                삭제
+              </button>
+              {showDeleteModal && (
+                <ConfirmModal
+                  handleDelete={handleDelete}
+                  closeDeleteModal={closeDeleteModal}
+                />
+              )}
+            </>
+          )}
         </div>
       </form>
     </div>
