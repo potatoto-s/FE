@@ -1,14 +1,45 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import FormInput from '../../components/MyPageEditor/EditorInput';
 
 const MyPageEditor: React.FC = () => {
   const email = 'srchoo19@gmail.com';
   const [name, setName] = useState('추서령');
   const [nickname, setNickname] = useState('Jenna');
-  const [phone, setPhone] = useState('010-1234-5678');
+  const [phone, setPhone] = useState('010-4910-3426');
   const [workshopName, setWorkshopName] = useState('Jenna');
+  const [isChecking, setIsChecking] = useState(false);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<
+    null | boolean
+  >(null);
+
+  const navigate = useNavigate();
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    alert('수정 내용이 저장되었습니다');
+    navigate('/mypage');
+  };
+
+  const handleCancel = () => {
+    alert('수정이 취소되었습니다');
+    navigate('/mypage');
+  };
+
+  const handleCheckNickname = () => {
+    setIsChecking(true);
+
+    const mockUseNickNames = ['User1', 'Jenna', 'Admin'];
+    setTimeout(() => {
+      if (mockUseNickNames.includes(nickname)) {
+        setIsNicknameAvailable(false);
+        alert('이미 사용 중인 닉네임입니다');
+      } else {
+        setIsNicknameAvailable(true);
+        alert('사용 가능한 닉네임입니다');
+      }
+      setIsChecking(false);
+    }, 1000);
   };
 
   return (
@@ -20,93 +51,70 @@ const MyPageEditor: React.FC = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">개인정보</h3>
 
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <label className="w-24 text-gray-700 font-medium">이름</label>
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="이름을 입력하세요"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-[375px] p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-            </div>
+          <FormInput
+            label="이름"
+            value={name}
+            placeholder="이름을 입력하세요"
+            onChange={(e) => setName(e.target.value)}
+          />
 
-            <div className="flex items-center">
-              <label className="w-24 text-gray-700 font-medium">닉네임</label>
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="닉네임을 입력하세요"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-              <button
-                type="button"
-                className="ml-4 px-4 py-2 bg-orange-400 text-white rounded hover:bg-orange-500"
-              >
-                중복확인
-              </button>
+          <div className="flex items-center mb-4">
+            <label className="w-24 text-gray-700 font-medium">닉네임</label>
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="닉네임을 입력하세요"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
             </div>
-
-            <div className="flex items-center">
-              <label className="w-24 text-gray-700 font-medium">이메일</label>
-              <div className="flex-1">
-                <input
-                  type="email"
-                  placeholder="이메일을 입력하세요"
-                  value={email}
-                  readOnly
-                  className="w-[375px] p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <label className="w-24 text-gray-700 font-medium">전화번호</label>
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="전화번호를 입력하세요"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-[375px] p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={handleCheckNickname}
+              className="ml-4 px-4 py-2 bg-orange-400 text-white rounded hover:bg-orange-500"
+            >
+              중복확인
+            </button>
           </div>
+
+          <FormInput
+            label="이메일"
+            value={email}
+            placeholder="이메일을 입력하세요"
+            readOnly
+            type="email"
+          />
+
+          <FormInput
+            label="전화번호"
+            value={phone}
+            placeholder="전화번호를 입력하세요"
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </div>
 
         <div>
           <h3 className="text-lg font-semibold mb-4">공방 정보</h3>
-          <div className="flex items-center">
-            <label className="w-24 text-gray-700 font-medium">공방 이름</label>
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="공방 이름을 입력하세요"
-                value={workshopName}
-                onChange={(e) => setWorkshopName(e.target.value)}
-                className="w-[375px] p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-          </div>
+          <FormInput
+            label="공방 이름"
+            value={workshopName}
+            placeholder="공방 이름을 입력하세요"
+            onChange={(e) => setWorkshopName(e.target.value)}
+          />
         </div>
 
         <div className="flex justify-center space-x-4 mt-8">
           <button
             type="submit"
+            onClick={handleSave}
             className="px-6 py-2 bg-orange-400 text-white font-medium rounded hover:bg-orange-600"
           >
             저장
           </button>
           <button
             type="button"
-            onClick={() => alert('수정이 취소되었습니다.')}
+            onClick={handleCancel}
             className="px-6 py-2 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200"
           >
             취소
