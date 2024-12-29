@@ -1,11 +1,18 @@
 import { IoCloseOutline } from 'react-icons/io5';
 import { BiEditAlt } from 'react-icons/bi';
 
+interface Author {
+  id: number;
+  nickname: string;
+  role: string;
+  companyName?: string;
+}
+
 interface Comment {
   id: number;
-  text: string;
-  date: string;
-  user: string;
+  content: string;
+  createdAt: string;
+  author: Author;
 }
 
 interface CommentListProps {
@@ -34,16 +41,18 @@ const CommentList = ({
               <div className="flex items-center mb-1">
                 <span className="text-gray-500 text-sm">
                   {/* 아이디 표시하기 */}
-                  {comment.user}
+                  {comment.author.nickname}
                   {/* {comment.user.replace(/.(?=.{3})/g, '*')} */}
                   {/* 아이디 가리기 */}
                 </span>
-                <span className="text-sm text-[#d28878] mx-2">찬희샵</span>
-                <span className="text-gray-400 text-xs">{comment.date}</span>
+                <span className="text-sm text-[#d28878] mx-2">Ananti</span>
+                <span className="text-gray-400 text-xs">
+                  {comment.createdAt}
+                </span>
               </div>
-              <p className="text-gray-800 text-base pl-1">{comment.text}</p>
+              <p className="text-gray-800 text-base pl-1">{comment.content}</p>
             </div>
-            {comment.user === currentUser && ( // 댓글 작성자와 일치할시 수정 및 삭제 버튼 표시
+            {comment.author.nickname === currentUser && ( // 댓글 작성자와 일치할시 수정 및 삭제 버튼 표시
               <div className="flex items-center mb-2">
                 <button
                   className="text-gray-600 hover:text-blue-600 mr-1"
