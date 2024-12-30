@@ -106,7 +106,7 @@ const SignUp = () => {
               type="button"
               onClick={handleCheckEmail}
               disabled={isEmailChecked}
-              className={`ml-2 px-3 py-1 text-sm rounded ${
+              className={`ml-2 px-2 py-1 text-xs rounded ${
                 isEmailChecked
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-[#F28749] text-white hover:bg-orange-600'
@@ -192,7 +192,7 @@ const SignUp = () => {
                 type="button"
                 onClick={handleCheckNickname}
                 disabled={isNicknameChecked}
-                className={`ml-2 px-3 py-1 text-sm rounded ${
+                className={`ml-2 px-2 py-1 text-xs rounded ${
                   isNicknameChecked
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-[#F28749] text-white hover:bg-orange-600'
