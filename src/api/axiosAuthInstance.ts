@@ -2,7 +2,7 @@ import axios from 'axios';
 import useAuthStore from '../stores/authStore';
 
 const axiosAuthInstance = axios.create({
-  baseURL: '', // 실제 API 주소로 수정
+  baseURL: 'https://hands.p-e.kr/', // 실제 API 주소로 수정
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
@@ -39,9 +39,12 @@ axiosAuthInstance.interceptors.response.use(
         if (!refreshToken) throw new Error('리프레시 토큰이 없습니다.');
 
         // Refresh Token을 사용하여 Access Token 재발급 요청
-        const { data } = await axios.post('/api/token/refresh/', {
-          refresh: refreshToken,
-        });
+        const { data } = await axios.post(
+          'https://hands.p-e.kr/token/refresh/',
+          {
+            refresh: refreshToken,
+          }
+        );
 
         // 새로운 Access Token 저장
         const newAccessToken = data.access;
