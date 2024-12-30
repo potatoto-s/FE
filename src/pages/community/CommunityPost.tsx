@@ -40,6 +40,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
 
   const [files, setFiles] = useState<File[]>([]);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -119,6 +120,8 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
       // 파일 목록 상태와 에러 초기화
       setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      // 파일 중복선택
+      setFileInputKey(Date.now());
       setFormData((prevFormData) => ({
         ...prevFormData,
         images: [...(prevFormData.images || []), ...selectedFiles],
@@ -241,6 +244,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             </button>
             <input
               type="file"
+              key={fileInputKey}
               id="image"
               name="image"
               accept="image/*"
