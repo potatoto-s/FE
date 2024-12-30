@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/modal/MainModal';
+import { PiThumbsUp } from 'react-icons/pi';
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
 
-  const [modalTitle, setModalTitle] = useState<string>('');
-  const [modalContent, setModalContent] = useState<string>('');
-  const [modalImage, setModalImage] = useState<string>('');
-  const [modalInfo, setModalInfo] = useState<string>('');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalState, setModalState] = useState({
+    title: '',
+    content: '',
+    image: '',
+    info: '',
+    isOpen: false,
+  });
 
   const openModal = (
     title: string,
@@ -17,21 +20,24 @@ const Main: React.FC = () => {
     imageSrc: string,
     info: string
   ) => {
-    setModalTitle(title);
-    setModalContent(content);
-    setModalImage(imageSrc);
-    setModalInfo(info);
-    setIsModalOpen(true);
+    setModalState({
+      title,
+      content,
+      image: imageSrc,
+      info,
+      isOpen: true,
+    });
   };
 
   const closeModal = () => {
-    setModalTitle('');
-    setModalContent('');
-    setModalImage('');
-    setModalInfo('');
-    setIsModalOpen(false);
+    setModalState({
+      title: '',
+      content: '',
+      image: '',
+      info: '',
+      isOpen: false,
+    });
   };
-
   const handleCommunityClick = (postId: number) => {
     navigate(`/community/${postId}`);
   };
@@ -41,7 +47,7 @@ const Main: React.FC = () => {
   };
   return (
     <div className="bg-gray-100 text-gray-800">
-      <section className="relative h-80 bg-orange-200 flex items-center justify-center text-center ">
+      <section className="relative h-80 bg-[#FDCF8B] flex items-center justify-center text-center ">
         <div className="relative bg-opacity-50 text-black p-6 rounded">
           <h1 className="text-3xl font-bold mb-4">
             2025년 공예 사업의 새로운 가능성을 발견하세요!
@@ -96,10 +102,9 @@ const Main: React.FC = () => {
                 A: "앞으로 더 많은 사람들과 가죽공예의 즐거움을 나누고 싶어요. 워크숍이나 클래스도 열어보려 합니다. 다양한 사람들과의 소통을 통해 가죽공예의 매력을 더 많은 이들에게 전하고, 함께 창작의 기쁨을 느끼고 싶습니다."
                 `,
                 '/ex1-1.jpg',
-                `공방분야 : 가죽공예
-                죽마을은 2020년에 설립된 가죽공예 전문공방입니다.    
-                고객 맞춤형 가죽 제품을 제작하며, 
-                전통 기법과 현대적 디자인을 결합하여 독창적인 작품을 선보입니다.`
+                `
+                가죽마을은 2020년에 설립된 가죽공예 전문 공방으로, 고객의 요청에 맞춘 맞춤형 가죽 제품 제작을 전문으로 하고 있습니다. 전통적인 제작 기법을 기반으로 하여 현대적인 디자인을 접목함으로써, 실용적이면서도 독창적인 작품을 만들어내고 있습니다. 핸드백, 지갑, 벨트 등 다양한 제품을 선보입니다
+                `
               )
             }
           >
@@ -130,7 +135,7 @@ const Main: React.FC = () => {
 
                 A:"앞으로는 종이공예 워크숍을 통해 더 많은 분들과 소통하고, 종이의 아름다움과 창의성을 나누고 싶습니다. 아이들과 성인 모두가 즐길 수 있는 프로그램을 마련하여, 종이공예의 즐거움을 함께 느끼고 싶어요."`,
                 '/ex1-2.jpeg',
-                '종이공방은 2021년에 설립된 종이공예 전문 공방입니다. 다양한 종류의 종이를 활용하여 독창적인 아트 작품과 실용적인 제품을 제작하고 있습니다. 종이접기, 종이 꽃 만들기, 그리고 커스터마이징 제품 등 다양한 종이 공예를 경험할 수 있습니다.'
+                '가죽마을은 2020년에 설립된 가죽공예 전문 공방으로, 전통적인 가죽공예 기법과 현대적인 디자인을 조화롭게 결합한 독창적인 작품을 선보이고 있습니다. 핸드백, 지갑, 벨트 등 다양한 제품을 최고 품질의 가죽으로 제작하며, 고객의 요청에 따라 맞춤형 디자인도 제공합니다.'
               )
             }
           >
@@ -207,7 +212,7 @@ const Main: React.FC = () => {
                     - 정상가 : 50,000원
                     - 할인가 : 40,000원 (사전 예약 시 20% 할인)`,
                 '/trend1.jpg',
-                '클래스 상세설명 : 이 워크숍에서는 기본적인 라탄 공예 기법을 배우고, 나만의 스타일로 리스를 만들어보는 시간을 가집니다.'
+                '이 워크숍에서는 라탄 공예의 기본적인 기법을 배우는 것을 시작으로, 각자의 개성과 스타일을 반영한 독창적인 리스를 만들어보는 시간을 제공합니다. 참여자는 라탄의 특성과 다루는 방법을 익히며, 자연 친화적인 소재를 활용해 실용적이고 아름다운 작품을 완성할 수 있습니다. '
               )
             }
           >
@@ -241,7 +246,7 @@ const Main: React.FC = () => {
                     - 정상가 : 70,000원
                     - 할인가 : 56,000원 (사전 예약 시 20% 할인)`,
                 '/trend2.jpg',
-                '클래스 상세설명 : 이 워크숍에서는 나무의 따뜻함과 질감을 느끼며, 나만의 개성이 담긴 소품을 만들어봅니다.'
+                '이 워크숍에서는 나무가 가진 따뜻함과 자연스러운 질감을 느끼며, 각자의 개성을 담은 소품을 직접 만들어보는 시간을 가집니다. 나무 소재의 특성과 다루는 방법을 배우는 것부터 시작해, 창의적인 디자인 과정을 통해 실용적이고 아름다운 작품을 완성할 수 있습니다.'
               )
             }
           >
@@ -262,15 +267,9 @@ const Main: React.FC = () => {
 
                 기대효과 : 다양한 재료와 향을 조합하여 나만의 개성이 담긴 캔들을 제작하며, 창의성을 마음껏 표현할 수 있는 기회를 제공합니다.
 
-                ✨🌿 내 손으로 만드는 특별한 캔들, 그 향기와 빛으로 나만의 공간을 채워보세요!
-
                 여러분의 창의력이 담긴 캔들을 만들어보는 이 워크숍에서는, 자연의 향기와 따뜻한 색감을 통해 아늑한 분위기를 연출할 수 있는 방법을 배워요.
 
-                💫 향기로운 순간을 만들어 줄 나만의 캔들, 이제 직접 만들어보세요!
-
                 전문가의 도움으로 초보자도 쉽게 따라 할 수 있는 캔들 제작 기법을 배우며, 소중한 사람들과 나누고 싶은 특별한 작품을 완성해보세요.
-
-                📸 함께 찍은 사진을 공유하며, 이 순간을 영원히 기억해요!
 
                 난이도 및 소요 시간
                     
@@ -285,7 +284,7 @@ const Main: React.FC = () => {
                     - 정상가 : 70,000원
                     - 할인가 : 56,000원 (사전 예약 시 20% 할인)`,
                 '/trend3.jpg',
-                '클래스 상세설명 : 초보자도 쉽게 따라 할 수 있는 캔들 제작 기법을 배우며, 소중한 사람들과 나누고 싶은 특별한 작품을 완성해보세요.'
+                '이 워크숍에서는 초보자도 쉽게 따라 할 수 있는 캔들 제작 기법을 배우며, 다양한 재료와 향을 활용해 자신만의 독창적인 캔들을 완성해보는 시간을 제공합니다. 참여자는 캔들의 기본 구조와 제작 과정에 대해 이해하고, 창의성을 발휘해 특별한 디자인과 향기를 더할 수 있습니다. '
               )
             }
           >
@@ -318,7 +317,9 @@ const Main: React.FC = () => {
                     <span className="text-gray-600 truncate">
                       제목 {index + 1}
                     </span>
-                    <span className="text-orange-500 mr-[250px]">[댓글수]</span>
+                    <span className="text-orange-500 mr-[300px] mt-1">
+                      <PiThumbsUp />
+                    </span>
                     <span className="text-gray-500">작성자</span>
                   </div>
                 ))}
@@ -369,12 +370,12 @@ const Main: React.FC = () => {
         </div>
       </section>
 
-      {isModalOpen && (
+      {modalState.isOpen && (
         <Modal
-          title={modalTitle}
-          content={modalContent}
-          imageSrc={modalImage}
-          info={modalInfo}
+          title={modalState.title}
+          content={modalState.content}
+          imageSrc={modalState.image}
+          info={modalState.info}
           onClose={closeModal}
         />
       )}

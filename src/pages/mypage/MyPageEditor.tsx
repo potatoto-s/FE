@@ -17,6 +17,11 @@ const MyPageEditor: React.FC = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name || !nickname || !phone || !workshopName) {
+      alert('모든 필드를 채워주세요.');
+      throw new Error('400: 잘못된 요청 (유효성 검증 실패)');
+    }
+
     alert('수정 내용이 저장되었습니다');
     navigate('/mypage');
   };
@@ -31,12 +36,16 @@ const MyPageEditor: React.FC = () => {
 
     const mockUseNickNames = ['User1', 'Jenna', 'Admin'];
     setTimeout(() => {
+      if (!nickname) {
+        setIsNicknameAvailable(null);
+        setIsChecking(false);
+        throw new Error('400: 잘못된 요청 (유효성 검증 실패)');
+      }
+
       if (mockUseNickNames.includes(nickname)) {
         setIsNicknameAvailable(false);
-        alert('이미 사용 중인 닉네임입니다');
       } else {
         setIsNicknameAvailable(true);
-        alert('사용 가능한 닉네임입니다');
       }
       setIsChecking(false);
     }, 1000);
@@ -77,6 +86,21 @@ const MyPageEditor: React.FC = () => {
               중복확인
             </button>
           </div>
+          {isChecking && (
+            <p className="text-sm ml-[95px] text-gray-500">
+              닉네임 중복 확인 중...
+            </p>
+          )}
+          {isNicknameAvailable === false && (
+            <p className="text-sm ml-[95px] text-red-500">
+              이미 사용 중인 닉네임입니다.
+            </p>
+          )}
+          {isNicknameAvailable === true && (
+            <p className="text-sm ml-[95px] text-green-500">
+              사용 가능한 닉네임입니다.
+            </p>
+          )}
 
           <FormInput
             label="이메일"
