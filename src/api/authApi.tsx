@@ -1,8 +1,8 @@
-import axiosAuthInstance from './axiosAuthInstance';
+import axios from 'axios';
 
 // 로그인 API
 export const loginApi = async (email: string, password: string) => {
-  const response = await axiosAuthInstance.post('/api/login/', {
+  const response = await axios.post('/api/login/', {
     email,
     password,
   });
