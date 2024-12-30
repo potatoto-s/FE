@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import useUserStore from './userStore';
 
 interface AuthState {
   accessToken: string | null;
@@ -16,6 +17,8 @@ const useAuthStore = create(
         set({ accessToken: null }); // Zustand 상태에서 accessToken 삭제
         localStorage.removeItem('refreshToken'); // 로컬 스토리지에서 refreshToken 삭제
         localStorage.removeItem('auth'); // Zustand persist 데이터 전체 삭제
+        localStorage.removeItem('user'); // user 데이터도 로컬스토리지에서 삭제
+        useUserStore.getState().clearUser(); // user 상태 초기화
       },
     }),
     {
