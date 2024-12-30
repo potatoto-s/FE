@@ -66,7 +66,7 @@ const SignUp = () => {
   const handleCheckEmail = async () => {
     try {
       const email = watch('email');
-      const response = await axios.post('/api/users/email-check/', { email });
+      const response = await axios.post('/api/check/email/', { email });
       if (response.data.available) {
         alert('사용 가능한 이메일입니다.');
         clearErrors('email');
@@ -84,7 +84,7 @@ const SignUp = () => {
   const handleCheckNickname = async () => {
     try {
       const nickname = watch('nickname');
-      const response = await axios.post('/api/users/nickname-check/', {
+      const response = await axios.post('/api/check/nickname/', {
         nickname,
       });
       if (response.data.available) {
@@ -106,7 +106,7 @@ const SignUp = () => {
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post('/api/users/signup/', data);
+      const response = await axios.post('/api/signup/', data);
       alert(response.data.message);
       navigate('/login');
     } catch {
