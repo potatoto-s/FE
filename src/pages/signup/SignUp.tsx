@@ -1,46 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-// 유효성 검사 스키마
-const schema = yup.object({
-  email: yup
-    .string()
-    .email('유효한 이메일 형식이 아닙니다.')
-    .required('이메일을 입력해주세요.'),
-  password: yup
-    .string()
-    .min(8, '비밀번호는 최소 8자 이상이어야 합니다.')
-    .required('비밀번호를 입력해주세요.'),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('password')], '비밀번호가 일치하지 않습니다.')
-    .required('비밀번호 확인을 입력해주세요.'),
-  name: yup.string().required('이름을 입력해주세요.'),
-  nickname: yup
-    .string()
-    .min(2, '닉네임은 최소 2자 이상이어야 합니다.')
-    .max(10, '닉네임은 최대 10자 이하로 입력해주세요.')
-    .required('닉네임을 입력해주세요.'),
-  phone: yup
-    .string()
-    .matches(/^\d{10,11}$/, '전화번호는 10~11자리의 숫자만 입력 가능합니다.')
-    .required('전화번호를 입력해주세요.'),
-  role: yup.string().required('회원 구분을 선택해주세요.'),
-  workshop_name: yup.string().when('role', {
-    is: 'workshop',
-    then: (schema) => schema.required('공방 이름을 입력해주세요.'),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-  company_name: yup.string().when('role', {
-    is: 'company',
-    then: (schema) => schema.required('기업 이름을 입력해주세요.'),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-});
+import { signUpSchema } from '../../schemas/signUpSchemas';
 
 const SignUp = () => {
   const {
@@ -52,7 +15,7 @@ const SignUp = () => {
     trigger,
     formState: { errors, isValid },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(signUpSchema),
     mode: 'onChange',
   });
 
@@ -66,7 +29,9 @@ const SignUp = () => {
   const handleCheckEmail = async () => {
     try {
       const email = watch('email');
-      const response = await axios.post('/api/check/email/', { email });
+      const response = await axios.post('https://hands.p-e.kr/check/email/', {
+        email,
+      });
       if (response.data.available) {
         alert('사용 가능한 이메일입니다.');
         clearErrors('email');
@@ -84,9 +49,12 @@ const SignUp = () => {
   const handleCheckNickname = async () => {
     try {
       const nickname = watch('nickname');
-      const response = await axios.post('/api/check/nickname/', {
-        nickname,
-      });
+      const response = await axios.post(
+        'https://hands.p-e.kr/check/nickname/',
+        {
+          nickname,
+        }
+      );
       if (response.data.available) {
         alert('사용 가능한 닉네임입니다.');
         clearErrors('nickname');
@@ -106,8 +74,8 @@ const SignUp = () => {
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post('/api/signup/', data);
-      alert(response.data.message);
+      await axios.post('https://hands.p-e.kr/signup/', data);
+      alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch {
       alert('회원가입 중 오류가 발생했습니다.');
@@ -147,6 +115,11 @@ const SignUp = () => {
               중복확인
             </button>
           </div>
+          {isEmailChecked && (
+            <p className="text-green-500 text-sm mt-1 ml-[25%]">
+              중복확인이 완료되었습니다.
+            </p>
+          )}
           {errors.email && (
             <p className="text-red-500 text-sm mt-1 ml-[25%]">
               {errors.email.message}
@@ -175,15 +148,15 @@ const SignUp = () => {
             <label className="w-1/4 text-gray-700 pr-2">비밀번호 확인*</label>
             <input
               type="password"
-              {...register('confirm_password', {
-                onBlur: () => trigger('confirm_password'),
+              {...register('password2', {
+                onBlur: () => trigger('password2'),
               })}
               className="w-2/4 border border-gray-300 rounded px-3 py-2"
             />
           </div>
-          {errors.confirm_password && (
+          {errors.password2 && (
             <p className="text-red-500 text-sm mt-1 ml-[25%]">
-              {errors.confirm_password.message}
+              {errors.password2.message}
             </p>
           )}
 
@@ -228,6 +201,11 @@ const SignUp = () => {
                 중복확인
               </button>
             </div>
+            {isNicknameChecked && (
+              <p className="text-green-500 text-sm mt-1 ml-[25%]">
+                중복확인이 완료되었습니다.
+              </p>
+            )}
             {errors.nickname && (
               <p className="text-red-500 text-sm mt-1 ml-[25%]">
                 {errors.nickname.message}
@@ -336,11 +314,11 @@ const SignUp = () => {
           <div className="flex justify-center space-x-2 mt-4">
             <button
               type="submit"
-              disabled={!isValid}
+              disabled={!isValid || !isEmailChecked || !isNicknameChecked}
               className={`px-4 py-2 rounded ${
-                isValid
+                isValid && isEmailChecked && isNicknameChecked
                   ? 'bg-[#F28749] text-white hover:bg-orange-600'
-                  : 'bg-gray-300 text-gray-500'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
               회원가입
