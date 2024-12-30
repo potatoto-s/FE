@@ -170,8 +170,8 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   };
 
   return (
-    <div className="mx-auto min-h-screen w-[81.25rem] pt-[6.25rem] pb-20 bg-[#BBBBBB]">
-      <div className="flex items-center px-4">
+    <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
+      <div className="flex items-center mb-8">
         <IoChevronBackOutline /> 게시판
       </div>
 
@@ -188,7 +188,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             onChange={handleChange} // handleChange 함수 연결
             required
             aria-label="카테고리 선택"
-            className="block w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
           >
             <option value="1" disabled>
               선택
@@ -218,7 +218,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             onChange={handleChange}
             aria-label="제목"
             required
-            className="block w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] "
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] "
           />
         </div>
 
@@ -232,13 +232,13 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             value={formData.content}
             onChange={handleChange}
             required
-            className="block w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] resize-none h-[500px] overflow-auto"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] resize-none h-[500px] overflow-auto"
           ></textarea>
         </div>
 
         {/* 이미지 첨부 */}
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start justify-center">
             {fileInfo.length > 0 ? (
               fileInfo.map((file, index) => (
                 <div key={index} className="text-[#a9a9a9]">
@@ -272,12 +272,12 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
           <div className="text-red-500 text-sm mt-2">{error.image}</div>
         )}
         {/* 첨부된 이미지 미리보기 */}
-        <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
+        <div className="flex justify-between mb-4 gap-4 max-sm:flex-col">
           {/* fileInfo 배열을 순회하여 이미지 미리보기 */}
           {fileInfo.map((file, index) => (
             <li
               key={index}
-              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF]"
+              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <img
                 src={file.filePath}
@@ -291,7 +291,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
           {[...Array(3 - fileInfo.length)].map((_, index) => (
             <li
               key={index}
-              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF]"
+              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <GoFileSymlinkFile className="h-20 w-20" />
             </li>
