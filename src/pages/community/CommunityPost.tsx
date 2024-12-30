@@ -24,21 +24,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     images: [],
   });
 
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
-
-  // 버튼 클릭 시 type 전환
-  const toggleType = () => {
-    if (pagetype === 'post') {
-      setPageType('edit');
-      navigate(`/communitypost/${id || '123'}`);
-    } else {
-      setPageType('post');
-      navigate('/communitypost');
-    }
-  };
-
   const ERROR_MESSAGES = {
     categoryRequired: '카테고리를 선택해야 합니다.',
     maxFileLimit: '최대 3개의 파일만 업로드 가능합니다.',
@@ -50,11 +35,25 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     image: null,
   });
 
-  // input 요소와 button 연결
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
+
+  const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 이미지 파일 배열 상태
-  const [files, setFiles] = useState<File[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // 버튼 클릭 시 type 전환
+  const toggleType = () => {
+    if (pagetype === 'post') {
+      setPageType('edit');
+      navigate(`/communitypost/${id || '123'}`);
+    } else {
+      setPageType('post');
+      navigate('/communitypost');
+    }
+  };
 
   // 입력값 변경 처리
   const handleChange = (
@@ -75,7 +74,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
   };
 
-  // 저장 버튼 클릭 처리
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // 유효성 검사: 카테고리가 "1"이면 저장 불가
@@ -97,13 +95,11 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
   };
 
-  // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
 
       // 유효성 검사: 이미지 파일만 허용
-
       if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
         setError((prevError) => ({
           ...prevError,
@@ -127,12 +123,21 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         ...prevFormData,
         images: [...(prevFormData.images || []), ...selectedFiles],
       }));
-      setError((prevError) => ({ ...prevError, image: undefined })); // 에러 초기화
+      setError((prevError) => ({ ...prevError, image: undefined }));
     }
   };
 
-  // 모달
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  // 미리보기 클릭 시 해당 파일 삭제
+  const handleDeleteFile = (fileToDelete: File) => {
+    setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToDelete));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      images: prevFormData.images
+        ? prevFormData.images.filter((file) => file !== fileToDelete)
+        : [],
+    }));
+  };
+
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
@@ -251,10 +256,11 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         )}
         {/* 첨부된 이미지 미리보기 */}
         <div className="flex justify-between mb-4 gap-4 max-sm:flex-col">
-          {/* fileInfo 배열을 순회하여 이미지 미리보기 */}
+          {/* 이미지 미리보기 */}
           {files.map((file, index) => (
             <li
               key={index}
+              onClick={() => handleDeleteFile(file)}
               className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <img
@@ -265,7 +271,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             </li>
           ))}
 
-          {/* 기본 이미지 아이콘은 fileInfo.length가 3에 도달할 때까지 표시 */}
+          {/* 기본 이미지 아이콘은 length가 3에 도달할 때까지 표시 */}
           {[...Array(3 - files.length)].map((_, index) => (
             <li
               key={index}
@@ -275,6 +281,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
             </li>
           ))}
         </div>
+
         {pagetype === 'post' && <button onClick={toggleType}>edit 전환</button>}
         {pagetype === 'edit' && <button onClick={toggleType}>post 전환</button>}
         {/* 등록/취소 버튼 */}
