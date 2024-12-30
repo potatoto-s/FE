@@ -7,7 +7,7 @@ type FormData = {
 
 type ErrorState = {
   category: string | null;
-  image: string | null;
+  image: string | null | undefined;
 };
 
 import { IoChevronBackOutline } from 'react-icons/io5';
@@ -39,17 +39,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
   };
 
-  // input 요소와 button 연결
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
-  const [fileInfo, setFileInfo] = useState<
-    { fileName: string; filePath: string }[]
-  >([]); // 배열로 초기화
-
-  // 이미지 파일 배열 상태
-  const [files, setFiles] = useState<File[]>([]);
-
   const ERROR_MESSAGES = {
     categoryRequired: '카테고리를 선택해야 합니다.',
     maxFileLimit: '최대 3개의 파일만 업로드 가능합니다.',
@@ -60,6 +49,12 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     category: null,
     image: null,
   });
+
+  // input 요소와 button 연결
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 이미지 파일 배열 상태
+  const [files, setFiles] = useState<File[]>([]);
 
   // 입력값 변경 처리
   const handleChange = (
@@ -108,10 +103,8 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       const selectedFiles = Array.from(e.target.files);
 
       // 유효성 검사: 이미지 파일만 허용
-      const invalidFiles = selectedFiles.filter(
-        (file) => !file.type.startsWith('image/')
-      );
-      if (invalidFiles.length > 0) {
+
+      if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
         setError((prevError) => ({
           ...prevError,
           image: ERROR_MESSAGES.imageFileOnly,
@@ -120,8 +113,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       }
 
       // 유효성 검사: 최대 3개의 파일만 업로드
-      const newFiles = [...files, ...selectedFiles];
-      if (newFiles.length > 3) {
+      if (files.length + selectedFiles.length > 3) {
         setError((prevError) => ({
           ...prevError,
           image: ERROR_MESSAGES.maxFileLimit,
@@ -129,27 +121,13 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         return;
       }
 
-      // 파일 정보 배열로 생성 (미리보기 URL 포함)
-      const fileArray = selectedFiles.map((file) => ({
-        fileName: file.name,
-        filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
-      }));
-
-      // 상태 업데이트: fileInfo는 배열로 저장
-      setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
-
-      // 파일 목록 상태 업데이트
-      setFiles(newFiles); // 새로운 파일 목록 상태로 설정
-
-      // formData.image 배열 업데이트
+      // 파일 목록 상태와 에러 초기화
+      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
       setFormData((prevFormData) => ({
         ...prevFormData,
-        images: [
-          // prevFormData.image가 null이면 빈 배열로 처리
-          ...(prevFormData.images || []),
-          ...selectedFiles,
-        ],
+        images: [...(prevFormData.images || []), ...selectedFiles],
       }));
+      setError((prevError) => ({ ...prevError, image: undefined })); // 에러 초기화
     }
   };
 
@@ -239,10 +217,10 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         {/* 이미지 첨부 */}
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
           <div className="flex flex-col items-start justify-center">
-            {fileInfo.length > 0 ? (
-              fileInfo.map((file, index) => (
+            {files.length > 0 ? (
+              files.map((file, index) => (
                 <div key={index} className="text-[#a9a9a9]">
-                  {`${index + 1}. ` + file.fileName}
+                  {`${index + 1}. ` + file.name}
                 </div>
               ))
             ) : (
@@ -274,21 +252,21 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         {/* 첨부된 이미지 미리보기 */}
         <div className="flex justify-between mb-4 gap-4 max-sm:flex-col">
           {/* fileInfo 배열을 순회하여 이미지 미리보기 */}
-          {fileInfo.map((file, index) => (
+          {files.map((file, index) => (
             <li
               key={index}
               className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <img
-                src={file.filePath}
-                alt={file.fileName}
+                src={URL.createObjectURL(file)}
+                alt={file.name}
                 className="w-full h-full rounded object-cover"
               />
             </li>
           ))}
 
           {/* 기본 이미지 아이콘은 fileInfo.length가 3에 도달할 때까지 표시 */}
-          {[...Array(3 - fileInfo.length)].map((_, index) => (
+          {[...Array(3 - files.length)].map((_, index) => (
             <li
               key={index}
               className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
