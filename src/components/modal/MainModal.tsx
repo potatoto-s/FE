@@ -18,12 +18,35 @@ const Modal: React.FC<ModalProps> = ({
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleNext = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, 2)); // 최대 페이지는 2
+    setCurrentPage((prev) => Math.min(prev + 1, 2));
   };
 
   const handlePrev = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1)); // 최소 페이지는 1
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
+
+  // Parse content and highlight specific sentences
+  const parseContent = (content: string, boldSentences: string[]) => {
+    return content.split('\n').map((paragraph, index) => {
+      const isBold = boldSentences.includes(paragraph.trim());
+      return (
+        <p key={index} className="mb-2">
+          {isBold ? <strong>{paragraph}</strong> : paragraph}
+        </p>
+      );
+    });
+  };
+
+  const boldSentences = [
+    'Q: 시작하게 된 계기는 무엇인가요?',
+    'Q: 작품 제작 시 가장 중요하게 생각하는 것은 무엇인가요?',
+    'Q: 매력은 무엇인가요?',
+    'Q: 앞으로의 계획이 있다면 무엇인가요?',
+    '클래스 목표 및 기대효과',
+    '난이도 및 소요 시간',
+    '수강료 할인 정보 (사전 예약 시 20% 할인)',
+    '재료 키트 정보',
+  ]; // 하이라이트 문장들
 
   return (
     <div
@@ -46,6 +69,8 @@ const Modal: React.FC<ModalProps> = ({
           {title}
         </h2>
 
+        <hr className="border-t border-[#F28749] my-4 border-[1px] mx-11" />
+
         {currentPage === 1 && (
           <div>
             {imageSrc && (
@@ -56,22 +81,22 @@ const Modal: React.FC<ModalProps> = ({
                   className="w-[300px] max-h-[300px] object-contain rounded-xl shadow-lg ml-10 mr-10 mt-2"
                 />
                 {info && (
-                  <p className="ml-10 mr-10 text-lg text-gray-600 font-medium text-left p-2 mb-10">
-                    {info}
-                  </p>
+                  <div className="ml-10 mr-10 text-lg text-gray-600 font-medium text-justify p-2 mb-10 space-y-2">
+                    {info.split('\n').map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
           </div>
         )}
         {currentPage === 2 && (
-          <div className="text-base leading-relaxed space-y-4 text-gray-700 m-11">
-            {content.split('\n').map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+          <div className="text-base leading-relaxed space-y-4 text-gray-700 m-11 mt-2">
+            {parseContent(content, boldSentences)}
           </div>
         )}
-        <div className="mt-8 flex justify-between ">
+        <div className="mt-8 flex justify-between">
           <button
             onClick={handlePrev}
             disabled={currentPage === 1}
