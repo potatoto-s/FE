@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
 // 로그인 API
 export const loginApi = async (email: string, password: string) => {
-  const response = await axios.post('https://hands.p-e.kr/login/', {
+  const response = await axiosInstance.post('https://hands.p-e.kr/login/', {
     email,
     password,
   });
