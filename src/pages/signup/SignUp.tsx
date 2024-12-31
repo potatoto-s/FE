@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { signUpSchema } from '../../schemas/signUpSchemas';
+import axiosInstance from '../../api/axiosInstance';
 
 const SignUp = () => {
   const {
@@ -29,9 +29,12 @@ const SignUp = () => {
   const handleCheckEmail = async () => {
     try {
       const email = watch('email');
-      const response = await axios.post('https://hands.p-e.kr/check/email/', {
-        email,
-      });
+      const response = await axiosInstance.post(
+        'https://hands.p-e.kr/check/email/',
+        {
+          email,
+        }
+      );
       if (response.data.available) {
         alert('사용 가능한 이메일입니다.');
         clearErrors('email');
@@ -49,7 +52,7 @@ const SignUp = () => {
   const handleCheckNickname = async () => {
     try {
       const nickname = watch('nickname');
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         'https://hands.p-e.kr/check/nickname/',
         {
           nickname,
@@ -74,7 +77,7 @@ const SignUp = () => {
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      await axios.post('https://hands.p-e.kr/signup/', data);
+      await axiosInstance.post('https://hands.p-e.kr/signup/', data);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch {
