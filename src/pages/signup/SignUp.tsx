@@ -29,7 +29,7 @@ const SignUp = () => {
   const handleCheckEmail = async () => {
     try {
       const email = watch('email');
-      const response = await axiosInstance.post('/check/email/', {
+      const response = await axiosInstance.post('/api/check/email/', {
         email,
       });
       if (response.data.available) {
@@ -49,7 +49,7 @@ const SignUp = () => {
   const handleCheckNickname = async () => {
     try {
       const nickname = watch('nickname');
-      const response = await axiosInstance.post('/check/nickname/', {
+      const response = await axiosInstance.post('/api/check/nickname/', {
         nickname,
       });
       if (response.data.available) {
@@ -71,7 +71,7 @@ const SignUp = () => {
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      await axiosInstance.post('/signup/', data);
+      await axiosInstance.post('/api/signup/', data);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch {
