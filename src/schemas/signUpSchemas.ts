@@ -21,7 +21,10 @@ export const signUpSchema = yup.object({
     .required('닉네임을 입력해주세요.'),
   phone: yup
     .string()
-    .matches(/^\d{10,11}$/, '전화번호는 10~11자리의 숫자만 입력 가능합니다.')
+    .matches(
+      /^(\d{3}-\d{3,4}-\d{4})$/,
+      '전화번호는 "010-1234-5678" 형식으로 입력해주세요.'
+    )
     .required('전화번호를 입력해주세요.'),
   role: yup.string().required('회원 구분을 선택해주세요.'),
   workshop_name: yup.string().when('role', {
