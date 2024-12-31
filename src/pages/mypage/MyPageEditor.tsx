@@ -56,7 +56,12 @@ const MyPageEditor: React.FC = () => {
       <h2 className="text-center text-2xl font-bold mb-8 text-[#F28749]">
         마이페이지 수정
       </h2>
-      <form className="space-y-6" onSubmit={handleSave}>
+      <form
+        className={`space-y-${
+          isChecking || isNicknameAvailable !== null ? '8' : '4'
+        }`} // 간격 조절
+        onSubmit={handleSave}
+      >
         <div>
           <h3 className="text-lg font-semibold mb-4">개인정보</h3>
 
@@ -67,7 +72,7 @@ const MyPageEditor: React.FC = () => {
             onChange={(e) => setName(e.target.value)}
           />
 
-          <div className="flex items-center mb-4">
+          <div className="flex items-start mb-4">
             <label className="w-24 text-gray-700 font-medium">닉네임</label>
             <div className="flex-1">
               <input
@@ -77,6 +82,21 @@ const MyPageEditor: React.FC = () => {
                 onChange={(e) => setNickname(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
+              <div className="mt-1">
+                {isChecking ? (
+                  <p className="text-sm text-gray-500">
+                    닉네임 중복 확인 중...
+                  </p>
+                ) : isNicknameAvailable === false ? (
+                  <p className="text-sm text-red-500">
+                    이미 사용 중인 닉네임입니다.
+                  </p>
+                ) : isNicknameAvailable === true ? (
+                  <p className="text-sm text-green-500">
+                    사용 가능한 닉네임입니다.
+                  </p>
+                ) : null}
+              </div>
             </div>
             <button
               type="button"
@@ -86,21 +106,6 @@ const MyPageEditor: React.FC = () => {
               중복확인
             </button>
           </div>
-          {isChecking && (
-            <p className="text-sm ml-[95px] text-gray-500">
-              닉네임 중복 확인 중...
-            </p>
-          )}
-          {isNicknameAvailable === false && (
-            <p className="text-sm ml-[95px] text-red-500">
-              이미 사용 중인 닉네임입니다.
-            </p>
-          )}
-          {isNicknameAvailable === true && (
-            <p className="text-sm ml-[95px] text-green-500">
-              사용 가능한 닉네임입니다.
-            </p>
-          )}
 
           <FormInput
             label="이메일"
@@ -119,7 +124,7 @@ const MyPageEditor: React.FC = () => {
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold mb-4">공방 정보</h3>
+          <h3 className="text-lg font-semibold mb-4 mt-12">공방 정보</h3>
           <FormInput
             label="공방 이름"
             value={workshopName}
