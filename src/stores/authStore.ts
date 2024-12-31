@@ -1,17 +1,30 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import useUserStore from './userStore';
 
 interface AuthState {
-  user: { id: number; email: string; nickname: string; role: string } | null;
   accessToken: string | null;
-  setUser: (user: AuthState['user']) => void;
   setAccessToken: (token: string | null) => void;
+  logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
-  setUser: (user) => set({ user }),
-  setAccessToken: (token) => set({ accessToken: token }),
-}));
+const useAuthStore = create(
+  persist<AuthState>(
+    (set) => ({
+      accessToken: null,
+      setAccessToken: (token) => set({ accessToken: token }),
+      logout: () => {
+        set({ accessToken: null }); // Zustand 상태에서 accessToken 삭제
+        localStorage.removeItem('refreshToken'); // 로컬 스토리지에서 refreshToken 삭제
+        localStorage.removeItem('auth'); // Zustand persist 데이터 전체 삭제
+        localStorage.removeItem('user'); // user 데이터도 로컬스토리지에서 삭제
+        useUserStore.getState().clearUser(); // user 상태 초기화
+      },
+    }),
+    {
+      name: 'auth', // persist된 데이터의 키
+    }
+  )
+);
 
 export default useAuthStore;
