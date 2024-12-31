@@ -7,31 +7,22 @@ type FormData = {
 
 type ErrorState = {
   category: string | null;
-  image: string | null;
+  image: string | null | undefined;
 };
 
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
+import ConfirmModal from '../../components/madal/ConfirmModal';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function CommunityPost() {
+function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
     content: '',
     images: [],
   });
-
-  // input 요소와 button 연결
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // 상태 설정: 파일 경로와 파일 이름을 저장할 상태 (UI 정보 저장)
-  const [fileInfo, setFileInfo] = useState<
-    { fileName: string; filePath: string }[]
-  >([]); // 배열로 초기화
-
-  // 이미지 파일 배열 상태
-  const [files, setFiles] = useState<File[]>([]);
 
   const ERROR_MESSAGES = {
     categoryRequired: '카테고리를 선택해야 합니다.',
@@ -43,6 +34,27 @@ function CommunityPost() {
     category: null,
     image: null,
   });
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
+
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // 버튼 클릭 시 type 전환
+  const toggleType = () => {
+    if (pagetype === 'post') {
+      setPageType('edit');
+      navigate(`/communitypost/${id || '123'}`);
+    } else {
+      setPageType('post');
+      navigate('/communitypost');
+    }
+  };
 
   // 입력값 변경 처리
   const handleChange = (
@@ -63,7 +75,6 @@ function CommunityPost() {
     }
   };
 
-  // 저장 버튼 클릭 처리
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // 유효성 검사: 카테고리가 "1"이면 저장 불가
@@ -85,16 +96,12 @@ function CommunityPost() {
     }
   };
 
-  // 이미지 파일이 선택될 때 호출되는 함수
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
 
       // 유효성 검사: 이미지 파일만 허용
-      const invalidFiles = selectedFiles.filter(
-        (file) => !file.type.startsWith('image/')
-      );
-      if (invalidFiles.length > 0) {
+      if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
         setError((prevError) => ({
           ...prevError,
           image: ERROR_MESSAGES.imageFileOnly,
@@ -103,8 +110,7 @@ function CommunityPost() {
       }
 
       // 유효성 검사: 최대 3개의 파일만 업로드
-      const newFiles = [...files, ...selectedFiles];
-      if (newFiles.length > 3) {
+      if (files.length + selectedFiles.length > 3) {
         setError((prevError) => ({
           ...prevError,
           image: ERROR_MESSAGES.maxFileLimit,
@@ -112,33 +118,46 @@ function CommunityPost() {
         return;
       }
 
-      // 파일 정보 배열로 생성 (미리보기 URL 포함)
-      const fileArray = selectedFiles.map((file) => ({
-        fileName: file.name,
-        filePath: URL.createObjectURL(file), // 파일의 미리보기 URL
-      }));
-
-      // 상태 업데이트: fileInfo는 배열로 저장
-      setFileInfo((prevFileInfo) => [...prevFileInfo, ...fileArray]);
-
-      // 파일 목록 상태 업데이트
-      setFiles(newFiles); // 새로운 파일 목록 상태로 설정
-
-      // formData.image 배열 업데이트
+      // 파일 목록 상태와 에러 초기화
+      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      // 파일 중복선택
+      setFileInputKey(Date.now());
       setFormData((prevFormData) => ({
         ...prevFormData,
-        images: [
-          // prevFormData.image가 null이면 빈 배열로 처리
-          ...(prevFormData.images || []),
-          ...selectedFiles,
-        ],
+        images: [...(prevFormData.images || []), ...selectedFiles],
       }));
+      setError((prevError) => ({ ...prevError, image: undefined }));
     }
   };
 
+  // 미리보기 클릭 시 해당 파일 삭제
+  const handleDeleteFile = (fileToDelete: File) => {
+    setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToDelete));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      images: prevFormData.images
+        ? prevFormData.images.filter((file) => file !== fileToDelete)
+        : [],
+    }));
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDelete = async () => {
+    // 삭제 로직 (API 호출 등)
+    console.log('삭제 로직 실행');
+    closeDeleteModal(); // 삭제 후 모달 닫기
+  };
+
   return (
-    <div className="mx-auto min-h-screen w-[81.25rem] pt-[6.25rem] pb-20 bg-[#BBBBBB]">
-      <div className="flex items-center px-4">
+    <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
+      <div className="flex items-center mb-8">
         <IoChevronBackOutline /> 게시판
       </div>
 
@@ -155,7 +174,7 @@ function CommunityPost() {
             onChange={handleChange} // handleChange 함수 연결
             required
             aria-label="카테고리 선택"
-            className="block w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
           >
             <option value="1" disabled>
               선택
@@ -185,7 +204,7 @@ function CommunityPost() {
             onChange={handleChange}
             aria-label="제목"
             required
-            className="block w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] "
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] "
           />
         </div>
 
@@ -199,17 +218,17 @@ function CommunityPost() {
             value={formData.content}
             onChange={handleChange}
             required
-            className="block w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] resize-none h-[500px] overflow-auto"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] resize-none h-[500px] overflow-auto"
           ></textarea>
         </div>
 
         {/* 이미지 첨부 */}
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
-          <div className="flex flex-col items-start">
-            {fileInfo.length > 0 ? (
-              fileInfo.map((file, index) => (
+          <div className="flex flex-col items-start justify-center">
+            {files.length > 0 ? (
+              files.map((file, index) => (
                 <div key={index} className="text-[#a9a9a9]">
-                  {`${index + 1}. ` + file.fileName}
+                  {`${index + 1}. ` + file.name}
                 </div>
               ))
             ) : (
@@ -225,6 +244,7 @@ function CommunityPost() {
             </button>
             <input
               type="file"
+              key={fileInputKey}
               id="image"
               name="image"
               accept="image/*"
@@ -239,47 +259,76 @@ function CommunityPost() {
           <div className="text-red-500 text-sm mt-2">{error.image}</div>
         )}
         {/* 첨부된 이미지 미리보기 */}
-        <div className="flex justify-between mb-4 h-60 overflow-hidden gap-4">
-          {/* fileInfo 배열을 순회하여 이미지 미리보기 */}
-          {fileInfo.map((file, index) => (
+        <div className="flex justify-between mb-4 gap-4 max-sm:flex-col">
+          {/* 이미지 미리보기 */}
+          {files.map((file, index) => (
             <li
               key={index}
-              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF]"
+              onClick={() => handleDeleteFile(file)}
+              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <img
-                src={file.filePath}
-                alt={file.fileName}
+                src={URL.createObjectURL(file)}
+                alt={file.name}
                 className="w-full h-full rounded object-cover"
               />
             </li>
           ))}
 
-          {/* 기본 이미지 아이콘은 fileInfo.length가 3에 도달할 때까지 표시 */}
-          {[...Array(3 - fileInfo.length)].map((_, index) => (
+          {/* 기본 이미지 아이콘은 length가 3에 도달할 때까지 표시 */}
+          {[...Array(3 - files.length)].map((_, index) => (
             <li
               key={index}
-              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF]"
+              className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <GoFileSymlinkFile className="h-20 w-20" />
             </li>
           ))}
         </div>
 
+        {pagetype === 'post' && <button onClick={toggleType}>edit 전환</button>}
+        {pagetype === 'edit' && <button onClick={toggleType}>post 전환</button>}
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            // onClick={handleSave}
-            className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
-          >
-            등록
-          </button>
-          <button
-            type="reset"
-            className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
-          >
-            취소
-          </button>
+          {pagetype === 'post' ? (
+            <>
+              <button
+                type="submit"
+                // onClick={handleSave}
+                className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+              >
+                등록
+              </button>
+              <button
+                type="reset"
+                className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
+              >
+                취소
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="submit"
+                className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300"
+              >
+                수정
+              </button>
+              <button
+                type="reset"
+                onClick={handleDeleteClick}
+                className="text-base px-8 py-2 text-[#F28749] border border-[#F28749] rounded-md hover:bg-[#f28749] hover:text-white transition duration-300"
+              >
+                삭제
+              </button>
+              {showDeleteModal && (
+                <ConfirmModal
+                  handleDelete={handleDelete}
+                  closeDeleteModal={closeDeleteModal}
+                />
+              )}
+            </>
+          )}
         </div>
       </form>
     </div>
