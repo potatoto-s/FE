@@ -33,7 +33,7 @@ const Login = () => {
       setUser(user);
 
       // 메인 페이지로 이동
-      navigate('/main');
+      navigate('/');
     } catch (error: any) {
       const errorMessage =
         error.response?.status === 401
