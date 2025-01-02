@@ -12,7 +12,7 @@ type ErrorState = {
 
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ConfirmModal from '../../components/modal/ConfirmModal';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosAuthInstance from '../../api/axiosAuthInstance';
@@ -46,16 +46,40 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const [fetchedData, setFetchedData] = useState<FormData | null>(null); // 서버에서 받은 데이터를 저장
+
   // 버튼 클릭 시 type 전환
   const toggleType = () => {
     if (pagetype === 'post') {
       setPageType('edit');
-      navigate(`/communitypost/${id || '123'}`);
+      navigate(`/communitypost/${id || '1'}`);
     } else {
       setPageType('post');
       navigate(`/communitypost`);
     }
   };
+
+  // PATCH
+  useEffect(() => {
+    console.log('pagetype: ' + pagetype);
+    if (pagetype !== 'post') {
+      axiosAuthInstance
+        .get(`/api/posts/${id || '1'}`)
+        .then((response) => {
+          const data = response.data;
+          setFetchedData(data); // 서버 데이터 설정
+          setFormData({
+            category: data.category,
+            title: data.title,
+            content: data.content,
+            images: Array.isArray(data.images) ? data.images : null,
+          }); // 폼 초기값 설정
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [pagetype]); // id가 변경될 때마다 실행
 
   // 입력값 변경 처리
   const handleChange = (
@@ -92,7 +116,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       console.log('저장 데이터:', formData);
       alert('게시물 등록이 완료되었습니다.');
 
-      navigate(`/communitydetail/:{id}`);
+      navigate(`/communitydetail/${id}`);
     } catch {
       alert('게시물 등록 중 오류가 발생했습니다.');
     }
@@ -160,16 +184,17 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   const handleDelete = async () => {
     try {
+      //test
+      console.log('id' + `${id}`);
       const response = await axiosAuthInstance.delete(
-        `/api/posts/${id}/delete`
+        `/api/posts/${id}/delete/`
       );
-
-      if (response.data.resultCode == '200') {
-        response.data.responseMessage;
+      // 응답 객체에서 status와 statusText에 접근
+      const { status } = response;
+      if (status === 204) {
         closeDeleteModal(); // 삭제 후 모달 닫기
       } else {
-        console.log(response.data.responseMessage); // 실패 메시지 출력
-        alert('삭제에 실패했습니다. 다시 시도해주세요.');
+        console.log('삭제 요청 중 오류 발생');
       }
     } catch (err) {
       console.log('삭제 요청 오류 발생', err);
