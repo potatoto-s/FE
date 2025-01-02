@@ -5,9 +5,9 @@ import useAuthStore from '../../stores/authStore';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // 햄버거 메뉴 상태
-  const { accessToken, logout } = useAuthStore(); // 로그인 상태와 로그아웃 함수
-  const [timeoutId, setTimeoutId] = useState<number | null>(null); // 드롭다운 타이머 설정
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { accessToken, logout } = useAuthStore();
+  const [timeoutId, setTimeoutId] = useState<number | null>(null);
 
   const handleLogout = () => {
     logout();
@@ -16,11 +16,11 @@ const Header = () => {
 
   // 드롭다운/햄버거 메뉴 타이머 설정 함수
   const startCloseTimer = useCallback(() => {
-    if (timeoutId) clearTimeout(timeoutId); // 기존 타이머 해제
+    if (timeoutId) clearTimeout(timeoutId);
     const id = window.setTimeout(() => {
       setIsDropdownOpen(false);
       setIsMenuOpen(false);
-    }, 3000); // 3초 후 닫기
+    }, 3000);
     setTimeoutId(id);
   }, [timeoutId]);
 
@@ -58,7 +58,6 @@ const Header = () => {
     };
   }, [isDropdownOpen, isMenuOpen, clearCloseTimer]);
 
-  // 화면 크기 변경 시 상태 초기화
   useEffect(() => {
     const handleResize = () => {
       setIsMenuOpen(false);
@@ -88,9 +87,9 @@ const Header = () => {
           className="sm:hidden text-[#F28749]"
           onClick={() => {
             setIsMenuOpen((prev) => !prev);
-            setIsDropdownOpen(false); // 햄버거 메뉴 열릴 때 드롭다운 닫기
+            setIsDropdownOpen(false);
             clearCloseTimer();
-            if (!isMenuOpen) startCloseTimer(); // 햄버거 메뉴 열릴 때 타이머 시작
+            if (!isMenuOpen) startCloseTimer();
           }}
         >
           ☰
@@ -152,7 +151,7 @@ const Header = () => {
                 onClick={() => {
                   setIsDropdownOpen((prev) => !prev);
                   clearCloseTimer();
-                  if (!isDropdownOpen) startCloseTimer(); // 드롭다운 열릴 때 타이머 시작
+                  if (!isDropdownOpen) startCloseTimer();
                 }}
               >
                 <CgProfile className="h-8 w-8 text-[#F28749]" />
