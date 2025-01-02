@@ -13,8 +13,9 @@ type ErrorState = {
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useRef, useState } from 'react';
-import ConfirmModal from '../../components/madal/ConfirmModal';
+import ConfirmModal from '../../components/modal/ConfirmModal';
 import { useNavigate, useParams } from 'react-router-dom';
+import axiosAuthInstance from '../../api/axiosAuthInstance';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [formData, setFormData] = useState<FormData>({
@@ -52,7 +53,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       navigate(`/communitypost/${id || '123'}`);
     } else {
       setPageType('post');
-      navigate('/communitypost');
+      navigate(`/communitypost`);
     }
   };
 
@@ -75,7 +76,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
   };
 
-  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // 유효성 검사: 카테고리가 "1"이면 저장 불가
     if (formData.category === '1') {
@@ -85,8 +86,16 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       }));
       return;
     }
-    console.log('저장 데이터:', formData);
-    // formData를 서버에 저장하거나 다른 작업 수행
+
+    try {
+      await axiosAuthInstance.post(`/api/posts/create/`, formData);
+      console.log('저장 데이터:', formData);
+      alert('게시물 등록이 완료되었습니다.');
+
+      navigate(`/communitydetail/:{id}`);
+    } catch {
+      alert('게시물 등록 중 오류가 발생했습니다.');
+    }
   };
 
   const handleButtonClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
