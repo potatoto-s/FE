@@ -1,13 +1,10 @@
-import { useState } from 'react';
-import { GoArrowRight } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
+import ContactItem from '../../components/contact/contactItem';
 
 const Contact = () => {
   const navigate = useNavigate();
-  const [type, setType] = useState<string>('');
-  const handleNavigation = (typeValue: string) => {
-    setType(typeValue);
-    navigate('/contactform', { state: { type: typeValue } }); // 상태로 전달
+  const handleNavigation = (typeValue: 'WORKSHOP' | 'COMPANY') => {
+    navigate('/contactform', { state: { type: typeValue } });
   };
 
   return (
@@ -19,24 +16,14 @@ const Contact = () => {
         CONTACT
       </h1>
       <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <div className="flex justify-between w-[30rem]">
-        <p className="my-[2.5rem] text-[1.8rem] font-bold text-[#F28749]">
-          컨설팅 문의하기
-        </p>
-        <button onClick={() => handleNavigation('WORKSHOP')}>
-          <GoArrowRight size={50} className="mr-[2rem]" />
-        </button>
-      </div>
-      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <div className="flex justify-between w-[30rem]">
-        <p className="my-[2.5rem] text-[1.8rem] font-bold text-[#F28749]">
-          공방 연결 문의하기
-        </p>
-        <button onClick={() => handleNavigation('COMPANY')}>
-          <GoArrowRight size={50} className="mr-[2rem]" />
-        </button>
-      </div>
-      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
+      <ContactItem
+        label="컨설팅 문의하기"
+        handleNavigation={() => handleNavigation('WORKSHOP')}
+      />
+      <ContactItem
+        label="공방 연결 문의하기"
+        handleNavigation={() => handleNavigation('COMPANY')}
+      />
     </div>
   );
 };
