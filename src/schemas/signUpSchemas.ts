@@ -28,12 +28,12 @@ export const signUpSchema = yup.object({
     .required('전화번호를 입력해주세요.'),
   role: yup.string().required('회원 구분을 선택해주세요.'),
   workshop_name: yup.string().when('role', {
-    is: 'workshop',
+    is: 'WORKSHOP',
     then: (schema) => schema.required('공방 이름을 입력해주세요.'),
     otherwise: (schema) => schema.notRequired(),
   }),
   company_name: yup.string().when('role', {
-    is: 'company',
+    is: 'COMPANY',
     then: (schema) => schema.required('기업 이름을 입력해주세요.'),
     otherwise: (schema) => schema.notRequired(),
   }),
