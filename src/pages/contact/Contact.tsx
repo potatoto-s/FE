@@ -12,31 +12,31 @@ const Contact = () => {
 
   return (
     <div
-      className="flex flex-col justify-center items-center lg:mr-[40%]"
-      style={{ height: 'calc(100vh - 3rem' }} //헤더,푸터 완성 시 수정 필요
+      className="flex flex-col justify-center items-center lg:mr-[40%] mt-[6rem]"
+      style={{ height: 'calc(100vh - 25rem' }}
     >
-      <h1 className="w-[38rem] text-[#6E6E6E] text-[4.6rem] font-bold mb-[3.1rem]">
+      <h1 className="w-[30rem] text-[#6E6E6E] text-[3.5rem] font-bold mb-[2.5rem]">
         CONTACT
       </h1>
-      <div className="w-[38rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <div className="flex justify-between w-[38rem]">
-        <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
+      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
+      <div className="flex justify-between w-[30rem]">
+        <p className="my-[2.5rem] text-[1.8rem] font-bold text-[#F28749]">
           컨설팅 문의하기
         </p>
-        <button onClick={() => handleNavigation('consulting')}>
-          <GoArrowRight size={60} className="mr-[2rem]" />
+        <button onClick={() => handleNavigation('WORKSHOP')}>
+          <GoArrowRight size={50} className="mr-[2rem]" />
         </button>
       </div>
-      <div className="w-[38rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <div className="flex justify-between w-[38rem]">
-        <p className="my-[2.5rem]  text-[2.5rem] font-bold text-[#F28749]">
+      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
+      <div className="flex justify-between w-[30rem]">
+        <p className="my-[2.5rem] text-[1.8rem] font-bold text-[#F28749]">
           공방 연결 문의하기
         </p>
-        <button onClick={() => handleNavigation('studioConnection')}>
-          <GoArrowRight size={60} className="mr-[2rem]" />
+        <button onClick={() => handleNavigation('COMPANY')}>
+          <GoArrowRight size={50} className="mr-[2rem]" />
         </button>
       </div>
-      <div className="w-[38rem] h-[0.2rem] bg-[#6E6E6E]"></div>
+      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
     </div>
   );
 };

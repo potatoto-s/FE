@@ -19,7 +19,14 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route path="/community" element={<Community />} />
         <Route path="/communitydetail" element={<CommunityDetail />} />
-        <Route path="/communitypost" element={<CommunityPost />} />
+        <Route
+          path="/communitypost/:id"
+          element={<CommunityPost type={'edit'} />}
+        />
+        <Route
+          path="/communitypost"
+          element={<CommunityPost type={'post'} />}
+        />
         <Route path="/contact" element={<Contact />} />
         <Route path="/contactform" element={<ContactForm />} />
         <Route path="/mypage" element={<Mypage />} />
