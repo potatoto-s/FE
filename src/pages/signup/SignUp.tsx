@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
@@ -24,54 +24,77 @@ const SignUp = () => {
 
   const navigate = useNavigate();
   const role = watch('role');
+  const email = watch('email');
+  const nickname = watch('nickname');
+
+  useEffect(() => {
+    setIsEmailChecked(false);
+  }, [email]);
+
+  useEffect(() => {
+    setIsNicknameChecked(false);
+  }, [nickname]);
 
   // 이메일 중복 확인
   const handleCheckEmail = async () => {
     try {
-      const email = watch('email');
-      const response = await axiosInstance.post('/check/email/', {
+      const response = await axiosInstance.post('/api/check/email/', {
         email,
       });
-      if (response.data.available) {
+      console.log(response);
+      if (response.status === 200) {
         alert('사용 가능한 이메일입니다.');
         clearErrors('email');
         setIsEmailChecked(true);
-        setError('email', { message: '이미 사용 중인 이메일입니다.' });
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 400) {
+        setError('email', {
+          message: '이미 사용 중인 이메일입니다.',
+        });
+        setIsEmailChecked(false);
+      } else {
+        setError('email', {
+          message: '닉네임 확인 중 오류가 발생했습니다.',
+        });
         setIsEmailChecked(false);
       }
-    } catch {
-      setError('email', { message: '이메일 확인 중 오류가 발생했습니다.' });
-      setIsEmailChecked(false);
     }
   };
 
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     try {
-      const nickname = watch('nickname');
-      const response = await axiosInstance.post('/check/nickname/', {
+      const response = await axiosInstance.post('/api/check/nickname/', {
         nickname,
       });
-      if (response.data.available) {
+      console.log(response);
+      if (response.status === 200) {
         alert('사용 가능한 닉네임입니다.');
         clearErrors('nickname');
         setIsNicknameChecked(true);
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response?.status === 400) {
+        setError('nickname', {
+          message: '이미 사용 중인 닉네임입니다.',
+        });
+        setIsNicknameChecked(false);
       } else {
-        setError('nickname', { message: '이미 사용 중인 닉네임입니다.' });
+        setError('nickname', {
+          message: '닉네임 확인 중 오류가 발생했습니다.',
+        });
         setIsNicknameChecked(false);
       }
-    } catch {
-      setError('nickname', {
-        message: '닉네임 확인 중 오류가 발생했습니다.',
-      });
-      setIsNicknameChecked(false);
     }
   };
 
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      await axiosInstance.post('/signup/', data);
+      await axiosInstance.post('/api/signup/', data);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch {
@@ -117,7 +140,7 @@ const SignUp = () => {
               중복확인이 완료되었습니다.
             </p>
           )}
-          {errors.email && (
+          {errors.email && !isEmailChecked && (
             <p className="text-red-500 text-sm mt-1 ml-[25%]">
               {errors.email.message}
             </p>
@@ -203,7 +226,7 @@ const SignUp = () => {
                 중복확인이 완료되었습니다.
               </p>
             )}
-            {errors.nickname && (
+            {errors.nickname && !isNicknameChecked && (
               <p className="text-red-500 text-sm mt-1 ml-[25%]">
                 {errors.nickname.message}
               </p>
