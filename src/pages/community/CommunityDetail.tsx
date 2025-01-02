@@ -4,6 +4,7 @@ import { BsChatHeart } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import CommentList from '../../components/comment/CommentList';
 import CommentInput from '../../components/comment/CommentInput';
+// import axios from 'axios';
 
 interface Author {
   id: number;
@@ -31,25 +32,31 @@ interface Post {
   comments: Comment[];
 }
 
+// const axiosInstance = axios.create({
+//   baseURL: '/api',
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
 const CommunityDetail = () => {
   const [comments, setComments] = useState<Comment[]>([]); // 댓글 목록 상태 관리
-  const [newComment, setNewComment] = useState<string>(''); // 새댓글 내용 상태 관리
-  const [likes, setLikes] = useState<number>(0); // 좋아요 수 증가 감소 상태 관리
+  const [newComment, setNewComment] = useState<string>(''); // 새 댓글 내용 상태 관리
+  const [likes, setLikes] = useState<number>(0); // 좋아요 수 상태 관리
   const [liked, setLiked] = useState<boolean>(false); // 좋아요 여부 상태 관리
   const [currentUser, setCurrentUser] = useState<Author | null>(null); // 현재 사용자 상태 관리
   const [post, setPost] = useState<Post | null>(null); // 게시글 상태 관리
   const [showModal, setShowModal] = useState<boolean>(false); // 모달 표시 상태 관리
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정할 댓글ID 상태 관리
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정할 댓글 ID 상태 관리
   const navigate = useNavigate();
 
-  // 컴포넌트 렌더링 될 시 실행되는 훅
+  // 컴포넌트 렌더링 시 실행되는 훅
   useEffect(() => {
     // 목업 데이터 설정
     const mockUser: Author = {
       id: 1,
       nickname: '정찬희',
-      role: 'user',
-      companyName: '회사명',
+      role: '공방 | 기업',
     };
 
     const mockPost: Post = {
@@ -58,7 +65,7 @@ const CommunityDetail = () => {
       content: '이것은 목업 게시글 내용입니다.',
       category: '일반',
       viewCount: 123,
-      imageUrls: ['https://via.placeholder.com/150'], // 목업 게시글 이미지 URL
+      imageUrls: ['https://via.placeholder.com/150'], // 목업 이미지 URL
       createdAt: new Date().toISOString(),
       author: mockUser,
       comments: [
@@ -78,26 +85,23 @@ const CommunityDetail = () => {
     };
 
     // 상태 업데이트
-    setCurrentUser(mockUser); // 사용자 상태
-    setPost(mockPost); // 게시글 상태
-    setComments(mockPost.comments); // 댓글 목록 상태
-  }, []); // 빈 배열 의존성으로 줘서 컴포넌트 렌더링 될때만 실행
+    setPost(mockPost); // 목업 게시글 설정
+    setComments(mockPost.comments); // 목업 댓글 설정
+    setCurrentUser(mockUser); // 현재 사용자 설정
+  }, []);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // 댓글 내용 변경 핸들러
-    setNewComment(e.target.value); // textarea의 값으로 새 댓글 내용 업데이트
+    setNewComment(e.target.value); // 댓글 내용 업데이트
   };
 
   const handleCommentSubmit = async () => {
-    // 댓글 제출 처리
     if (newComment.trim().length > 0 && currentUser && post) {
-      // 댓글 내용이 비어있는지 확인
+      // 댓글 내용이 비어있지 않은지 확인
       const currentDate = new Date();
       const formattedDate = `${currentDate.getMonth() + 1}. ${currentDate.getDate()}. ${currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
       const newCommentEntry: Comment = {
-        // 새로운 댓글 객체 생성
-        id: editingCommentId ? editingCommentId : comments.length + 1, // 수정할 댓글 ID 있다면 사용, 아니면 새 댓글 ID
+        id: editingCommentId ? editingCommentId : comments.length + 1,
         content: newComment,
         createdAt: formattedDate,
         author: currentUser,
@@ -108,7 +112,7 @@ const CommunityDetail = () => {
         setComments(
           comments.map((comment) =>
             comment.id === editingCommentId
-              ? { ...comment, content: newComment } // 수정된 내용으로 업데이트
+              ? { ...comment, content: newComment }
               : comment
           )
         );
@@ -125,8 +129,7 @@ const CommunityDetail = () => {
   };
 
   const handleCommentDelete = (id: number) => {
-    // 댓글 삭제 처리 함수
-    setComments(comments.filter((comment) => comment.id !== id));
+    setComments(comments.filter((comment) => comment.id !== id)); // 댓글 삭제 처리
   };
 
   const handleEditComment = (id: number) => {
@@ -143,15 +146,14 @@ const CommunityDetail = () => {
   };
 
   const handleEditButtonClick = () => {
-    // 수정 버튼 클릭시 CommunityPost 페이지 이동
     if (post) {
-      navigate(`/CommunityPost`);
+      navigate(`/communitypost`);
     }
   };
 
   const handleDeletePost = () => {
     console.log('게시글이 삭제되었습니다.');
-    navigate(`/Community`);
+    navigate(`/community`);
   };
 
   return (
@@ -169,20 +171,22 @@ const CommunityDetail = () => {
                   <FaCommentDots className="mr-1" />({comments.length})
                 </span>
               </div>
-              <div className="flex space-x-4">
-                <button
-                  onClick={handleEditButtonClick} // 수정 버튼 클릭 시 핸들러 호출
-                  className="text-gray-400 text-base hover:text-blue-600 transition duration-300 text-sm"
-                >
-                  수정
-                </button>
-                <button
-                  onClick={handleDeletePost} // 삭제 버튼 클릭 시 핸들러 호출
-                  className="text-gray-400 text-base hover:text-red-600 transition duration-300 text-sm"
-                >
-                  삭제
-                </button>
-              </div>
+              {currentUser && post.author.id === currentUser.id && (
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleEditButtonClick}
+                    className="text-gray-400 text-base hover:text-blue-600 transition duration-300 text-sm"
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={handleDeletePost}
+                    className="text-gray-400 text-base hover:text-red-600 transition duration-300 text-sm"
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="mb-6">
@@ -194,11 +198,7 @@ const CommunityDetail = () => {
             <div className="flex justify-center mt-10 mb-10">
               <button
                 onClick={handleLike}
-                className={`border rounded-lg px-4 py-1 flex items-center transition duration-300 ${
-                  liked
-                    ? 'bg-[#F26749] text-white border-[#F26749] font-bold'
-                    : 'border-[#F26749] text-[#F26749] font-bold'
-                }`}
+                className={`border rounded-lg px-4 py-1 flex items-center transition duration-300 ${liked ? 'bg-[#F26749] text-white border-[#F26749] font-bold' : 'border-[#F26749] text-[#F26749] font-bold'}`}
               >
                 <BsChatHeart className="mr-1 h-5 w-5" />
                 좋아요 ! {likes}
@@ -236,7 +236,7 @@ const CommunityDetail = () => {
 
 export default CommunityDetail;
 
-// 수정 버튼 클릭스 post 페이지 이동
-// 삭제 버튼 클릭시 '게시글을 삭제 하시겠습니까?' 모달같은 경고문 띄우고
+// 수정 버튼 클릭스 post 페이지 이동 o
+// 삭제 버튼 클릭시 '게시글을 삭제 하시겠습니까?'  경고창 띄우고
 // 돌아가기 , 삭제하기 버튼 2개 돌아가기 버튼 클릭수 취소 , 삭제하기 클릭시
-// 게시글 삭제후 커뮤니티 페이지로 이동
+// 게시글 삭제후 커뮤니티 페이지로 이동 o
