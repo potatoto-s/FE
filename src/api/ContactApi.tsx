@@ -2,7 +2,7 @@ import axiosInstance from './axiosInstance';
 
 export const contactApi = async (data: any) => {
   try {
-    await axiosInstance.post('/contact/', {
+    await axiosInstance.post('api/contact/', {
       name: data.name,
       email: data.email,
       phone: data.phone,
