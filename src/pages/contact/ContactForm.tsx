@@ -71,6 +71,9 @@ const ContactForm = () => {
             >
               이메일*
             </label>
+            <p className="text-[0.8rem] text-[#AEAEAE]">
+              이메일 형식을 지켜서 입력해 주세요. EX) example@domain.com
+            </p>
             <input
               type="text"
               className="pl-[0.3rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
@@ -80,12 +83,12 @@ const ContactForm = () => {
               })}
             />
             {errors.email?.type === 'required' && (
-              <p className="text-[red] text-[1rem] absolute mt-[11rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[12rem]">
                 이메일을 입력해주세요.
               </p>
             )}
             {errors.email?.type === 'pattern' && (
-              <p className="text-[red] text-[1rem] absolute mt-[11rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[12rem]">
                 이메일 양식에 맞게 입력해주세요.
               </p>
             )}
@@ -96,9 +99,12 @@ const ContactForm = () => {
             >
               전화번호*
             </label>
+            <p className="text-[0.8rem] text-[#AEAEAE]">
+              구분자(-)를 포함해 주세요. EX) 010-1234-5678
+            </p>
             <input
               type="tel"
-              // pattern="^\d{9,11}$"
+              // pattern="^\d{2,3}-\d{3,4}-\d{4}$"
               className="pl-[0.3rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
               {...register('phone', {
                 required: true,
@@ -106,16 +112,22 @@ const ContactForm = () => {
                   value: 20,
                   message: '전화번호는 20자 이하로 입력해주세요.',
                 },
+                pattern: /^\d{2,3}-\d{3,4}-\d{4}$/,
               })}
             />
             {errors.phone?.type === 'required' && (
-              <p className="text-[red] text-[1rem] absolute mt-[17.5rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
                 전화번호를 입력해주세요.
               </p>
             )}
             {errors.phone?.type === 'maxLength' && (
-              <p className="text-[red] text-[1rem] absolute mt-[17.5rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
                 전화번호는 20자 이하로 입력해주세요.
+              </p>
+            )}
+            {errors.phone?.type === 'pattern' && (
+              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
+                전화번호 양식에 맞게 입력해주세요.
               </p>
             )}
             {/* 기업이름/공방이름 */}
@@ -147,12 +159,12 @@ const ContactForm = () => {
               })}
             />
             {errors.organizationName?.type === 'required' && (
-              <p className="text-[red] text-[1rem] absolute mt-[24rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[26.5rem]">
                 회사 이름을 입력해주세요.
               </p>
             )}
             {errors.organizationName?.type === 'maxLength' && (
-              <p className="text-[red] text-[1rem] absolute mt-[24rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[26.5rem]">
                 회사 이름은 100자 이하로 입력해주세요.
               </p>
             )}
@@ -167,13 +179,13 @@ const ContactForm = () => {
               문의 내용*
             </label>
             <textarea
-              className="resize-none pl-[0.3rem] md:w-[33rem] w-[28rem] h-[13.5rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
+              className="resize-none pl-[0.3rem] md:w-[33rem] w-[28rem] h-[16rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
               {...register('message', {
                 required: true,
               })}
             />
             {errors.message && (
-              <p className="text-[red] text-[1rem] absolute mt-[17.5rem]">
+              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
                 문의 내용을 입력해주세요.
               </p>
             )}
