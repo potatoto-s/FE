@@ -38,6 +38,7 @@ const SignUp = () => {
   // 이메일 중복 확인
   const handleCheckEmail = async () => {
     try {
+      const email = watch('email');
       const response = await axiosInstance.post('/api/check/email/', {
         email,
       });
@@ -66,6 +67,7 @@ const SignUp = () => {
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     try {
+      const nickname = watch('nickname');
       const response = await axiosInstance.post('/api/check/nickname/', {
         nickname,
       });
