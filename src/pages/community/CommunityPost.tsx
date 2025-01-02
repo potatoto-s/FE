@@ -159,7 +159,19 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   };
 
   const handleDelete = async () => {
-    // 삭제 로직 (API 호출 등)
+    try {
+      const response = await axiosAuthInstance.delete(
+        `/api/posts/${id}/delete`
+      );
+
+      if (response.data.resultCode == '200') {
+        response.data.responseMessage;
+      } else {
+        response.data.responseMessage;
+      }
+    } catch {
+      console.log('삭제 요청 오류 발생');
+    }
     console.log('삭제 로직 실행');
     closeDeleteModal(); // 삭제 후 모달 닫기
   };
