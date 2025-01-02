@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import ContactItem from '../../components/contact/contactItem';
+import ContactType from '../../components/contact/contactType';
 
 const Contact = () => {
   const navigate = useNavigate();
@@ -16,11 +16,11 @@ const Contact = () => {
         CONTACT
       </h1>
       <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <ContactItem
+      <ContactType
         label="컨설팅 문의하기"
         handleNavigation={() => handleNavigation('WORKSHOP')}
       />
-      <ContactItem
+      <ContactType
         label="공방 연결 문의하기"
         handleNavigation={() => handleNavigation('COMPANY')}
       />
