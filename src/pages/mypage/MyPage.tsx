@@ -4,9 +4,8 @@ const MyPage: React.FC = () => {
   // 목업
   const name = '추서령';
   const email = 'srchoo19@gmail.com';
-  const phone = '01049103426';
-  const companyName = 'JennaCompany';
-  const workshopName = 'jennachu';
+  const phone = '010-4910-3426';
+  const role = 'company';
 
   const navigate = useNavigate();
 
@@ -19,7 +18,6 @@ const MyPage: React.FC = () => {
     <div>
       <div className="flex flex-col items-center py-10 mt-[6.25rem]">
         {' '}
-        {/* Header 높이 보정 */}
         <div className="w-full max-w-screen-lg text-center">
           <h2 className="text-lg font-bold text-[#F28749] inline-block border-b-2 border-[#F28749] pb-3">
             마이페이지
@@ -39,15 +37,9 @@ const MyPage: React.FC = () => {
             <p className="text-lg mt-4 mb-2">{email}</p>
             <p className="text-lg">{phone}</p>
             <div className="mt-4">
-              {companyName ? (
-                <span className="px-4 py-2 text-sm font-medium text-[#F28749] bg-orange-100 rounded-full border border-[#F28749]">
-                  {companyName}
-                </span>
-              ) : (
-                <span className="px-4 py-2 text-sm font-medium text-[#F28749] bg-orange-100 rounded-full border border-[#F28749]">
-                  {workshopName}
-                </span>
-              )}
+              <span className="px-4 py-2 text-sm font-medium text-[#F28749] bg-orange-100 rounded-full border border-[#F28749]">
+                {role === 'company' ? 'Company' : 'Workshop'}
+              </span>
             </div>
           </div>
         </div>
