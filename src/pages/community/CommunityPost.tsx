@@ -166,14 +166,17 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
       if (response.data.resultCode == '200') {
         response.data.responseMessage;
+        closeDeleteModal(); // 삭제 후 모달 닫기
       } else {
-        response.data.responseMessage;
+        console.log(response.data.responseMessage); // 실패 메시지 출력
+        alert('삭제에 실패했습니다. 다시 시도해주세요.');
       }
-    } catch {
-      console.log('삭제 요청 오류 발생');
+    } catch (err) {
+      console.log('삭제 요청 오류 발생', err);
+      alert('삭제 중 오류가 발생했습니다.');
     }
+
     console.log('삭제 로직 실행');
-    closeDeleteModal(); // 삭제 후 모달 닫기
   };
 
   return (
