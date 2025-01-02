@@ -14,16 +14,17 @@ const Header = () => {
     alert('로그아웃 되었습니다.');
   };
 
-  // 드롭다운 타이머 설정 함수
+  // 드롭다운/햄버거 메뉴 타이머 설정 함수
   const startCloseTimer = useCallback(() => {
     if (timeoutId) clearTimeout(timeoutId); // 기존 타이머 해제
     const id = window.setTimeout(() => {
       setIsDropdownOpen(false);
+      setIsMenuOpen(false);
     }, 3000); // 3초 후 닫기
     setTimeoutId(id);
   }, [timeoutId]);
 
-  // 드롭다운 타이머 해제 함수
+  // 드롭다운/햄버거 메뉴 타이머 해제 함수
   const clearCloseTimer = useCallback(() => {
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -41,11 +42,12 @@ const Header = () => {
         )
       ) {
         setIsDropdownOpen(false);
+        setIsMenuOpen(false);
         clearCloseTimer();
       }
     };
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -54,7 +56,7 @@ const Header = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isDropdownOpen, clearCloseTimer]);
+  }, [isDropdownOpen, isMenuOpen, clearCloseTimer]);
 
   // 화면 크기 변경 시 상태 초기화
   useEffect(() => {
@@ -88,6 +90,7 @@ const Header = () => {
             setIsMenuOpen((prev) => !prev);
             setIsDropdownOpen(false); // 햄버거 메뉴 열릴 때 드롭다운 닫기
             clearCloseTimer();
+            if (!isMenuOpen) startCloseTimer(); // 햄버거 메뉴 열릴 때 타이머 시작
           }}
         >
           ☰
@@ -118,7 +121,7 @@ const Header = () => {
                 </Link>
                 <div
                   onClick={handleLogout}
-                  className="block py-2 px-4 text-black hover:text-gray-800 cursor-pointer"
+                  className="block py-2 px-4 text-[#F28749] font-bold hover:text-[#c36d3b] cursor-pointer"
                 >
                   로그아웃
                 </div>
@@ -148,8 +151,8 @@ const Header = () => {
                 className="dropdown-button text-[#F28749] font-bold hover:underline"
                 onClick={() => {
                   setIsDropdownOpen((prev) => !prev);
-                  if (!isDropdownOpen) startCloseTimer(); // 열릴 때 타이머 시작
-                  clearCloseTimer(); // 타이머 초기화
+                  clearCloseTimer();
+                  if (!isDropdownOpen) startCloseTimer(); // 드롭다운 열릴 때 타이머 시작
                 }}
               >
                 <CgProfile className="h-8 w-8 text-[#F28749]" />
