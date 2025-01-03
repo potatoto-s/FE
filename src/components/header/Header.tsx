@@ -2,19 +2,34 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CgProfile } from 'react-icons/cg';
 import useAuthStore from '../../stores/authStore';
+import useUserStore from '../../stores/userStore';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { user } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { accessToken, logout } = useAuthStore();
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    alert('로그아웃 되었습니다.');
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await new Promise((resolve) => {
+        logout(); // 상태 초기화
+        resolve(null);
+      });
+      alert('로그아웃 되었습니다.');
+      navigate('/'); // 메인 페이지로 이동
+    } catch (error) {
+      console.error('로그아웃 처리 중 오류:', error);
+      alert('로그아웃 처리에 실패했습니다.');
+    }
   };
+
+  useEffect(() => {
+    console.log('현재 accessToken:', accessToken);
+    console.log('현재 user 상태:', user);
+  }, [accessToken, user]);
 
   // 드롭다운/햄버거 메뉴 타이머 설정 함수
   const startCloseTimer = useCallback(() => {
