@@ -38,7 +38,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
+  const [pagetype, setPageType] = useState<'post' | 'edit'>(type);
 
   const [files, setFiles] = useState<File[]>([]);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
