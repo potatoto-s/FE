@@ -5,6 +5,7 @@ import { BsChatHeart } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import CommentList from '../../components/comment/CommentList';
 import CommentInput from '../../components/comment/CommentInput';
+import ConfirmModal from '../../components/madal/ConfirmModal';
 import {
   fetchPostDetail,
   createComment,
@@ -64,9 +65,9 @@ const CommunityDetail = () => {
   // const [currentUser ] = useState<Author | null>(null); // 현재 사용자 상태 관리
   const [post, setPost] = useState<Post | null>(null); // 게시글 상태 관리
   const [showModal, setShowModal] = useState<boolean>(false); // 모달 표시 상태 관리
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정할 댓글 ID 상태 관리
   const navigate = useNavigate();
-  console.log(user);
 
   useEffect(() => {
     // 게시글 세부 정보 가져오고 상태 저장 로직
@@ -92,6 +93,7 @@ const CommunityDetail = () => {
       const formattedDate = `${currentDate.getMonth() + 1}. ${currentDate.getDate()}. ${currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
       const newCommentEntry: Comment = {
+        // 나중에 수정
         id: editingCommentId ? editingCommentId : comments.length + 1,
         content: newComment,
         status: 'ACTIVE',
@@ -121,8 +123,8 @@ const CommunityDetail = () => {
       } else {
         // 새댓글 추가하고 생선된 댓글 추가 로직
         const createdComment = await createComment(
-          post.id.toString(),
-          newCommentEntry
+          post.id,
+          newCommentEntry.content
         );
         setComments([...comments, createdComment]);
       }
@@ -153,14 +155,28 @@ const CommunityDetail = () => {
   };
 
   const handleEditButtonClick = () => {
-    if (post) {
-      navigate(`/communitypost/${post.id}`);
+    if (id) {
+      navigate(`/communitypost/${id}`);
     }
   };
 
+  // 취소 버튼 클릭시 모달 닫기
+  const closeDeleteModal = () => {
+    setShowConfirmModal(false);
+  };
+
+  // 삭제 버튼 클릭시 모달열기
   const handleDeletePost = () => {
-    console.log('게시글이 삭제되었습니다.');
-    navigate(`/community`);
+    setShowConfirmModal(true);
+  };
+
+  // 게시글 삭제 확인
+  const confirmDeletePost = async () => {
+    if (post) {
+      await deleteComment(post.id);
+      navigate(`/community`);
+    }
+    setShowConfirmModal(false);
   };
 
   return (
@@ -234,6 +250,12 @@ const CommunityDetail = () => {
                   </h2>
                 </div>
               </div>
+            )}
+            {showConfirmModal && (
+              <ConfirmModal
+                handleDelete={confirmDeletePost} // 삭제 버튼 클릭 시 게시글 삭제
+                closeDeleteModal={closeDeleteModal} // 취소 버튼 클릭 시 모달 닫기
+              />
             )}
           </>
         )}

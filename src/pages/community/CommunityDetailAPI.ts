@@ -6,14 +6,28 @@ export const fetchPostDetail = async (postId: string) => {
   return response.data;
 };
 
-// 댓글 작성 함수
-export const createComment = async (
-  postId: string,
-  data: { content: string }
+// 게시글 삭제 함수
+export const deletePost = async (postId: string) => {
+  await axiosAuthInstance.delete(`/api/posts/${postId}/delete/`);
+};
+
+// 게시글 수정 함수
+export const updatePost = async (
+  postId: number,
+  updatedContent: { title: string; content: string }
 ) => {
+  const response = await axiosAuthInstance.patch(
+    `/api/posts/${postId}/update/`,
+    { updatedContent }
+  );
+  return response.data;
+};
+
+// 댓글 작성 함수
+export const createComment = async (postId: number, content: string) => {
   const response = await axiosAuthInstance.post(
     `/api/comment/${postId}/comments/create/`,
-    data
+    { content }
   );
   return response.data;
 };
@@ -25,7 +39,7 @@ export const updateComment = async (
 ) => {
   const response = await axiosAuthInstance.patch(
     `/api/comment/${commentId}/update/`,
-    content
+    { content }
   );
   return response.data;
 };

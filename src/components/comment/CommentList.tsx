@@ -47,7 +47,7 @@ const CommentList = ({
                   {/* 아이디 표시하기 */}
                   {comment.author.nickname}
                   {/* {comment.user.replace(/.(?=.{3})/g, '*')} */}
-                  {/* 아이디 가리기 */}
+                  {/* 아이디 가리기 ex: chanhee0****/}
                 </span>
                 <span className="text-sm text-[#d28878] mx-2">Ananti</span>
                 <span className="text-gray-400 text-xs">
