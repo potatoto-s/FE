@@ -31,18 +31,18 @@ const ContactForm = () => {
 
   return (
     <div className="flex flex-col justify-center items-center mt-[4rem]">
-      <div className="lg:flex lg:w-[71rem] md:w-[33rem] w-[28rem]  mt-[5rem]">
+      <div className="lg:flex lg:w-[71rem] md:w-[33rem] w-[28rem]">
         <h1 className="text-[#6E6E6E] text-[3.5rem] font-bold mr-[2.3rem] ">
           CONTACT
         </h1>
         {type === 'COMPANY' && (
-          <p className="lg:pt-[2.5rem] md:text-[1.2rem] text-[0.8rem] mb-[4rem] font-normal text-[#AEAEAE]">
+          <p className="lg:pt-[2.5rem] md:text-[1.2rem] text-[0.8rem] mb-[5rem] font-normal text-[#AEAEAE]">
             공방 연결에 대한 문의를 남겨주시면 담당자가 확인 후
             연락드리겠습니다.
           </p>
         )}
         {type === 'WORKSHOP' && (
-          <p className="lg:pt-[2.5rem] md:text-[1.2rem] text-[1rem] mb-[4rem] font-normal text-[#AEAEAE]">
+          <p className="lg:pt-[2.5rem] md:text-[1.2rem] text-[1rem] mb-[5rem] font-normal text-[#AEAEAE]">
             컨설팅에 대한 문의를 남겨주시면 담당자가 확인 후 연락드리겠습니다.
           </p>
         )}
@@ -94,7 +94,7 @@ const ContactForm = () => {
         </div>
         <button
           type="submit"
-          className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300 lg:mt-[6rem] mt-[4rem]"
+          className="text-base px-8 py-2 text-white bg-[#F28749] rounded hover:bg-[#d8743e] transition duration-300 mt-[4rem]"
         >
           문의하기
         </button>
