@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchUserProfile } from '../../api/UserApi';
 
@@ -83,8 +83,8 @@ const MyPage: React.FC = () => {
             <div className="mt-4">
               <span className="px-4 py-2 text-sm font-medium text-[#F28749] bg-orange-100 rounded-full border border-[#F28749]">
                 {userInfo?.role === 'WORKSHOP'
-                  ? userInfo?.workshop_name
-                  : userInfo?.company_name}
+                  ? `공방: ${userInfo?.workshop_name}`
+                  : `기업: ${userInfo?.company_name}`}
               </span>
             </div>
           </div>
