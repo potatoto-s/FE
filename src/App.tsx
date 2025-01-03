@@ -11,14 +11,13 @@ import LogIn from './pages/login/LogIn';
 import SignUp from './pages/signup/SignUp';
 import CommunityPost from './pages/community/CommunityPost';
 import Layout from './layout/Layout';
-
 const App = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Main />} />
         <Route path="/community" element={<Community />} />
-        <Route path="/communitydetail" element={<CommunityDetail />} />
+        <Route path="/communitydetail/:id" element={<CommunityDetail />} />
         <Route
           path="/communitypost/:id"
           element={<CommunityPost type={'edit'} />}

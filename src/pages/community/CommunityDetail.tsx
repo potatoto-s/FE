@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaCommentDots } from 'react-icons/fa';
 import { BsChatHeart } from 'react-icons/bs';
@@ -11,6 +12,7 @@ import {
   deleteComment,
   toggleLikePost,
 } from './CommunityDetailAPI';
+import useUserStore from '../../stores/userStore';
 // import axios from 'axios';
 
 interface Author {
@@ -23,8 +25,18 @@ interface Author {
 interface Comment {
   id: number;
   content: string;
-  createdAt: string;
+  status: string;
+  created_at: string;
+  is_deleted: boolean;
   author: Author;
+  post: number;
+  user: number;
+}
+
+interface Image {
+  id: number;
+  image_url: string;
+  created_at: string;
 }
 
 interface Post {
@@ -32,83 +44,48 @@ interface Post {
   title: string;
   content: string;
   category: string;
-  viewCount: number;
-  imageUrls: string[];
-  createdAt: string;
+  view_count: number;
+  like_count: number;
+  comment_count: number;
   author: Author;
   comments: Comment[];
+  created_at: string;
+  is_liked: boolean;
+  images: Image[];
 }
 
 const CommunityDetail = () => {
+  const { user } = useUserStore();
+  const { id } = useParams<{ id: string }>();
   const [comments, setComments] = useState<Comment[]>([]); // 댓글 목록 상태 관리
   const [newComment, setNewComment] = useState<string>(''); // 새 댓글 내용 상태 관리
   const [likes, setLikes] = useState<number>(0); // 좋아요 수 상태 관리
   const [liked, setLiked] = useState<boolean>(false); // 좋아요 여부 상태 관리
-  const [currentUser, setCurrentUser] = useState<Author | null>(null); // 현재 사용자 상태 관리
+  // const [currentUser ] = useState<Author | null>(null); // 현재 사용자 상태 관리
   const [post, setPost] = useState<Post | null>(null); // 게시글 상태 관리
   const [showModal, setShowModal] = useState<boolean>(false); // 모달 표시 상태 관리
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정할 댓글 ID 상태 관리
   const navigate = useNavigate();
-
-  // 목업 데이터 컴포넌트 렌더링 시 실행되는 훅
-  // useEffect(() => {
-  //   // 목업 데이터 설정
-  //   const mockUser: Author = {
-  //     id: 1,
-  //     nickname: '정찬희',
-  //     role: '공방 | 기업',
-  //   };
-
-  //   const mockPost: Post = {
-  //     id: 1,
-  //     title: '목업 게시글 제목',
-  //     content: '이것은 목업 게시글 내용입니다.',
-  //     category: '일반',
-  //     viewCount: 0,
-  //     imageUrls: ['https://via.placeholder.com/150'], // 목업 이미지 URL
-  //     createdAt: new Date().toISOString(),
-  //     author: mockUser,
-  //     comments: [
-  //       {
-  //         id: 1,
-  //         content: '첫 번째 댓글입니다!',
-  //         createdAt: new Date().toISOString(),
-  //         author: mockUser,
-  //       },
-  //       {
-  //         id: 2,
-  //         content: '두 번째 댓글입니다!',
-  //         createdAt: new Date().toISOString(),
-  //         author: mockUser,
-  //       },
-  //     ],
-  //   };
-
-  //   // 상태 업데이트
-  //   setPost(mockPost); // 목업 게시글 설정
-  //   setComments(mockPost.comments); // 목업 댓글 설정
-  //   setCurrentUser(mockUser); // 현재 사용자 설정
-  //   setLikes(mockPost.viewCount);
-  // }, []);
+  console.log(user);
 
   useEffect(() => {
     const loadPostDetails = async () => {
-      const postId = '1';
-      const postDetail = await fetchPostDetail(postId);
-      setPost(postDetail);
-      setComments(postDetail.comments);
-      setLiked(postDetail.viewCount);
-      setCurrentUser({ id: 1, nickname: '찬', role: '공방 ㅣ 기업' });
+      if (id) {
+        const postDetail = await fetchPostDetail(id);
+        setPost(postDetail);
+        setComments(postDetail.comments);
+        setLiked(postDetail.is_liked);
+      }
     };
     loadPostDetails();
-  }, []);
+  }, [id]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value); // 댓글 내용 업데이트
   };
 
   const handleCommentSubmit = async () => {
-    if (newComment.trim().length > 0 && currentUser && post) {
+    if (newComment.trim().length > 0 && user && post) {
       // 댓글 내용이 비어있지 않은지 확인
       const currentDate = new Date();
       const formattedDate = `${currentDate.getMonth() + 1}. ${currentDate.getDate()}. ${currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
@@ -116,8 +93,17 @@ const CommunityDetail = () => {
       const newCommentEntry: Comment = {
         id: editingCommentId ? editingCommentId : comments.length + 1,
         content: newComment,
-        createdAt: formattedDate,
-        author: currentUser,
+        status: 'ACTIVE',
+        created_at: formattedDate,
+        is_deleted: false,
+        post: post.id,
+        user: 1, // 나중에 user.id 이렇게 다시 수정
+        author: {
+          id: 1, // author: id 수정
+          nickname: user.nickname,
+          role: user.role,
+          companyName: user.company_name,
+        },
       };
 
       if (editingCommentId) {
@@ -133,11 +119,10 @@ const CommunityDetail = () => {
         setEditingCommentId(null); // 수정 모드 종료
       } else {
         // 댓글 추가 로직
-        const createdComment = await createComment(
-          post.id.toString(),
-          newComment
-        );
-        setComments([...comments, newCommentEntry]);
+        const createdComment = await createComment(post.id.toString(), {
+          content: newComment,
+        });
+        setComments([...comments, createdComment]);
       }
 
       setNewComment('');
@@ -150,7 +135,6 @@ const CommunityDetail = () => {
     await deleteComment(id);
     setComments(comments.filter((comment) => comment.id !== id)); // 댓글 삭제 처리
   };
-
   const handleEditComment = (id: number) => {
     const commentToEdit = comments.find((comment) => comment.id === id);
     if (commentToEdit) {
@@ -168,7 +152,7 @@ const CommunityDetail = () => {
 
   const handleEditButtonClick = () => {
     if (post) {
-      navigate(`/communitypost`);
+      navigate(`/communitypost/${post.id}`);
     }
   };
 
@@ -192,22 +176,23 @@ const CommunityDetail = () => {
                   <FaCommentDots className="mr-1" />({comments.length})
                 </span>
               </div>
-              {currentUser && post.author.id === currentUser.id && (
-                <div className="flex space-x-4">
-                  <button
-                    onClick={handleEditButtonClick}
-                    className="text-gray-400 text-base hover:text-blue-600 transition duration-300 text-sm"
-                  >
-                    수정
-                  </button>
-                  <button
-                    onClick={handleDeletePost}
-                    className="text-gray-400 text-base hover:text-red-600 transition duration-300 text-sm"
-                  >
-                    삭제
-                  </button>
-                </div>
-              )}
+              {user &&
+                post.author.id === 1 && ( // user.id  나중에 수정
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={handleEditButtonClick}
+                      className="text-gray-400 text-base hover:text-blue-600 transition duration-300 text-sm"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={handleDeletePost}
+                      className="text-gray-400 text-base hover:text-red-600 transition duration-300 text-sm"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
             </div>
 
             <div className="mb-6">
@@ -234,7 +219,7 @@ const CommunityDetail = () => {
 
             <CommentList
               comments={comments}
-              currentUser={currentUser ? currentUser.nickname : ''}
+              currentUser={user ? user.nickname : ''}
               onDelete={handleCommentDelete}
               onEdit={handleEditComment}
             />
@@ -261,3 +246,44 @@ export default CommunityDetail;
 // 삭제 버튼 클릭시 '게시글을 삭제 하시겠습니까?'  경고창 띄우고
 // 돌아가기 , 삭제하기 버튼 2개 돌아가기 버튼 클릭수 취소 , 삭제하기 클릭시
 // 게시글 삭제후 커뮤니티 페이지로 이동 o
+
+// 목업 데이터 컴포넌트 렌더링 시 실행되는 훅
+// useEffect(() => {
+//   // 목업 데이터 설정
+//   const mockUser: Author = {
+//     id: 1,
+//     nickname: '정찬희',
+//     role: '공방 | 기업',
+//   };
+
+//   const mockPost: Post = {
+//     id: 1,
+//     title: '목업 게시글 제목',
+//     content: '이것은 목업 게시글 내용입니다.',
+//     category: '일반',
+//     viewCount: 0,
+//     imageUrls: ['https://via.placeholder.com/150'], // 목업 이미지 URL
+//     createdAt: new Date().toISOString(),
+//     author: mockUser,
+//     comments: [
+//       {
+//         id: 1,
+//         content: '첫 번째 댓글입니다!',
+//         createdAt: new Date().toISOString(),
+//         author: mockUser,
+//       },
+//       {
+//         id: 2,
+//         content: '두 번째 댓글입니다!',
+//         createdAt: new Date().toISOString(),
+//         author: mockUser,
+//       },
+//     ],
+//   };
+
+//   // 상태 업데이트
+//   setPost(mockPost); // 목업 게시글 설정
+//   setComments(mockPost.comments); // 목업 댓글 설정
+//   setCurrentUser(mockUser); // 현재 사용자 설정
+//   setLikes(mockPost.viewCount);
+// }, []);

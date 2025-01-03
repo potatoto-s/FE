@@ -7,10 +7,13 @@ export const fetchPostDetail = async (postId: string) => {
 };
 
 // 댓글 작성 함수
-export const createComment = async (postId: string, content: string) => {
+export const createComment = async (
+  postId: string,
+  data: { content: string }
+) => {
   const response = await axiosAuthInstance.post(
     `/api/comment/${postId}/comments/create/`,
-    content
+    data
   );
   return response.data;
 };

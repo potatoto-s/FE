@@ -11,8 +11,12 @@ interface Author {
 interface Comment {
   id: number;
   content: string;
-  createdAt: string;
+  status: string;
+  created_at: string;
+  is_deleted: boolean;
   author: Author;
+  post: number;
+  user: number;
 }
 
 interface CommentListProps {
@@ -47,7 +51,7 @@ const CommentList = ({
                 </span>
                 <span className="text-sm text-[#d28878] mx-2">Ananti</span>
                 <span className="text-gray-400 text-xs">
-                  {comment.createdAt}
+                  {comment.created_at}
                 </span>
               </div>
               <p className="text-gray-800 text-base pl-1">{comment.content}</p>
