@@ -24,6 +24,16 @@ const generateDummyPosts = (count: number): Post[] => {
     '플라워 데코레이션 팁',
     '캔들 제작을 위한 팁',
     '마크라메 기초 배우기',
+    '목공 작업의 안전 수칙',
+    '도자기 굽기 전 주의사항',
+    '선물 포장 아이디어 10가지',
+    '핸드메이드 디퓨저 만들기',
+    '캔들 향 선택 방법',
+    '비즈 공예를 위한 도구 소개',
+    '라탄 가구 제작 과정',
+    '마크라메 벽 장식 만들기',
+    '초보자를 위한 플라워 디자인',
+    '석고 방향제의 장단점',
   ];
 
   const dummyPosts: Post[] = [];
@@ -39,39 +49,83 @@ const generateDummyPosts = (count: number): Post[] => {
   return dummyPosts;
 };
 
-const allPosts: Post[] = generateDummyPosts(50); // 50개의 더미 데이터 생성
+const allPosts: Post[] = generateDummyPosts(100); // 100개의 더미 데이터 생성
 
 const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
-  const [visibleCount, setVisibleCount] = useState<number>(10); // 한 번에 표시할 게시글 수
+  const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 상태
+  const [currentPageGroup, setCurrentPageGroup] = useState<number>(0); // 현재 페이지 그룹
+  const postsPerPage = 10; // 페이지당 표시할 게시글 수
+  const pagesPerGroup = 5; // 한 번에 표시할 페이지 수
 
   // 검색어에 따라 게시글 필터링
-  const filteredPosts = allPosts.filter((post) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPosts = allPosts.filter((post) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.category.toLowerCase().includes(query) ||
+      post.author.toLowerCase().includes(query)
+    );
+  });
+
+  // 현재 페이지에 표시할 게시글
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const visiblePosts = filteredPosts.slice(
+    startIndex,
+    startIndex + postsPerPage
   );
 
-  // 현재 표시할 게시글
-  const visiblePosts = filteredPosts.slice(0, visibleCount);
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
-  // more 버튼 클릭 핸들러
-  const handleMoreClick = () => {
-    setVisibleCount((prevCount) => prevCount + 10); // 10개씩 더 보기
+  // 현재 페이지 그룹에 표시할 페이지 번호 계산
+  const getPageNumbers = () => {
+    const startPage = currentPageGroup * pagesPerGroup + 1;
+    const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
+  };
+
+  // 페이지 이동 핸들러
+  const handlePageClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 다음 그룹 핸들러
+  const handleNextGroup = () => {
+    if ((currentPageGroup + 1) * pagesPerGroup < totalPages) {
+      setCurrentPageGroup((prev) => prev + 1);
+    }
+  };
+
+  // 이전 그룹 핸들러
+  const handlePrevGroup = () => {
+    if (currentPageGroup > 0) {
+      setCurrentPageGroup((prev) => prev - 1);
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-[#FFFBEF]">
-      <div className="w-[81.25rem] px-4 mt-[6.25rem]">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-[#F28749] text-2xl font-bold">커뮤니티</h1>
+    <div className="min-h-screen flex flex-col items-center bg-white">
+      {/* 검색 및 게시글 섹션 */}
+      <div className="w-full max-w-5xl px-4 mt-4 md:mt-6">
+        {/* 검색 필드 */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+          <h1 className="text-[#F28749] text-lg md:text-2xl font-bold mb-2 md:mb-0">
+            커뮤니티
+          </h1>
           <input
             type="text"
             placeholder="검색어를 입력하세요"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border rounded-lg px-4 py-2 w-[20rem] focus:outline-none focus:ring-2 focus:ring-[#F28749]"
+            className="w-full md:w-[20rem] border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F28749]"
           />
         </div>
 
+        {/* 게시글 리스트 */}
         <div className="bg-white shadow-md rounded-lg p-4">
           {visiblePosts.length > 0 ? (
             visiblePosts.map((post, index) => (
@@ -83,11 +137,13 @@ const Community: React.FC = () => {
                   <span className="text-[#F28749] font-medium mr-4">
                     [{post.category}]
                   </span>
-                  <span className="text-lg font-bold">{post.title}</span>
+                  <span className="text-sm md:text-base font-bold">
+                    {post.title}
+                  </span>
                 </div>
-                <div className="flex items-center text-sm text-gray-500">
-                  <span className="mr-4">{post.author}</span>
-                  <span className="mr-4">{post.date}</span>
+                <div className="flex items-center text-xs md:text-sm text-gray-500">
+                  <span className="mr-2">{post.author}</span>
+                  <span className="mr-2">{post.date}</span>
                   <span>{post.views} 조회</span>
                 </div>
               </div>
@@ -99,16 +155,38 @@ const Community: React.FC = () => {
           )}
         </div>
 
-        {visiblePosts.length < filteredPosts.length && (
-          <div className="flex justify-center mt-8">
-            <button
-              onClick={handleMoreClick}
-              className="text-[#F28749] font-bold border border-[#F28749] rounded-lg px-6 py-2 hover:bg-[#F28749] hover:text-white transition duration-300"
+        {/* 페이지네이션 */}
+        <div className="flex justify-center mt-4 gap-2">
+          {currentPageGroup > 0 && (
+            <span
+              onClick={handlePrevGroup}
+              className="cursor-pointer text-sm md:text-base text-gray-500 hover:text-[#F28749]"
             >
-              more
-            </button>
-          </div>
-        )}
+              이전
+            </span>
+          )}
+          {getPageNumbers().map((page) => (
+            <span
+              key={page}
+              onClick={() => handlePageClick(page)}
+              className={`cursor-pointer px-2 text-sm md:text-base ${
+                currentPage === page
+                  ? 'text-[#F28749] font-bold underline'
+                  : 'text-gray-500 hover:text-[#F28749]'
+              }`}
+            >
+              {page}
+            </span>
+          ))}
+          {(currentPageGroup + 1) * pagesPerGroup < totalPages && (
+            <span
+              onClick={handleNextGroup}
+              className="cursor-pointer text-sm md:text-base text-gray-500 hover:text-[#F28749]"
+            >
+              더보기
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
