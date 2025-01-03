@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserProfile } from '../../api/UserApi';
+import { fetchUserProfile } from '../../api/ProfileGetApi';
 
 const MyPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<{
