@@ -24,7 +24,6 @@ const useUserStore = create(
       user: null,
       setUser: (user) => set({ user }),
       clearUser: () => {
-        localStorage.removeItem('user');
         set({ user: null });
       },
     }),
