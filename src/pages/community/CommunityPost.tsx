@@ -112,18 +112,33 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
 
     try {
-      const response = await axiosAuthInstance.post(
-        `/api/posts/create/`,
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
-      );
-      console.log('respose:', response.data.id);
-      console.log('저장 데이터:', formData);
-      alert('게시물 등록이 완료되었습니다.');
+      let response;
+      if (pagetype === 'post') {
+        response = await axiosAuthInstance.post(
+          `/api/posts/create/`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+        console.log('respose:', response.data.id);
+        console.log('저장 데이터:', formData);
+        alert('게시물 등록이 완료되었습니다.');
 
-      navigate(`/communitydetail/${response.data.id}`);
+        navigate(`/communitydetail/${response.data.id}`);
+      } else if (pagetype === 'edit') {
+        response = await axiosAuthInstance.patch(
+          `/api/posts/${id}/update/`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+        console.log('수정 데이터:', formData);
+        alert('게시물 수정이 완료되었습니다.');
+
+        navigate(`/communitydetail/${response.data.id}`);
+      }
     } catch {
       alert('게시물 등록 중 오류가 발생했습니다.');
     }
