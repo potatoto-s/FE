@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { setAccessToken } = useAuthStore();
+  const { setAccessToken, setRefreshToken } = useAuthStore();
   const { setUser } = useUserStore();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ const Login = () => {
 
       // 토큰 저장
       setAccessToken(accessToken);
-      localStorage.setItem('refreshToken', refreshToken); // refreshToken은 로컬스토리지에 저장
+      setRefreshToken(refreshToken);
 
       // 유저 정보 저장
       setUser(user);

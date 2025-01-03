@@ -31,7 +31,7 @@ axiosAuthInstance.interceptors.response.use(
     // Access Token 만료 처리 (401 오류)
     if (error.response?.status === 401) {
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = useAuthStore.getState();
         if (!refreshToken) throw new Error('리프레시 토큰이 없습니다.');
 
         // Refresh Token을 사용하여 Access Token 재발급 요청
@@ -42,9 +42,11 @@ axiosAuthInstance.interceptors.response.use(
           }
         );
 
-        // 새로운 Access Token 저장
+        // 새로운 Access Token , Refresh Token 저장
         const newAccessToken = data.access;
+        const newRefreshToken = data.refresh;
         useAuthStore.getState().setAccessToken(newAccessToken);
+        useAuthStore.getState().setRefreshToken(newRefreshToken);
 
         // 재발급된 Access Token으로 원래 요청 재시도
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -54,11 +56,11 @@ axiosAuthInstance.interceptors.response.use(
 
         // 로그아웃 처리
         useAuthStore.getState().logout();
-        window.location.href = '/login'; // 로그인 페이지로 이동
+        window.location.href = '/login';
       }
     }
 
-    return Promise.reject(error); // 그 외 에러 처리
+    return Promise.reject(error);
   }
 );
 
