@@ -46,8 +46,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const [fetchedData, setFetchedData] = useState<FormData | null>(null); // 서버에서 받은 데이터를 저장
-
   // 버튼 클릭 시 type 전환
   const toggleType = () => {
     if (pagetype === 'post') {
@@ -67,7 +65,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         .get(`/api/posts/${id || '1'}`)
         .then((response) => {
           const data = response.data;
-          setFetchedData(data); // 서버 데이터 설정
           setFormData({
             category: data.category,
             title: data.title,
