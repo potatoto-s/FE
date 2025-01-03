@@ -200,6 +200,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       const { status } = response;
       if (status === 204) {
         closeDeleteModal(); // 삭제 후 모달 닫기
+        navigate('/community');
       } else {
         console.log('삭제 요청 중 오류 발생');
       }
