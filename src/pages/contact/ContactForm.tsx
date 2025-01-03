@@ -1,6 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { contactApi } from '../../api/ContactApi';
+import ContactInputName from '../../components/contact/contactInputName';
+import ContactInputEmail from '../../components/contact/contactInputEmail';
+import ContactInputPhone from '../../components/contact/contactInputPhone';
+import ContactInputOrganizationName from '../../components/contact/contactInputOrganizationName';
+import ContactInputMessage from '../../components/contact/contactInputMessage';
+import ContactInputPreferredReply from '../../components/contact/contactInputPreferredReply';
 
 const ContactForm = () => {
   const location = useLocation();
@@ -48,179 +54,42 @@ const ContactForm = () => {
         <div className="lg:flex">
           <div className="flex flex-col">
             {/* 이름 */}
-            <label
-              htmlFor="name"
-              className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
-            >
-              이름*
-            </label>
-            <input
-              type="text"
-              className="pl-[0.3rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
-              {...register('name', { required: true })}
+            <ContactInputName
+              register={register}
+              error={errors.name ? '이름을 입력해주세요.' : undefined}
             />
-            {errors.name && (
-              <p className="text-[red] text-[1rem] absolute mt-[4.5rem]">
-                이름을 입력해주세요.
-              </p>
-            )}
             {/* 이메일 */}
-            <label
-              htmlFor="email"
-              className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
-            >
-              이메일*
-            </label>
-            <p className="text-[0.8rem] text-[#AEAEAE]">
-              이메일 형식을 지켜서 입력해 주세요. EX) example@domain.com
-            </p>
-            <input
-              type="text"
-              className="pl-[0.3rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
-              {...register('email', {
-                required: true,
-                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-              })}
+            <ContactInputEmail
+              register={register}
+              error={errors.email?.message as string | undefined}
             />
-            {errors.email?.type === 'required' && (
-              <p className="text-[red] text-[1rem] absolute mt-[12rem]">
-                이메일을 입력해주세요.
-              </p>
-            )}
-            {errors.email?.type === 'pattern' && (
-              <p className="text-[red] text-[1rem] absolute mt-[12rem]">
-                이메일 양식에 맞게 입력해주세요.
-              </p>
-            )}
             {/* 전화번호 */}
-            <label
-              htmlFor="phone"
-              className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
-            >
-              전화번호*
-            </label>
-            <p className="text-[0.8rem] text-[#AEAEAE]">
-              구분자(-)를 포함해 주세요. EX) 010-1234-5678
-            </p>
-            <input
-              type="tel"
-              // pattern="^\d{2,3}-\d{3,4}-\d{4}$"
-              className="pl-[0.3rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
-              {...register('phone', {
-                required: true,
-                maxLength: {
-                  value: 20,
-                  message: '전화번호는 20자 이하로 입력해주세요.',
-                },
-                pattern: /^\d{2,3}-\d{3,4}-\d{4}$/,
-              })}
+            <ContactInputPhone
+              register={register}
+              error={errors.phone?.message as string | undefined}
             />
-            {errors.phone?.type === 'required' && (
-              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
-                전화번호를 입력해주세요.
-              </p>
-            )}
-            {errors.phone?.type === 'maxLength' && (
-              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
-                전화번호는 20자 이하로 입력해주세요.
-              </p>
-            )}
-            {errors.phone?.type === 'pattern' && (
-              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
-                전화번호 양식에 맞게 입력해주세요.
-              </p>
-            )}
             {/* 기업이름/공방이름 */}
-            {type === 'COMPANY' && (
-              <label
-                htmlFor="organizationName"
-                className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
-              >
-                기업 이름*
-              </label>
-            )}
-            {type === 'WORKSHOP' && (
-              <label
-                htmlFor="organizationName"
-                className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
-              >
-                공방 이름*
-              </label>
-            )}
-            <input
-              type="text"
-              className="pl-[0.3rem] mb-[2.5rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
-              {...register('organizationName', {
-                required: true,
-                maxLength: {
-                  value: 100,
-                  message: '회사 이름은 100자 이하로 입력해주세요.',
-                },
-              })}
+            <ContactInputOrganizationName
+              type={type}
+              register={register}
+              error={errors.organizationName?.message as string | undefined}
             />
-            {errors.organizationName?.type === 'required' && (
-              <p className="text-[red] text-[1rem] absolute mt-[26.5rem]">
-                회사 이름을 입력해주세요.
-              </p>
-            )}
-            {errors.organizationName?.type === 'maxLength' && (
-              <p className="text-[red] text-[1rem] absolute mt-[26.5rem]">
-                회사 이름은 100자 이하로 입력해주세요.
-              </p>
-            )}
           </div>
-
           <div className="flex flex-col">
             {/* 문의 내용 */}
-            <label
-              htmlFor="message"
-              className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE] mb-[2rem]"
-            >
-              문의 내용*
-            </label>
-            <textarea
-              className="resize-none pl-[0.3rem] md:w-[33rem] w-[28rem] h-[16rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
-              {...register('message', {
-                required: true,
-              })}
+            <ContactInputMessage
+              register={register}
+              error={errors.message ? '문의 내용을 입력해주세요.' : undefined}
             />
-            {errors.message && (
-              <p className="text-[red] text-[1rem] absolute mt-[20rem]">
-                문의 내용을 입력해주세요.
-              </p>
-            )}
             {/* 선호 연락 방법 */}
-            <label
-              htmlFor="prefered_reply"
-              className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE] mb-[0.5rem]"
-            >
-              선호 연락 방법 (이메일 / 휴대전화)*
-            </label>
-            <div className="flex">
-              <input
-                type="radio"
-                value="email"
-                className="mr-[1.4rem]"
-                {...register('prefered_reply', {
-                  required: '선호 연락 방법을 입력해주세요.',
-                })}
-              />
-              <p className="text-[1rem] text-[#AEAEAE] mr-[12rem]">이메일</p>
-              <input
-                type="radio"
-                value="phone"
-                className="mr-[1rem]"
-                {...register('prefered_reply', {
-                  required: true,
-                })}
-              />
-              <p className="text-[1rem] text-[#AEAEAE]">휴대전화</p>
-              {errors.prefered_reply && (
-                <p className="text-[red] text-[1rem] absolute mt-[1.8rem]">
-                  선호 연락 방법을 입력해주세요.
-                </p>
-              )}
-            </div>
+            <ContactInputPreferredReply
+              register={register}
+              error={
+                errors.prefered_reply
+                  ? '선호 연락 방법을 입력해주세요.'
+                  : undefined
+              }
+            />
           </div>
         </div>
         <button
