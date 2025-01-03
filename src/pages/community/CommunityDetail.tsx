@@ -69,6 +69,7 @@ const CommunityDetail = () => {
   console.log(user);
 
   useEffect(() => {
+    // 게시글 세부 정보 가져오고 상태 저장 로직
     const loadPostDetails = async () => {
       if (id) {
         const postDetail = await fetchPostDetail(id);
@@ -118,10 +119,11 @@ const CommunityDetail = () => {
         );
         setEditingCommentId(null); // 수정 모드 종료
       } else {
-        // 댓글 추가 로직
-        const createdComment = await createComment(post.id.toString(), {
-          content: newComment,
-        });
+        // 새댓글 추가하고 생선된 댓글 추가 로직
+        const createdComment = await createComment(
+          post.id.toString(),
+          newCommentEntry
+        );
         setComments([...comments, createdComment]);
       }
 
