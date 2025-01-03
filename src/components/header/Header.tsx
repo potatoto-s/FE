@@ -2,16 +2,19 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { CgProfile } from 'react-icons/cg';
 import useAuthStore from '../../stores/authStore';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { accessToken, logout } = useAuthStore();
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     alert('로그아웃 되었습니다.');
+    navigate('/'); // 명시적으로 "/"로 이동
   };
 
   // 드롭다운/햄버거 메뉴 타이머 설정 함수
@@ -118,12 +121,13 @@ const Header = () => {
                 >
                   마이페이지
                 </Link>
-                <div
+                <Link
+                  to="#"
                   onClick={handleLogout}
                   className="block py-2 px-4 text-[#F28749] font-bold hover:text-[#c36d3b] cursor-pointer"
                 >
                   로그아웃
-                </div>
+                </Link>
               </>
             ) : (
               <Link
