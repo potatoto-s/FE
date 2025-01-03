@@ -29,12 +29,7 @@ axiosAuthInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     // Access Token 만료 처리 (401 오류)
-    if (
-      error.response?.status === 401 && // Unauthorized
-      !originalRequest._retry // 이미 재시도한 요청인지 확인
-    ) {
-      originalRequest._retry = true;
-
+    if (error.response?.status === 401) {
       try {
         const refreshToken = localStorage.getItem('refreshToken');
         if (!refreshToken) throw new Error('리프레시 토큰이 없습니다.');
