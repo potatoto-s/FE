@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { signUpSchema } from '../../schemas/signUpSchemas';
 import axiosInstance from '../../api/axiosInstance';
+import SignUpInput from './SignUpInput';
 
 const SignUp = () => {
   const {
@@ -113,15 +114,21 @@ const SignUp = () => {
           className="w-full max-w-[37.5rem] p-8 rounded space-y-4"
         >
           {/* 이메일 */}
-          <div className="flex items-center">
-            <label className="w-1/4 text-gray-700 pr-2">이메일*</label>
-            <input
-              type="email"
-              {...register('email', {
-                onBlur: () => trigger('email'),
-              })}
-              className="w-2/4 border border-gray-300 rounded px-3 py-2"
-            />
+          <SignUpInput
+            label="이메일*"
+            inputType="email"
+            attribute={register('email', {
+              onBlur: () => trigger('email'),
+            })}
+            message={
+              isEmailChecked
+                ? '중복 확인이 완료되었습니다.'
+                : errors.email
+                  ? errors.email.message
+                  : ''
+            }
+            messageColor={isEmailChecked ? 'green' : 'red'}
+          >
             <button
               type="button"
               onClick={handleCheckEmail}
@@ -134,201 +141,130 @@ const SignUp = () => {
             >
               중복확인
             </button>
-          </div>
-          {isEmailChecked && (
-            <p className="text-green-500 text-sm mt-1 ml-[25%]">
-              중복확인이 완료되었습니다.
-            </p>
-          )}
-          {errors.email && !isEmailChecked && (
-            <p className="text-red-500 text-sm mt-1 ml-[25%]">
-              {errors.email.message}
-            </p>
-          )}
+          </SignUpInput>
 
           {/* 비밀번호 */}
-          <div className="flex items-center">
-            <label className="w-1/4 text-gray-700 pr-2">비밀번호*</label>
-            <input
-              type="password"
-              {...register('password', {
-                onBlur: () => trigger('password'),
-              })}
-              className="w-2/4 border border-gray-300 rounded px-3 py-2"
-            />
-          </div>
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1 ml-[25%]">
-              {errors.password.message}
-            </p>
-          )}
+          <SignUpInput
+            label="비밀번호*"
+            inputType="password"
+            attribute={register('password', {
+              onBlur: () => trigger('password'),
+            })}
+            message={errors.password ? errors.password.message : ''}
+          />
 
           {/* 비밀번호 확인 */}
-          <div className="flex items-center">
-            <label className="w-1/4 text-gray-700 pr-2">비밀번호 확인*</label>
-            <input
-              type="password"
-              {...register('password2', {
-                onBlur: () => trigger('password2'),
-              })}
-              className="w-2/4 border border-gray-300 rounded px-3 py-2"
-            />
-          </div>
-          {errors.password2 && (
-            <p className="text-red-500 text-sm mt-1 ml-[25%]">
-              {errors.password2.message}
-            </p>
-          )}
+          <SignUpInput
+            label="비밀번호 확인*"
+            inputType="password"
+            attribute={register('password2', {
+              onBlur: () => trigger('password2'),
+            })}
+            message={errors.password2 ? errors.password2.message : ''}
+          />
 
           {/* 이름 */}
-          <div className="flex items-center">
-            <label className="w-1/4 text-gray-700 pr-2">이름*</label>
-            <input
-              type="text"
-              {...register('name', {
-                onBlur: () => trigger('name'),
-              })}
-              className="w-2/4 border border-gray-300 rounded px-3 py-2"
-            />
-          </div>
-          {errors.name && (
-            <p className="text-red-500 text-sm mt-1 ml-[25%]">
-              {errors.name.message}
-            </p>
-          )}
+          <SignUpInput
+            label="이름*"
+            inputType="text"
+            attribute={register('name', {
+              onBlur: () => trigger('name'),
+            })}
+            message={errors.name ? errors.name.message : ''}
+          />
 
           {/* 닉네임 */}
-          <div className="flex flex-col">
-            <div className="flex items-center">
-              <label className="w-1/4 text-gray-700 pr-2">닉네임*</label>
-              <input
-                type="text"
-                {...register('nickname', {
-                  onBlur: () => trigger('nickname'),
-                })}
-                className="w-2/4 border border-gray-300 rounded px-3 py-2"
-              />
-              <button
-                type="button"
-                onClick={handleCheckNickname}
-                disabled={isNicknameChecked}
-                className={`ml-2 px-2 py-1 text-xs rounded ${
-                  isNicknameChecked
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-[#F28749] text-white hover:bg-orange-600'
-                }`}
-              >
-                중복확인
-              </button>
-            </div>
-            {isNicknameChecked && (
-              <p className="text-green-500 text-sm mt-1 ml-[25%]">
-                중복확인이 완료되었습니다.
-              </p>
-            )}
-            {errors.nickname && !isNicknameChecked && (
-              <p className="text-red-500 text-sm mt-1 ml-[25%]">
-                {errors.nickname.message}
-              </p>
-            )}
-          </div>
+          <SignUpInput
+            label="닉네임*"
+            inputType="text"
+            attribute={register('nickname', {
+              onBlur: () => trigger('nickname'),
+            })}
+            message={
+              isNicknameChecked
+                ? '중복 확인이 완료되었습니다.'
+                : errors.nickname
+                  ? errors.nickname.message
+                  : ''
+            }
+            messageColor={isNicknameChecked ? 'green' : 'red'}
+          >
+            <button
+              type="button"
+              onClick={handleCheckNickname}
+              disabled={isNicknameChecked}
+              className={`ml-2 px-2 py-1 text-xs rounded ${
+                isNicknameChecked
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-[#F28749] text-white hover:bg-orange-600'
+              }`}
+            >
+              중복확인
+            </button>
+          </SignUpInput>
 
           {/* 전화번호 */}
-          <div className="flex flex-col">
-            <div className="flex items-center">
-              <label className="w-1/4 text-gray-700 pr-2">전화번호*</label>
-              <input
-                type="tel"
-                {...register('phone', {
-                  onBlur: () => trigger('phone'),
-                })}
-                placeholder="010-1234-5678"
-                className="w-2/4 border border-gray-300 rounded px-3 py-2"
-              />
-            </div>
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1 ml-[25%]">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
+          <SignUpInput
+            label="전화번호*"
+            inputType="tel"
+            attribute={register('phone', {
+              onBlur: () => trigger('phone'),
+            })}
+            message={errors.phone ? errors.phone.message : ''}
+            placeholder="010-1234-5678"
+          />
 
           {/* 회원구분 */}
-          <div className="flex flex-col">
-            <div className="flex items-center">
-              <label className="w-1/4 text-gray-700 pr-2">회원구분*</label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    {...register('role', {
-                      onBlur: () => trigger('role'),
-                    })}
-                    value="WORKSHOP"
-                    className="mr-2"
-                  />
-                  공방
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    {...register('role', {
-                      onBlur: () => trigger('role'),
-                    })}
-                    value="COMPANY"
-                    className="mr-2"
-                  />
-                  기업
-                </label>
-              </div>
-            </div>
-            {errors.role && (
-              <p className="text-red-500 text-sm mt-1 ml-[25%]">
-                {errors.role.message}
-              </p>
-            )}
-          </div>
+          <SignUpInput
+            label="회원구분*"
+            inputType="radio"
+            message={errors.role?.message}
+            messageColor="red"
+          >
+            <label className="flex items-center">
+              <input
+                type="radio"
+                {...register('role', { onBlur: () => trigger('role') })}
+                value="WORKSHOP"
+                className="mr-2"
+              />
+              공방
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                {...register('role', { onBlur: () => trigger('role') })}
+                value="COMPANY"
+                className="mr-2"
+              />
+              기업
+            </label>
+          </SignUpInput>
 
           {/* 공방 이름 */}
           {role === 'WORKSHOP' && (
-            <div className="flex flex-col">
-              <div className="flex items-center">
-                <label className="w-1/4 text-gray-700 pr-2">공방 이름*</label>
-                <input
-                  type="text"
-                  {...register('workshop_name', {
-                    onBlur: () => trigger('workshop_name'),
-                  })}
-                  className="w-2/4 border border-gray-300 rounded px-3 py-2"
-                />
-              </div>
-              {errors.workshop_name && (
-                <p className="text-red-500 text-sm mt-1 ml-[25%]">
-                  {errors.workshop_name.message}
-                </p>
-              )}
-            </div>
+            <SignUpInput
+              label="공방 이름*"
+              inputType="text"
+              attribute={register('workshop_name', {
+                onBlur: () => trigger('workshop_name'),
+              })}
+              message={errors.workshop_name?.message}
+              messageColor="red"
+            />
           )}
 
           {/* 기업 이름 */}
           {role === 'COMPANY' && (
-            <div className="flex flex-col">
-              <div className="flex items-center">
-                <label className="w-1/4 text-gray-700 pr-2">기업 이름*</label>
-                <input
-                  type="text"
-                  {...register('company_name', {
-                    onBlur: () => trigger('company_name'),
-                  })}
-                  className="w-2/4 border border-gray-300 rounded px-3 py-2"
-                />
-              </div>
-              {errors.company_name && (
-                <p className="text-red-500 text-sm mt-1 ml-[25%]">
-                  {errors.company_name.message}
-                </p>
-              )}
-            </div>
+            <SignUpInput
+              label="기업 이름*"
+              inputType="text"
+              attribute={register('company_name', {
+                onBlur: () => trigger('company_name'),
+              })}
+              message={errors.company_name?.message}
+              messageColor="red"
+            />
           )}
 
           {/* 제출 버튼 */}
