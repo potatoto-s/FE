@@ -100,9 +100,9 @@ const CommunityDetail = () => {
         created_at: formattedDate,
         is_deleted: false,
         post: post.id,
-        user: 1, // 나중에 user.id 이렇게 다시 수정
+        user: user.id, // 나중에 user.id 이렇게 다시 수정
         author: {
-          id: 1, // author: id 수정
+          id: user.id, // author: id 수정
           nickname: user.nickname,
           role: user.role,
           companyName: user.company_name,
@@ -154,6 +154,7 @@ const CommunityDetail = () => {
     setLiked(newLikedStatus);
   };
 
+  // 수정 버튼 클릭시 수정 페이지 이동
   const handleEditButtonClick = () => {
     if (id) {
       navigate(`/communitypost/${id}`);
@@ -179,15 +180,34 @@ const CommunityDetail = () => {
     setShowConfirmModal(false);
   };
 
+  const handleBackButtonClick = () => {
+    navigate('/community');
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen px-4">
       <div className="w-full max-w-[81.25rem] h-[93.0625rem] bg-white p-6 shadow-lg rounded-lg mt-[6.25rem] mb-[6.25rem]">
+        <button onClick={handleBackButtonClick} className="mb-4 text-gray-400">
+          뒤로가기
+        </button>
         {post && (
           <>
+            {post.images && post.images.length > 0 && (
+              <div className="mb-6">
+                {post.images.map((image) => (
+                  <img
+                    key={image.id}
+                    src={image.image_url}
+                    alt={`게시글 이미지 ${image.id}`}
+                    className="w-full h-auto mb-4"
+                  />
+                ))}
+              </div>
+            )}
             <div className="mb-4 flex items-center justify-between">
-              <div className="mb-4 flex items-center">
+              <div className="flex items-center">
                 <h1 className="text-black text-2xl font-medium">
-                  [ 레진/비즈공예 ]
+                  [{post.category}]
                 </h1>
                 <h1 className="text-xl font-bold ml-2">{post.title}</h1>
                 <span className="text-gray-500 text-lg ml-2 flex items-center">
@@ -195,7 +215,7 @@ const CommunityDetail = () => {
                 </span>
               </div>
               {user &&
-                post.author.id === 1 && ( // user.id  나중에 수정
+                post.author.id === user.id && ( // user.id  나중에 수정 / 1
                   <div className="flex space-x-4">
                     <button
                       onClick={handleEditButtonClick}
@@ -211,6 +231,17 @@ const CommunityDetail = () => {
                     </button>
                   </div>
                 )}
+            </div>
+
+            <div className="text-gray-400 mb-10">
+              <span className="font-bold mr-2">{post.author.nickname} </span>
+              <span className="text-[#F26749] mr-2">
+                {post.author.companyName || post.author.role}
+              </span>
+
+              <span className="text-sm">
+                {new Date(post.created_at).toLocaleString()}
+              </span>
             </div>
 
             <div className="mb-6">
@@ -265,49 +296,3 @@ const CommunityDetail = () => {
 };
 
 export default CommunityDetail;
-
-// 수정 버튼 클릭스 post 페이지 이동 o
-// 삭제 버튼 클릭시 '게시글을 삭제 하시겠습니까?'  경고창 띄우고
-// 돌아가기 , 삭제하기 버튼 2개 돌아가기 버튼 클릭수 취소 , 삭제하기 클릭시
-// 게시글 삭제후 커뮤니티 페이지로 이동 o
-
-// 목업 데이터 컴포넌트 렌더링 시 실행되는 훅
-// useEffect(() => {
-//   // 목업 데이터 설정
-//   const mockUser: Author = {
-//     id: 1,
-//     nickname: '정찬희',
-//     role: '공방 | 기업',
-//   };
-
-//   const mockPost: Post = {
-//     id: 1,
-//     title: '목업 게시글 제목',
-//     content: '이것은 목업 게시글 내용입니다.',
-//     category: '일반',
-//     viewCount: 0,
-//     imageUrls: ['https://via.placeholder.com/150'], // 목업 이미지 URL
-//     createdAt: new Date().toISOString(),
-//     author: mockUser,
-//     comments: [
-//       {
-//         id: 1,
-//         content: '첫 번째 댓글입니다!',
-//         createdAt: new Date().toISOString(),
-//         author: mockUser,
-//       },
-//       {
-//         id: 2,
-//         content: '두 번째 댓글입니다!',
-//         createdAt: new Date().toISOString(),
-//         author: mockUser,
-//       },
-//     ],
-//   };
-
-//   // 상태 업데이트
-//   setPost(mockPost); // 목업 게시글 설정
-//   setComments(mockPost.comments); // 목업 댓글 설정
-//   setCurrentUser(mockUser); // 현재 사용자 설정
-//   setLikes(mockPost.viewCount);
-// }, []);
