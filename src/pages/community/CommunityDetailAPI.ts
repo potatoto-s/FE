@@ -1,6 +1,7 @@
 import axiosAuthInstance from '../../api/axiosAuthInstance';
 import axiosInstance from '../../api/axiosInstance';
 
+// 게시글 작성 함수
 export const fetchPostDetail = async (postId: string) => {
   const response = await axiosInstance.get(`/api/posts/${postId}/`);
   return response.data;

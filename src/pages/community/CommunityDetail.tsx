@@ -5,7 +5,7 @@ import { BsChatHeart } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import CommentList from '../../components/comment/CommentList';
 import CommentInput from '../../components/comment/CommentInput';
-import ConfirmModal from '../../components/madal/ConfirmModal';
+import ConfirmModal from '../../components/modal/ConfirmModal';
 import {
   fetchPostDetail,
   createComment,
