@@ -4,9 +4,7 @@ import useUserStore from './userStore';
 
 interface AuthState {
   accessToken: string | null;
-  refreshToken: string | null;
   setAccessToken: (token: string | null) => void;
-  setRefreshToken: (token: string | null) => void;
   logout: () => void;
 }
 
@@ -14,16 +12,13 @@ const useAuthStore = create(
   persist<AuthState>(
     (set) => ({
       accessToken: null,
-      refreshToken: null,
-
       setAccessToken: (token) => set({ accessToken: token }),
-      setRefreshToken: (token) => set({ refreshToken: token }),
-
       logout: () => {
-        useUserStore.getState().clearUser();
-        set({ accessToken: null, refreshToken: null });
-        localStorage.removeItem('auth');
-        localStorage.removeItem('user');
+        set({ accessToken: null }); // Zustand 상태에서 accessToken 삭제
+        localStorage.removeItem('refreshToken'); // 로컬 스토리지에서 refreshToken 삭제
+        localStorage.removeItem('auth'); // Zustand persist 데이터 전체 삭제
+        localStorage.removeItem('user'); // user 데이터도 로컬스토리지에서 삭제
+        useUserStore.getState().clearUser(); // user 상태 초기화
       },
     }),
     {
