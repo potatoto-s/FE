@@ -9,7 +9,7 @@ const Contact = () => {
 
   return (
     <div
-      className="flex flex-col justify-center items-center lg:mr-[40%] mt-[6rem]"
+      className="flex flex-col justify-center items-center lg:mr-[40%]"
       style={{ height: 'calc(100vh - 25rem' }}
     >
       <h1 className="w-[30rem] text-[#6E6E6E] text-[3.5rem] font-bold mb-[2.5rem]">
