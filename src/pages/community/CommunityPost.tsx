@@ -109,20 +109,16 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
 
     try {
-      const payload = new FormData();
-      payload.append('category', formData.category);
-      payload.append('title', formData.title);
-      payload.append('content', formData.content);
-      formData.images?.forEach((image) => {
-        payload.append('images', image);
-      });
-
       let response;
       if (pagetype === 'post') {
-        response = await axiosAuthInstance.post(`/api/posts/create/`, payload, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        console.log('respose:', response.data);
+        response = await axiosAuthInstance.post(
+          `/api/posts/create/`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+        console.log('respose:', response.data.id);
         console.log('저장 데이터:', formData);
         alert('게시물 등록이 완료되었습니다.');
 
@@ -130,7 +126,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       } else if (pagetype === 'edit') {
         response = await axiosAuthInstance.patch(
           `/api/posts/${id}/update/`,
-          payload,
+          formData,
           {
             headers: { 'Content-Type': 'multipart/form-data' },
           }
