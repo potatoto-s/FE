@@ -42,14 +42,12 @@ const SignUp = () => {
       const response = await axiosInstance.post('/api/check/email/', {
         email,
       });
-      console.log(response);
       if (response.status === 200) {
         alert('사용 가능한 이메일입니다.');
         clearErrors('email');
         setIsEmailChecked(true);
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 400) {
         setError('email', {
           message: '이미 사용 중인 이메일입니다.',
@@ -70,14 +68,12 @@ const SignUp = () => {
       const response = await axiosInstance.post('/api/check/nickname/', {
         nickname,
       });
-      console.log(response);
       if (response.status === 200) {
         alert('사용 가능한 닉네임입니다.');
         clearErrors('nickname');
         setIsNicknameChecked(true);
       }
     } catch (error: any) {
-      console.log(error);
       if (error.response?.status === 400) {
         setError('nickname', {
           message: '이미 사용 중인 닉네임입니다.',
