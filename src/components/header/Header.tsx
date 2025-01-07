@@ -2,11 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CgProfile } from 'react-icons/cg';
 import useAuthStore from '../../stores/authStore';
-import useUserStore from '../../stores/userStore';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { user } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { accessToken, logout } = useAuthStore();
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
@@ -25,11 +23,6 @@ const Header = () => {
       alert('로그아웃 처리에 실패했습니다.');
     }
   };
-
-  useEffect(() => {
-    console.log('현재 accessToken:', accessToken);
-    console.log('현재 user 상태:', user);
-  }, [accessToken, user]);
 
   // 드롭다운/햄버거 메뉴 타이머 설정 함수
   const startCloseTimer = useCallback(() => {
@@ -93,9 +86,9 @@ const Header = () => {
       <div className="flex justify-between items-center h-[6.25rem] px-4 sm:px-8 max-w-[81.25rem] mx-auto">
         <Link to="/" className="flex-shrink-0">
           <img
-            src="assets/logo.png"
+            src="/logo.png"
             alt="로고"
-            className="h-[2rem] sm:h-[2.5rem]"
+            className="h-[2rem] sm:h-[2.5rem] object-contain"
           />
         </Link>
 
