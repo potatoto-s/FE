@@ -27,6 +27,5 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.NCP_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.NCP_SECRET_KEY }}
-          AWS_REGION: ${{ secrets.NCP_REGION }}
           AWS_ENDPOINT_URL: 'https://kr.object.ncloudstorage.com'
           SOURCE_DIR: 'dist' # 빌드된 디렉토리 (Vite, React 등 빌드 결과물 경로)
