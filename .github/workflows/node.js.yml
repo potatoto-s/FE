@@ -24,6 +24,12 @@ jobs:
       - name: Build Project
         run: npm run build
 
+      - name: Debug Environment Variables
+        run: |
+          echo "AWS_S3_BUCKET=${{ secrets.NCP_BUCKET_NAME }}"
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.NCP_ACCESS_KEY }}"
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.NCP_SECRET_KEY }}"
+
       - name: Upload to NCP Object Storage
         uses: jakejarvis/s3-sync-action@master
         with:
