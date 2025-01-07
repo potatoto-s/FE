@@ -6,6 +6,7 @@ import { updateUserProfile } from '../../api/ProfilePatchApi';
 
 const MyPageEditor: React.FC = () => {
   const location = useLocation();
+
   const userInfo = location.state as {
     name: string;
     nickname: string;
@@ -20,7 +21,6 @@ const MyPageEditor: React.FC = () => {
   const [nickname, setNickname] = useState(userInfo.nickname);
   const [phone, setPhone] = useState(userInfo.phone);
 
-  // role에 따라 상태 초기화
   const [workshopName, setWorkshopName] = useState(
     userInfo.role === 'WORKSHOP' ? userInfo.workshop_name || '' : ''
   );
@@ -48,14 +48,15 @@ const MyPageEditor: React.FC = () => {
         '/api/users/check/nickname/',
         { nickname }
       );
+      console.log('닉네임 중복 확인 응답:', response);
 
       if (response.status === 200) {
         alert('사용 가능한 닉네임입니다.');
         setIsNicknameAvailable(true);
       }
     } catch (error: any) {
-      alert('닉네임 중복 확인 중 문제가 발생했습니다.');
       setIsNicknameAvailable(false);
+      alert('닉네임 중복 확인 중 문제가 발생했습니다.');
     } finally {
       setIsChecking(false);
     }
@@ -79,13 +80,16 @@ const MyPageEditor: React.FC = () => {
         company_name: userInfo.role === 'COMPANY' ? companyName : '',
       };
 
-      console.log('전송 데이터:', updatedData);
-
       const response = await updateUserProfile(updatedData);
+      console.log('API 응답:', response);
 
       if (response.status === 200) {
         alert('수정 내용이 저장되었습니다.');
+
         navigate('/mypage', { state: updatedData });
+      } else {
+        console.error('예상치 못한 상태 코드:', response.status);
+        alert('수정 저장에 실패했습니다. 다시 시도해주세요.');
       }
     } catch (error: any) {
       console.error('에러 발생:', error);
@@ -106,7 +110,7 @@ const MyPageEditor: React.FC = () => {
   };
 
   return (
-    <div className="p-12 max-w-2xl mx-auto mt-12">
+    <div className="p-12 max-w-2xl mx-auto">
       <h2 className="text-center text-2xl font-bold mb-8 text-[#F28749]">
         마이페이지 수정
       </h2>
@@ -172,7 +176,6 @@ const MyPageEditor: React.FC = () => {
           />
         </div>
 
-        {/* 공방 정보 / 기업 정보 렌더링 */}
         {userInfo.role === 'WORKSHOP' && (
           <div>
             <h3 className="text-lg font-semibold mb-4 mt-12">공방 정보</h3>

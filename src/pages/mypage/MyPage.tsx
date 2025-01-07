@@ -59,7 +59,7 @@ const MyPage: React.FC = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center py-10 mt-[6.25rem]">
+      <div className="flex flex-col items-center py-10 ">
         <div className="w-full max-w-screen-lg text-center">
           <h2 className="text-lg font-bold text-[#F28749] inline-block border-b-2 border-[#F28749] pb-3">
             마이페이지

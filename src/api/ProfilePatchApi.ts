@@ -14,7 +14,9 @@ export const updateUserProfile = async (updatedData: {
       '/api/users/profile/',
       updatedData
     );
-    return response.data;
+
+    console.log('사용자 프로필 업데이트 응답:', response);
+    return response;
   } catch (error: any) {
     console.error('사용자 프로필 업데이트 중 오류 발생:', error);
     throw error;
