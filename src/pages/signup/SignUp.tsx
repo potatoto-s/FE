@@ -55,7 +55,7 @@ const SignUp = () => {
         setIsEmailChecked(false);
       } else {
         setError('email', {
-          message: '닉네임 확인 중 오류가 발생했습니다.',
+          message: '이메일 확인 중 오류가 발생했습니다.',
         });
         setIsEmailChecked(false);
       }
