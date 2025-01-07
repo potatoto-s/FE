@@ -112,7 +112,7 @@ const MyPageEditor: React.FC = () => {
   return (
     <div className="p-12 max-w-2xl mx-auto">
       <h2 className="text-center text-2xl font-bold mb-8 text-[#F28749]">
-        마이페이지 수정
+        프로필 수정
       </h2>
       <form onSubmit={handleSave} className="space-y-6">
         <div>
