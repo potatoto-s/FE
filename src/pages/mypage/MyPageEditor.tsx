@@ -1,13 +1,33 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import FormInput from '../../components/MyPageEditor/EditorInput';
+import axiosAuthInstance from '../../api/axiosAuthInstance';
+import { updateUserProfile } from '../../api/ProfilePatchApi';
 
 const MyPageEditor: React.FC = () => {
-  const email = 'srchoo19@gmail.com';
-  const [name, setName] = useState('추서령');
-  const [nickname, setNickname] = useState('Jenna');
-  const [phone, setPhone] = useState('010-4910-3426');
-  const [workshopName, setWorkshopName] = useState('Jenna');
+  const location = useLocation();
+  const userInfo = location.state as {
+    name: string;
+    nickname: string;
+    email: string;
+    phone: string;
+    role: string;
+    workshop_name?: string;
+    company_name?: string;
+  };
+
+  const [name, setName] = useState(userInfo.name);
+  const [nickname, setNickname] = useState(userInfo.nickname);
+  const [phone, setPhone] = useState(userInfo.phone);
+
+  // role에 따라 상태 초기화
+  const [workshopName, setWorkshopName] = useState(
+    userInfo.role === 'WORKSHOP' ? userInfo.workshop_name || '' : ''
+  );
+  const [companyName, setCompanyName] = useState(
+    userInfo.role === 'COMPANY' ? userInfo.company_name || '' : ''
+  );
+
   const [isChecking, setIsChecking] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState<
     null | boolean
@@ -15,40 +35,74 @@ const MyPageEditor: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !nickname || !phone || !workshopName) {
-      alert('모든 필드를 채워주세요.');
-      throw new Error('400: 잘못된 요청 (유효성 검증 실패)');
+  // 닉네임 중복 확인
+  const handleCheckNickname = async () => {
+    if (!nickname) {
+      alert('닉네임을 입력해주세요.');
+      return;
     }
 
-    alert('수정 내용이 저장되었습니다');
-    navigate('/mypage');
-  };
-
-  const handleCancel = () => {
-    alert('수정이 취소되었습니다');
-    navigate('/mypage');
-  };
-
-  const handleCheckNickname = () => {
     setIsChecking(true);
+    try {
+      const response = await axiosAuthInstance.post(
+        '/api/users/check/nickname/',
+        { nickname }
+      );
 
-    const mockUseNickNames = ['User1', 'Jenna', 'Admin'];
-    setTimeout(() => {
-      if (!nickname) {
-        setIsNicknameAvailable(null);
-        setIsChecking(false);
-        throw new Error('400: 잘못된 요청 (유효성 검증 실패)');
-      }
-
-      if (mockUseNickNames.includes(nickname)) {
-        setIsNicknameAvailable(false);
-      } else {
+      if (response.status === 200) {
+        alert('사용 가능한 닉네임입니다.');
         setIsNicknameAvailable(true);
       }
+    } catch (error: any) {
+      alert('닉네임 중복 확인 중 문제가 발생했습니다.');
+      setIsNicknameAvailable(false);
+    } finally {
       setIsChecking(false);
-    }, 1000);
+    }
+  };
+
+  // 사용자 정보 저장
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name || !nickname || !phone) {
+      alert('모든 필드를 채워주세요.');
+      return;
+    }
+
+    try {
+      const updatedData = {
+        name,
+        nickname,
+        phone,
+        workshop_name: userInfo.role === 'WORKSHOP' ? workshopName : '',
+        company_name: userInfo.role === 'COMPANY' ? companyName : '',
+      };
+
+      console.log('전송 데이터:', updatedData);
+
+      const response = await updateUserProfile(updatedData);
+
+      if (response.status === 200) {
+        alert('수정 내용이 저장되었습니다.');
+        navigate('/mypage', { state: updatedData });
+      }
+    } catch (error: any) {
+      console.error('에러 발생:', error);
+
+      if (error.response) {
+        console.error('서버 응답 데이터:', error.response.data);
+        alert(`오류: ${error.response.data.message}`);
+      } else {
+        alert('프로필 저장 중 문제가 발생했습니다.');
+      }
+    }
+  };
+
+  // 취소 버튼 클릭
+  const handleCancel = () => {
+    alert('수정이 취소되었습니다.');
+    navigate('/mypage');
   };
 
   return (
@@ -56,12 +110,7 @@ const MyPageEditor: React.FC = () => {
       <h2 className="text-center text-2xl font-bold mb-8 text-[#F28749]">
         마이페이지 수정
       </h2>
-      <form
-        className={`space-y-${
-          isChecking || isNicknameAvailable !== null ? '8' : '4'
-        }`} // 간격 조절
-        onSubmit={handleSave}
-      >
+      <form onSubmit={handleSave} className="space-y-6">
         <div>
           <h3 className="text-lg font-semibold mb-4">개인정보</h3>
 
@@ -109,7 +158,7 @@ const MyPageEditor: React.FC = () => {
 
           <FormInput
             label="이메일"
-            value={email}
+            value={userInfo.email}
             placeholder="이메일을 입력하세요"
             readOnly
             type="email"
@@ -123,20 +172,34 @@ const MyPageEditor: React.FC = () => {
           />
         </div>
 
-        <div>
-          <h3 className="text-lg font-semibold mb-4 mt-12">공방 정보</h3>
-          <FormInput
-            label="공방 이름"
-            value={workshopName}
-            placeholder="공방 이름을 입력하세요"
-            onChange={(e) => setWorkshopName(e.target.value)}
-          />
-        </div>
+        {/* 공방 정보 / 기업 정보 렌더링 */}
+        {userInfo.role === 'WORKSHOP' && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4 mt-12">공방 정보</h3>
+            <FormInput
+              label="공방 이름"
+              value={workshopName}
+              placeholder="공방 이름을 입력하세요"
+              onChange={(e) => setWorkshopName(e.target.value)}
+            />
+          </div>
+        )}
+
+        {userInfo.role === 'COMPANY' && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4 mt-12">기업 정보</h3>
+            <FormInput
+              label="기업 이름"
+              value={companyName}
+              placeholder="기업 이름을 입력하세요"
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+          </div>
+        )}
 
         <div className="flex justify-center space-x-4 mt-8">
           <button
             type="submit"
-            onClick={handleSave}
             className="px-6 py-2 bg-orange-400 text-white font-medium rounded hover:bg-orange-600"
           >
             저장

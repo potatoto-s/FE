@@ -92,7 +92,9 @@ const MyPage: React.FC = () => {
 
         <div className="mt-10 text-center md:text-right w-full max-w-4xl md:pr-16">
           <button
-            onClick={() => navigate('/MyPageEditor')}
+            onClick={
+              () => navigate('/MyPageEditor', { state: userInfo }) // 사용자 정보를 state로 전달
+            }
             className="px-6 py-2 text-white bg-[#F28749] rounded hover:bg-[#F26749]"
           >
             프로필 수정
