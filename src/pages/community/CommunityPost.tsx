@@ -214,7 +214,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         closeDeleteModal(); // 삭제 후 모달 닫기
         navigate('/community');
       } else {
-        console.log('삭제 요청 중 오류 발생');
+        console.log('삭제 요청 중 오류 발생함');
       }
     } catch (err) {
       console.log('삭제 요청 오류 발생', err);
