@@ -1,42 +1,29 @@
-import { useState } from 'react';
-import { GoArrowRight } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
+import ContactType from '../../components/contact/contactType';
 
 const Contact = () => {
   const navigate = useNavigate();
-  const [type, setType] = useState<string>('');
-  const handleNavigation = (typeValue: string) => {
-    setType(typeValue);
-    navigate('/contactform', { state: { type: typeValue } }); // 상태로 전달
+  const handleNavigation = (typeValue: 'WORKSHOP' | 'COMPANY') => {
+    navigate('/contactform', { state: { type: typeValue } });
   };
 
   return (
     <div
-      className="flex flex-col justify-center items-center lg:mr-[40%] mt-[6rem]"
+      className="flex flex-col justify-center items-center lg:mr-[40%]"
       style={{ height: 'calc(100vh - 25rem' }}
     >
       <h1 className="w-[30rem] text-[#6E6E6E] text-[3.5rem] font-bold mb-[2.5rem]">
         CONTACT
       </h1>
       <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <div className="flex justify-between w-[30rem]">
-        <p className="my-[2.5rem] text-[1.8rem] font-bold text-[#F28749]">
-          컨설팅 문의하기
-        </p>
-        <button onClick={() => handleNavigation('WORKSHOP')}>
-          <GoArrowRight size={50} className="mr-[2rem]" />
-        </button>
-      </div>
-      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
-      <div className="flex justify-between w-[30rem]">
-        <p className="my-[2.5rem] text-[1.8rem] font-bold text-[#F28749]">
-          공방 연결 문의하기
-        </p>
-        <button onClick={() => handleNavigation('COMPANY')}>
-          <GoArrowRight size={50} className="mr-[2rem]" />
-        </button>
-      </div>
-      <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
+      <ContactType
+        label="컨설팅 문의하기"
+        handleNavigation={() => handleNavigation('WORKSHOP')}
+      />
+      <ContactType
+        label="공방 연결 문의하기"
+        handleNavigation={() => handleNavigation('COMPANY')}
+      />
     </div>
   );
 };

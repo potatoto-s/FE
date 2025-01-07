@@ -12,9 +12,10 @@ type ErrorState = {
 
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
-import { useRef, useState } from 'react';
-import ConfirmModal from '../../components/madal/ConfirmModal';
+import { useEffect, useRef, useState } from 'react';
+import ConfirmModal from '../../components/modal/ConfirmModal';
 import { useNavigate, useParams } from 'react-router-dom';
+import axiosAuthInstance from '../../api/axiosAuthInstance';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [formData, setFormData] = useState<FormData>({
@@ -37,7 +38,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pagetype, setPageType] = useState<'post' | 'edit'>('post');
+  const [pagetype, setPageType] = useState<'post' | 'edit'>(type);
 
   const [files, setFiles] = useState<File[]>([]);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
@@ -49,12 +50,33 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const toggleType = () => {
     if (pagetype === 'post') {
       setPageType('edit');
-      navigate(`/communitypost/${id || '123'}`);
+      navigate(`/communitypost/${id || '1'}`);
     } else {
       setPageType('post');
-      navigate('/communitypost');
+      navigate(`/communitypost`);
     }
   };
+
+  // PATCH
+  useEffect(() => {
+    console.log('pagetype: ' + pagetype);
+    if (pagetype !== 'post') {
+      axiosAuthInstance
+        .get(`/api/posts/${id || '1'}`)
+        .then((response) => {
+          const data = response.data;
+          setFormData({
+            category: data.category,
+            title: data.title,
+            content: data.content,
+            images: Array.isArray(data.images) ? data.images : null,
+          }); // 폼 초기값 설정
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [pagetype]); // id가 변경될 때마다 실행
 
   // 입력값 변경 처리
   const handleChange = (
@@ -75,7 +97,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
   };
 
-  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // 유효성 검사: 카테고리가 "1"이면 저장 불가
     if (formData.category === '1') {
@@ -85,8 +107,38 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
       }));
       return;
     }
-    console.log('저장 데이터:', formData);
-    // formData를 서버에 저장하거나 다른 작업 수행
+
+    try {
+      let response;
+      if (pagetype === 'post') {
+        response = await axiosAuthInstance.post(
+          `/api/posts/create/`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+        console.log('respose:', response.data.id);
+        console.log('저장 데이터:', formData);
+        alert('게시물 등록이 완료되었습니다.');
+
+        navigate(`/communitydetail/${response.data.id}`);
+      } else if (pagetype === 'edit') {
+        response = await axiosAuthInstance.patch(
+          `/api/posts/${id}/update/`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+        console.log('수정 데이터:', formData);
+        alert('게시물 수정이 완료되었습니다.');
+
+        navigate(`/communitydetail/${response.data.id}`);
+      }
+    } catch {
+      alert('게시물 등록 중 오류가 발생했습니다.');
+    }
   };
 
   const handleButtonClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -150,9 +202,26 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   };
 
   const handleDelete = async () => {
-    // 삭제 로직 (API 호출 등)
+    try {
+      //test
+      console.log('id' + `${id}`);
+      const response = await axiosAuthInstance.delete(
+        `/api/posts/${id}/delete/`
+      );
+      // 응답 객체에서 status와 statusText에 접근
+      const { status } = response;
+      if (status === 204) {
+        closeDeleteModal(); // 삭제 후 모달 닫기
+        navigate('/community');
+      } else {
+        console.log('삭제 요청 중 오류 발생함');
+      }
+    } catch (err) {
+      console.log('삭제 요청 오류 발생', err);
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+
     console.log('삭제 로직 실행');
-    closeDeleteModal(); // 삭제 후 모달 닫기
   };
 
   return (
