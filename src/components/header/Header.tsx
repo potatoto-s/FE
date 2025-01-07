@@ -94,7 +94,7 @@ const Header = () => {
 
         {/* 햄버거 버튼 */}
         <button
-          className="sm:hidden text-[#F28749]"
+          className="sm:hidden text-[#F28749] text-[1.5rem]"
           onClick={() => {
             setIsMenuOpen((prev) => !prev);
             setIsDropdownOpen(false);
