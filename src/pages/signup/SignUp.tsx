@@ -39,7 +39,7 @@ const SignUp = () => {
   // 이메일 중복 확인
   const handleCheckEmail = async () => {
     try {
-      const response = await axiosInstance.post('/api/check/email/', {
+      const response = await axiosInstance.post('/api/users/check/email/', {
         email,
       });
       if (response.status === 200) {
@@ -65,7 +65,7 @@ const SignUp = () => {
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
     try {
-      const response = await axiosInstance.post('/api/check/nickname/', {
+      const response = await axiosInstance.post('/api/users/check/nickname/', {
         nickname,
       });
       if (response.status === 200) {
@@ -91,7 +91,7 @@ const SignUp = () => {
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      await axiosInstance.post('/api/signup/', data);
+      await axiosInstance.post('/api/user/signup/', data);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch {
