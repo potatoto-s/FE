@@ -20,9 +20,7 @@ import useUserStore from '../../stores/userStore';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const { user } = useUserStore();
-  if (!user || user.role !== 'WORKSHOP') {
-    return <Navigate to="/community" />;
-  }
+  const isWorkShopUser = user && user.role !== 'WORKSHOP';
 
   const [formData, setFormData] = useState<FormData>({
     category: '1',
@@ -66,7 +64,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   // PATCH
   useEffect(() => {
     console.log('pagetype: ' + pagetype);
-    if (pagetype !== 'post') {
+    if (isWorkShopUser && pagetype !== 'post') {
       axiosAuthInstance
         .get(`/api/posts/${id || '1'}`)
         .then((response) => {
@@ -233,6 +231,10 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
     console.log('삭제 로직 실행');
   };
+
+  if (isWorkShopUser) {
+    return <Navigate to="/community" />;
+  }
 
   return (
     <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
