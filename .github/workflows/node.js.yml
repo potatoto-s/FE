@@ -1,21 +1,16 @@
-name: Frontend CI/CD with NCP
+name: Deploy To S3 And Invalidate Cloudfront
 
 on:
   push:
     branches:
-      - main
-      - develop
-  pull_request:
-    branches:
-      - main
       - develop
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
 
       - name: Install Dependencies
@@ -24,19 +19,17 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Debug Secrets
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.NCP_ACCESS_KEY }}";
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.NCP_SECRET_KEY }}";
-
-      - name: Upload to NCP Object Storage
-        # uses: jakejarvis/s3-sync-action@master
-        uses: jakejarvis/s3-sync-action@v0.5.0
+      - name: AWS 인증 설정
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          args: --acl public-read --follow-symlinks
-        env:
-          AWS_S3_BUCKET: ${{ secrets.NCP_BUCKET_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.NCP_SECRET_KEY }}
-          AWS_ENDPOINT_URL: 'https://kr.object.ncloudstorage.com'
-          SOURCE_DIR: 'dist' # 빌드된 디렉토리 (Vite, React 등 빌드 결과물 경로)
+          aws-region: ap-northeast-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: S3 기존 파일 전체 삭제 및  새로 업로드
+        run: |
+          aws s3 rm --recursive s3://hanzwit
+          aws s3 cp ./dist s3://hanzwit/ --recursive
+
+      - name: Cloudfront 캐시 무효화
+        run: aws cloudfront create-invalidation --distribution-id EUVOV32IK6R5B --paths "/*"
