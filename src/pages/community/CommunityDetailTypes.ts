@@ -1,22 +1,20 @@
 export interface Author {
   id: number;
-  nickname: string;
+  nickname?: string;
   role: string;
-  companyName?: string;
-  workshopName?: string;
+  company_name?: string;
+  workshop_name?: string;
 }
 
 export interface Comment {
   id: number;
   content: string;
-  status: string;
   created_at: string;
+  updated_at: string;
   is_deleted: boolean;
   author: Author;
-  post: number;
-  user: number;
-  workshopName?: string;
-  companyName?: string;
+  workshop_name?: string;
+  company_name?: string;
 }
 
 export interface Image {
@@ -42,7 +40,7 @@ export interface Post {
 
 export interface CommentListProps {
   comments: Comment[];
-  currentUser: string;
+  currentUserId: number;
   onDelete: (id: number) => void;
   onEdit: (id: number) => void;
 }

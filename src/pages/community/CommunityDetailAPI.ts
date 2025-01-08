@@ -45,9 +45,9 @@ export const updateComment = async (
   return response.data;
 };
 
-// 댓글 삭제 함수
-export const deleteComment = async (commentId: number) => {
-  await axiosAuthInstance.delete(`/api/comment/${commentId}/delete/`);
+// 댓글 삭제 API 함수
+export const deleteComment = async (comment_id: number) => {
+  await axiosAuthInstance.delete(`/api/comment/${comment_id}/delete/`);
 };
 
 // 게시글 좋아요 토글 함수
