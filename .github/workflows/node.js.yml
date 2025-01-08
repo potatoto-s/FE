@@ -24,8 +24,14 @@ jobs:
       - name: Build Project
         run: npm run build
 
+      - name: Debug Secrets
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.NCP_ACCESS_KEY }}";
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.NCP_SECRET_KEY }}";
+
       - name: Upload to NCP Object Storage
-        uses: jakejarvis/s3-sync-action@master
+        # uses: jakejarvis/s3-sync-action@master
+        uses: jakejarvis/s3-sync-action@v0.5.0
         with:
           args: --acl public-read --follow-symlinks
         env:
