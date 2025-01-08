@@ -13,9 +13,9 @@ type ErrorState = {
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
-import ConfirmModal from '../../components/modal/ConfirmModal';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosAuthInstance from '../../api/axiosAuthInstance';
+import ConfirmModal from '../../components/modal/ConfirmModal';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   const [formData, setFormData] = useState<FormData>({
@@ -109,29 +109,33 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
     }
 
     try {
+      const payload = new FormData();
+      payload.append('category', formData.category);
+      payload.append('title', formData.title);
+      payload.append('content', formData.content);
+      formData.images?.forEach((image) => {
+        payload.append('images', image);
+      });
       let response;
       if (pagetype === 'post') {
-        response = await axiosAuthInstance.post(
-          `/api/posts/create/`,
-          formData,
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          }
-        );
-        console.log('respose:', response.data.id);
-        console.log('저장 데이터:', formData);
+        response = await axiosAuthInstance.post(`/api/posts/create/`, payload, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log('수정 respose:', response.data);
+        console.log('저장 데이터:', payload);
         alert('게시물 등록이 완료되었습니다.');
 
-        navigate(`/communitydetail/${response.data.id}`);
+        navigate(`/communitydetail/${response.data}`);
       } else if (pagetype === 'edit') {
         response = await axiosAuthInstance.patch(
           `/api/posts/${id}/update/`,
-          formData,
+          payload,
           {
             headers: { 'Content-Type': 'multipart/form-data' },
           }
         );
-        console.log('수정 데이터:', formData);
+        console.log('수정 respose:', response.data);
+        console.log('수정 데이터:', payload);
         alert('게시물 수정이 완료되었습니다.');
 
         navigate(`/communitydetail/${response.data.id}`);
