@@ -14,10 +14,15 @@ import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
 import ConfirmModal from '../../components/modal/ConfirmModal';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import axiosAuthInstance from '../../api/axiosAuthInstance';
+import useUserStore from '../../stores/userStore';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
+  const { user } = useUserStore();
+  if (!user || user.role !== 'WORKSHOP') {
+    return <Navigate to="/community" />;
+  }
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
