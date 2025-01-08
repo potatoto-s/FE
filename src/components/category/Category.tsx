@@ -1,24 +1,26 @@
 import { useState } from 'react';
 import { IoMenuOutline, IoCloseOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 function Category() {
   const categories = [
-    { id: 'all', label: '전체' },
-    { id: 'balloon', label: '풍선/페이퍼아트' },
-    { id: 'gift', label: '선물포장/보자기' },
-    { id: 'wood', label: '목공/도자기/가죽' },
-    { id: 'resin', label: '레진/비즈공예' },
-    { id: 'diffuser', label: '디퓨저/캔들/석고방향제' },
-    { id: 'rattan', label: '라탄/마크라메' },
-    { id: 'flower', label: '플라워' },
-    { id: 'total', label: '토탈공예' },
+    { id: 'BALLOON', label: '풍선/페이퍼아트' },
+    { id: 'GIFT', label: '선물포장/보자기' },
+    { id: 'WOOD', label: '목공/도자기/가죽' },
+    { id: 'RESIN', label: '레진/비즈공예' },
+    { id: 'DIFFUSER', label: '디퓨저/캔들/석고방향제' },
+    { id: 'RATTAN', label: '라탄/마크라메' },
+    { id: 'FLOWER', label: '플라워' },
+    { id: 'TOTAL', label: '토탈공예' },
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleCategoryClick = (id: string) => {
     setSelectedCategory(id);
+    navigate(`/community/?category=${id}`);
     setIsMenuOpen(false); // 카테고리 선택 시 메뉴 닫기
   };
 
