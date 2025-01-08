@@ -13,15 +13,11 @@ type ErrorState = {
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axiosAuthInstance from '../../api/axiosAuthInstance';
 import ConfirmModal from '../../components/modal/ConfirmModal';
-import useUserStore from '../../stores/userStore';
 
 function CommunityPost({ type }: { type: 'post' | 'edit' }) {
-  const { user } = useUserStore();
-  const isWorkShopUser = user && user.role !== 'WORKSHOP';
-
   const [formData, setFormData] = useState<FormData>({
     category: '1',
     title: '',
@@ -64,7 +60,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
   // PATCH
   useEffect(() => {
     console.log('pagetype: ' + pageType);
-    if (isWorkShopUser && pageType !== 'post') {
+    if (pageType !== 'post') {
       axiosAuthInstance
         .get(`/api/posts/${id || '1'}`)
         .then((response) => {
@@ -231,10 +227,6 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
     console.log('삭제 로직 실행');
   };
-
-  if (isWorkShopUser) {
-    return <Navigate to="/community" />;
-  }
 
   return (
     <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
