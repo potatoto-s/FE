@@ -42,7 +42,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pagetype, setPageType] = useState<'post' | 'edit'>(type);
+  const [pageType, setPageType] = useState<'post' | 'edit'>(type);
 
   const [files, setFiles] = useState<File[]>([]);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
@@ -52,7 +52,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   // 버튼 클릭 시 type 전환
   const toggleType = () => {
-    if (pagetype === 'post') {
+    if (pageType === 'post') {
       setPageType('edit');
       navigate(`/communitypost/${id || '1'}`);
     } else {
@@ -63,8 +63,8 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
 
   // PATCH
   useEffect(() => {
-    console.log('pagetype: ' + pagetype);
-    if (isWorkShopUser && pagetype !== 'post') {
+    console.log('pagetype: ' + pageType);
+    if (isWorkShopUser && pageType !== 'post') {
       axiosAuthInstance
         .get(`/api/posts/${id || '1'}`)
         .then((response) => {
@@ -80,7 +80,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
           console.error(err);
         });
     }
-  }, [pagetype]); // id가 변경될 때마다 실행
+  }, [pageType]); // id가 변경될 때마다 실행
 
   // 입력값 변경 처리
   const handleChange = (
@@ -121,7 +121,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         payload.append('images', image);
       });
       let response;
-      if (pagetype === 'post') {
+      if (pageType === 'post') {
         response = await axiosAuthInstance.post(`/api/posts/create/`, payload, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
@@ -130,7 +130,7 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
         alert('게시물 등록이 완료되었습니다.');
 
         navigate(`/communitydetail/${response.data}`);
-      } else if (pagetype === 'edit') {
+      } else if (pageType === 'edit') {
         response = await axiosAuthInstance.patch(
           `/api/posts/${id}/update/`,
           payload,
@@ -367,11 +367,11 @@ function CommunityPost({ type }: { type: 'post' | 'edit' }) {
           ))}
         </div>
 
-        {pagetype === 'post' && <button onClick={toggleType}>edit 전환</button>}
-        {pagetype === 'edit' && <button onClick={toggleType}>post 전환</button>}
+        {pageType === 'post' && <button onClick={toggleType}>edit 전환</button>}
+        {pageType === 'edit' && <button onClick={toggleType}>post 전환</button>}
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
-          {pagetype === 'post' ? (
+          {pageType === 'post' ? (
             <>
               <button
                 type="submit"
