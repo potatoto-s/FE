@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserProfile } from '../../api/UserApi';
+import { fetchUserProfile } from '../../api/ProfileGetApi';
 
 const MyPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<{
@@ -59,7 +59,7 @@ const MyPage: React.FC = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center py-10 mt-[6.25rem]">
+      <div className="flex flex-col items-center py-10 ">
         <div className="w-full max-w-screen-lg text-center">
           <h2 className="text-lg font-bold text-[#F28749] inline-block border-b-2 border-[#F28749] pb-3">
             마이페이지
@@ -92,7 +92,9 @@ const MyPage: React.FC = () => {
 
         <div className="mt-10 text-center md:text-right w-full max-w-4xl md:pr-16">
           <button
-            onClick={() => navigate('/MyPageEditor')}
+            onClick={
+              () => navigate('/MyPageEditor', { state: userInfo }) // 사용자 정보를 state로 전달
+            }
             className="px-6 py-2 text-white bg-[#F28749] rounded hover:bg-[#F26749]"
           >
             프로필 수정
