@@ -13,7 +13,7 @@ const Contact = () => {
       style={{ height: 'calc(100vh - 25rem' }}
     >
       <h1 className="w-[30rem] text-[#6E6E6E] text-[3.5rem] font-bold mb-[2.5rem]">
-        CONTACT
+        CONTACT ~확인확인~
       </h1>
       <div className="w-[30rem] h-[0.2rem] bg-[#6E6E6E]"></div>
       <ContactType
