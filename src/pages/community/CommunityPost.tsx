@@ -22,24 +22,13 @@ function CommunityPost({ type }: Props) {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pageType, setPageType] = useState<'post' | 'edit'>(type);
+  const [pageType] = useState<FormType>(type);
 
   const [files, setFiles] = useState<File[]>([]);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  // 버튼 클릭 시 type 전환
-  const toggleType = () => {
-    if (pageType === 'post') {
-      setPageType('edit');
-      navigate(`/communitypost/${id || '1'}`);
-    } else {
-      setPageType('post');
-      navigate(`/communitypost`);
-    }
-  };
 
   // PATCH
   useEffect(() => {
@@ -322,8 +311,6 @@ function CommunityPost({ type }: Props) {
           ))}
         </div>
 
-        {pageType === 'post' && <button onClick={toggleType}>edit 전환</button>}
-        {pageType === 'edit' && <button onClick={toggleType}>post 전환</button>}
         {/* 등록/취소 버튼 */}
         <div className="flex justify-center gap-4">
           {pageType === 'post' ? (
