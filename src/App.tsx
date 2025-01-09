@@ -12,7 +12,6 @@ import SignUp from './pages/signup/SignUp';
 import CommunityPost from './pages/community/CommunityPost';
 import Layout from './layout/Layout';
 import CategoryLayout from './layout/CategoryLayout';
-
 const App = () => {
   return (
     <Routes>
@@ -20,7 +19,7 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route element={<CategoryLayout />}>
           <Route path="/community" element={<Community />} />
-          <Route path="/communitydetail" element={<CommunityDetail />} />
+          <Route path="/communitydetail/:id" element={<CommunityDetail />} />
         </Route>
         <Route
           path="/communitypost/:id"
