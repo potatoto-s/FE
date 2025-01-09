@@ -2,10 +2,15 @@ import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axiosAuthInstance from '../../api/axiosAuthInstance';
 import ConfirmModal from '../../components/modal/ConfirmModal';
 import { initFormData, initError, ERROR_MESSAGES } from './const';
 import type { FormData, FormType, ErrorState } from './type';
+import {
+  getPostById,
+  createPost,
+  updatePost,
+  deletePost,
+} from '../../api/PostApi';
 
 type Props = {
   type: FormType;
@@ -39,11 +44,10 @@ function CommunityPost({ type }: Props) {
   // PATCH
   useEffect(() => {
     console.log('pagetype: ' + pageType);
-    if (pageType !== 'post') {
-      axiosAuthInstance
-        .get(`/api/posts/${id || '1'}`)
+    if (pageType !== 'post' && id) {
+      getPostById(id)
         .then((response) => {
-          const data = response.data;
+          const data = response;
           setFormData({
             category: data.category,
             title: data.title,
@@ -55,7 +59,7 @@ function CommunityPost({ type }: Props) {
           console.error(err);
         });
     }
-  }, [pageType]); // id가 변경될 때마다 실행
+  }, [pageType, id]);
 
   // 입력값 변경 처리
   const handleChange = (
@@ -78,7 +82,6 @@ function CommunityPost({ type }: Props) {
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // 유효성 검사: 카테고리가 "1"이면 저장 불가
     if (formData.category === '1') {
       setError((prevError) => ({
         ...prevError,
@@ -97,27 +100,14 @@ function CommunityPost({ type }: Props) {
       });
       let response;
       if (pageType === 'post') {
-        response = await axiosAuthInstance.post(`/api/posts/create/`, payload, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        console.log('수정 respose:', response.data);
-        console.log('저장 데이터:', payload);
+        response = await createPost(payload);
+        console.log('응답 데이터:', response);
         alert('게시물 등록이 완료되었습니다.');
-
-        navigate(`/communitydetail/${response.data}`);
-      } else if (pageType === 'edit') {
-        response = await axiosAuthInstance.patch(
-          `/api/posts/${id}/update/`,
-          payload,
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          }
-        );
-        console.log('수정 respose:', response.data);
-        console.log('수정 데이터:', payload);
+        navigate(`/communitydetail/${response.id}`);
+      } else if (pageType === 'edit' && id) {
+        response = await updatePost(id, payload);
         alert('게시물 수정이 완료되었습니다.');
-
-        navigate(`/communitydetail/${response.data.id}`);
+        navigate(`/communitydetail/${response.id}`);
       }
     } catch {
       alert('게시물 등록 중 오류가 발생했습니다.');
@@ -185,26 +175,20 @@ function CommunityPost({ type }: Props) {
   };
 
   const handleDelete = async () => {
-    try {
-      //test
-      console.log('id' + `${id}`);
-      const response = await axiosAuthInstance.delete(
-        `/api/posts/${id}/delete/`
-      );
-      // 응답 객체에서 status와 statusText에 접근
-      const { status } = response;
-      if (status === 204) {
-        closeDeleteModal(); // 삭제 후 모달 닫기
-        navigate('/community');
-      } else {
-        console.log('삭제 요청 중 오류 발생함');
+    if (id) {
+      try {
+        const { status } = await deletePost(id);
+        if (status === 204) {
+          closeDeleteModal(); // 삭제 후 모달 닫기
+          navigate('/community');
+        } else {
+          console.log('삭제 요청 중 오류 발생');
+        }
+      } catch (err) {
+        console.log('삭제 요청 오류 발생', err);
+        alert('삭제 중 오류가 발생했습니다.');
       }
-    } catch (err) {
-      console.log('삭제 요청 오류 발생', err);
-      alert('삭제 중 오류가 발생했습니다.');
     }
-
-    console.log('삭제 로직 실행');
   };
 
   return (
