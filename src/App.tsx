@@ -12,6 +12,8 @@ import SignUp from './pages/signup/SignUp';
 import CommunityPost from './pages/community/CommunityPost';
 import Layout from './layout/Layout';
 import CategoryLayout from './layout/CategoryLayout';
+import { LoginRoutes, PublicRoutes, WorkshopRoutes } from './layout/ProtectedRoute';
+
 const App = () => {
   return (
     <Routes>
@@ -21,20 +23,26 @@ const App = () => {
           <Route path="/community" element={<Community />} />
           <Route path="/communitydetail/:id" element={<CommunityDetail />} />
         </Route>
-        <Route
-          path="/communitypost/:id"
-          element={<CommunityPost type={'edit'} />}
-        />
-        <Route
-          path="/communitypost"
-          element={<CommunityPost type={'post'} />}
-        />
+        <Route element={<WorkshopRoutes />}>
+          <Route
+            path="/communitypost/:id"
+            element={<CommunityPost type={'edit'} />}
+          />
+          <Route
+            path="/communitypost"
+            element={<CommunityPost type={'post'} />}
+          />
+        </Route>
         <Route path="/contact" element={<Contact />} />
         <Route path="/contactform" element={<ContactForm />} />
-        <Route path="/mypage" element={<Mypage />} />
-        <Route path="/mypageeditor" element={<MypageEditor />} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route element={<LoginRoutes />}>
+          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypageeditor" element={<MypageEditor />} />
+        </Route>
+        <Route element={<PublicRoutes />}>
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Route>
       </Route>
     </Routes>
   );
