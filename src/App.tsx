@@ -12,11 +12,7 @@ import SignUp from './pages/signup/SignUp';
 import CommunityPost from './pages/community/CommunityPost';
 import Layout from './layout/Layout';
 import CategoryLayout from './layout/CategoryLayout';
-import {
-  LoginRoutes,
-  PublicRoutes,
-  WorkshopRoutes,
-} from './layout/ProtectedRoute';
+import { LoginRoutes, PublicRoutes, WorkshopRoutes } from './layout/ProtectedRoute';
 
 const App = () => {
   return (
@@ -25,7 +21,7 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route element={<CategoryLayout />}>
           <Route path="/community" element={<Community />} />
-          <Route path="/communitydetail" element={<CommunityDetail />} />
+          <Route path="/communitydetail/:id" element={<CommunityDetail />} />
         </Route>
         <Route element={<WorkshopRoutes />}>
           <Route

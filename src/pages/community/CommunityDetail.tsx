@@ -1,195 +1,241 @@
-import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { FaCommentDots } from 'react-icons/fa';
 import { BsChatHeart } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import CommentList from '../../components/comment/CommentList';
 import CommentInput from '../../components/comment/CommentInput';
-
-interface Comment {
-  // 댓글 인터페이스 정의
-  id: number;
-  text: string;
-  date: string;
-  user: string;
-}
+import ConfirmModal from '../../components/modal/ConfirmModal';
+import {
+  fetchPostDetail,
+  createComment,
+  updateComment,
+  deleteComment,
+  toggleLikePost,
+  deletePost,
+} from './CommunityDetailAPI';
+import useUserStore from '../../stores/userStore';
+import { Comment, Post } from './CommunityDetailTypes';
 
 const CommunityDetail = () => {
-  // 상태 관리
+  const { user } = useUserStore();
+  const { id } = useParams<{ id: string }>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
   const [likes, setLikes] = useState<number>(0);
   const [liked, setLiked] = useState<boolean>(false);
-  const [currentUser] = useState<string>('chanhee0708'); // 현재 사용자 (나중에 유저값 수정)
-  const [author] = useState<string>('chanhee0708'); // 게시글 작성자
+  const [post, setPost] = useState<Post | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
-  const [editingCommentText, setEditingCommentText] = useState<string>('');
+  const navigate = useNavigate();
 
-  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 댓글 등록후 등록된 댓글 텍스트로 상태 업데이트
+  useEffect(() => {
+    const loadPostDetails = async () => {
+      if (id) {
+        const postDetail = await fetchPostDetail(id);
+        setPost(postDetail);
+        setComments(postDetail.comments);
+        setLiked(postDetail.is_liked);
+      }
+    };
+    loadPostDetails();
+  }, []);
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = () => {
-    if (typeof newComment === 'string' && newComment.trim().length > 0) {
-      const currentDate = new Date();
-      const formattedDate = `${currentDate.getMonth() + 1}. ${currentDate.getDate()}. ${currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  const handleCommentSubmit = async () => {
+    if (!(user && post && newComment.trim().length > 0)) return;
+
+    const handleCommentEdit = async () => {
+      if (!editingCommentId) throw new Error('Invalid editingCommentId');
+      await updateComment(editingCommentId, newComment);
+      setComments(
+        comments.map((comment) =>
+          comment.id === editingCommentId
+            ? { ...comment, content: newComment }
+            : comment
+        )
+      );
+      setEditingCommentId(null);
+    };
+
+    const handleCommentCreate = async () => {
+      const res = await createComment(post.id, newComment);
       const newCommentEntry: Comment = {
-        id: comments.length + 1,
-        text: newComment,
-        date: formattedDate,
-        user: currentUser,
+        id: res.id,
+        content: res.content,
+        created_at: res.created_at,
+        updated_at: res.updated_at,
+        is_deleted: res.deleted,
+        author: {
+          id: user.id,
+          role: user.role,
+          workshop_name: user.workshop_name,
+        },
       };
+      setComments([newCommentEntry, ...comments]);
+    };
 
+    try {
       if (editingCommentId) {
-        setComments(
-          comments.map((comment) =>
-            comment.id === editingCommentId
-              ? { ...comment, text: newComment }
-              : comment
-          )
-        );
-        setEditingCommentId(null);
-        setNewComment('');
+        await handleCommentEdit();
       } else {
-        setComments([...comments, newCommentEntry]);
+        await handleCommentCreate();
       }
-
       setNewComment('');
       setShowModal(true);
-      setTimeout(() => setShowModal(false), 2000); // 모달창 2초뒤 창사라짐
+      setTimeout(() => setShowModal(false), 2000);
+    } catch (error) {
+      console.error('댓글 등록 에러 발생', error); // 체크용
     }
   };
 
-  const handleCommentDelete = (id: number) => {
+  const handleCommentDelete = async (id: number) => {
+    await deleteComment(id);
     setComments(comments.filter((comment) => comment.id !== id));
   };
 
   const handleEditComment = (id: number) => {
     const commentToEdit = comments.find((comment) => comment.id === id);
     if (commentToEdit) {
-      setNewComment(commentToEdit.text);
+      setNewComment(commentToEdit.content);
       setEditingCommentId(id);
-      setEditingCommentText(commentToEdit.text);
-      // 수정 및 삭제 페이지 이동하는 라우터 로직 추가
     }
   };
 
-  const handleLike = () => {
-    if (!liked) {
-      setLikes(likes + 1);
-    } else {
-      setLikes(likes - 1);
-    }
-    setLiked(!liked);
+  const handleLike = async () => {
+    const newLikedStatus = !liked;
+    await toggleLikePost(newLikedStatus, post?.id || 0);
+    setLikes(likes + (newLikedStatus ? 1 : -1));
+    setLiked(newLikedStatus);
   };
 
-  const handleEditPost = () => {
-    alert('게시글 수정 페이지 이동 나중에 라우터 로직 구현');
+  const handleEditButtonClick = () => {
+    if (id) {
+      navigate(`/communitypost/${id}`);
+    }
+  };
+
+  const closeDeleteModal = () => {
+    setShowConfirmModal(false);
   };
 
   const handleDeletePost = () => {
-    alert('게시글 삭제 이것도 나중에 라우터 로직 구현');
+    setShowConfirmModal(true);
+  };
+
+  const confirmDeletePost = async () => {
+    if (post) {
+      await deletePost(post.id);
+      navigate(`/community`);
+    }
+    setShowConfirmModal(false);
+  };
+
+  const handleBackButtonClick = () => {
+    navigate('/community');
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4">
-      <div className="w-full max-w-[81.25rem] h-[93.0625rem] bg-white p-6 shadow-lg rounded-lg mt-[6.25rem] mb-[6.25rem]">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="mb-4 flex items-center">
-            <h1 className="text-black text-2xl font-medium">
-              [ 레진/비즈공예 ]
-            </h1>
-            <h1 className="text-xl font-bold ml-2">
-              비즈의 종류는 무엇이 있나요?
-            </h1>
-            <span className="text-gray-500 text-lg ml-2 flex items-center">
-              <FaCommentDots className="mr-1" />({comments.length})
-            </span>
-          </div>
-          {currentUser === author && (
-            <div className="flex space-x-4 ml-2">
-              <span
-                onClick={handleEditPost}
-                className="cursor-pointer text-gray-400 text-nowrap hover:text-blue-600 text-sm"
-              >
-                수정
+    <div className="flex justify-center items-center px-4">
+      <div className="w-full max-w-[81.25rem] bg-white p-6 shadow-lg rounded-lg mt-[6.25rem] mb-[6.25rem]">
+        <button onClick={handleBackButtonClick} className="mb-4 text-gray-400">
+          뒤로가기
+        </button>
+        {post && (
+          <>
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <h1 className="text-black text-2xl font-medium">
+                  [{post.category}]
+                </h1>
+                <h1 className="text-xl font-bold ml-2">{post.title}</h1>
+                <span className="text-gray-500 text-lg ml-2 flex items-center">
+                  <FaCommentDots className="mr-1" />({comments.length})
+                </span>
+              </div>
+              {user && post.author.id === user.id && (
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleEditButtonClick}
+                    className="text-gray-400 hover:text-blue-600 transition duration-300 text-sm"
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={handleDeletePost}
+                    className="text-gray-400 hover:text-red-600 transition duration-300 text-sm"
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="text-gray-400 mb-10">
+              <span className="font-bold mr-2">{post.author.nickname} </span>
+              <span className="text-[#F26749] mr-2">
+                {post.author.workshop_name || post.author.company_name}
               </span>
-              <span
-                onClick={handleDeletePost}
-                className="cursor-pointer text-gray-400 text-nowrap hover:text-red-600 text-sm"
-              >
-                삭제
+              <span className="text-sm">
+                {new Date(post.created_at).toLocaleString()}
               </span>
             </div>
-          )}
-        </div>
-
-        <div className="mb-6">
-          <div className="mb-4">
-            <img
-              src="/assets/logo.png"
-              alt="Logo"
-              className="inline-block mb-2"
+            {post.images && post.images.length > 0 && (
+              <div className="flex flex-wrap mb-6">
+                {post.images.map((image) => (
+                  <img
+                    key={image.id}
+                    src={image.image_url}
+                    alt={`게시글 이미지 ${image.id}`}
+                    className="w-80 h-80 mb-4"
+                  />
+                ))}
+              </div>
+            )}
+            <div className="mb-6 w-full">
+              <p className="mt-2 text-base leading-relaxed text-gray-700 break-words">
+                {post.content}
+              </p>
+            </div>
+            <div className="flex justify-center mt-10 mb-10">
+              <button
+                onClick={handleLike}
+                className={`border rounded-lg px-4 py-1 flex items-center transition duration-300 ${liked ? 'bg-[#F26749] text-white border-[#F26749] font-bold' : 'border-[#F26749] text-[#F26749] font-bold'}`}
+              >
+                <BsChatHeart className="mr-1 h-5 w-5" />
+                좋아요 ! {likes}
+              </button>
+            </div>
+            <CommentInput
+              newComment={newComment}
+              onCommentChange={handleCommentChange}
+              onCommentSubmit={handleCommentSubmit}
             />
-          </div>
-          <p className="mt-2 text-base leading-relaxed text-gray-700">
-            내용비즈의 종류로는 크게 진주, 펄 시드비즈, 화이어 폴리쉬, 터키석,
-            캣츠아이, 론델, 주판알 크리스탈, 자개 비즈 등이 있으며 이외에도
-            종류는 다양하다. 각 비즈마다 특징이 다른데 대표적으로 캣츠아이는
-            고양이 눈처럼 세로줄이 비즈에 있다. 내용비즈의 종류로는 크게 진주,
-            펄 시드비즈, 화이어 폴리쉬, 터키석, 캣츠아이, 론델, 주판알 크리스탈,
-            자개 비즈 등이 있으며 이외에도 종류는 다양하다. 각 비즈마다 특징이
-            다른데 대표적으로 캣츠아이는 고양이 눈처럼 세로줄이 비즈에 있다.
-            내용비즈의 종류로는 크게 진주, 펄 시드비즈, 화이어 폴리쉬, 터키석,
-            캣츠아이, 론델, 주판알 크리스탈, 자개 비즈 등이 있으며 이외에도
-            종류는 다양하다. 각 비즈마다 특징이 다른데 대표적으로 캣츠아이는
-            고양이 눈처럼 세로줄이 비즈에 있다. 내용비즈의 종류로는 크게 진주,
-            펄 시드비즈, 화이어 폴리쉬, 터키석, 캣츠아이, 론델, 주판알 크리스탈,
-            자개 비즈 등이 있으며 이외에도 종류는 다양하다. 각 비즈마다 특징이
-            다른데 대표적으로 캣츠아이는 고양이 눈처럼 세로줄이 비즈에 있다.
-            내용비즈의 종류로는 크게 진주, 펄 시드비즈, 화이어 폴리쉬, 터키석,
-            캣츠아이, 론델, 주판알 크리스탈, 자개 비즈 등이 있으며 이외에도
-            종류는 다양하다. 각 비즈마다 특징이 다른데 대표적으로 캣츠아이는
-            고양이 눈처럼 세로줄이 비즈에 있다.
-          </p>
-        </div>
-
-        <div className="flex justify-center mt-10 mb-10">
-          <button
-            onClick={handleLike}
-            className={`border rounded-lg px-4 py-1 flex items-center transition duration-300 ${
-              liked
-                ? 'bg-[#F26749] text-white border-[#F26749] font-bold'
-                : 'border-[#F26749] text-[#F26749] font-bold'
-            }`}
-          >
-            <BsChatHeart className="mr-1 h-5 w-5" />
-            좋아요 ! {likes}
-          </button>
-        </div>
-
-        <CommentInput
-          newComment={newComment}
-          onCommentChange={handleCommentChange}
-          onCommentSubmit={handleCommentSubmit}
-          editingCommentText={editingCommentText}
-        />
-
-        <CommentList
-          comments={comments}
-          currentUser={currentUser}
-          onDelete={handleCommentDelete}
-          onEdit={handleEditComment}
-        />
-
-        {showModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-lg font-semibold text-center">
-                댓글이 등록되었습니다 !
-              </h2>
-            </div>
-          </div>
+            <CommentList
+              comments={comments}
+              currentUserId={user ? user.id : 0}
+              onDelete={handleCommentDelete}
+              onEdit={handleEditComment}
+            />
+            {showModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <h2 className="text-lg font-semibold text-center">
+                    댓글이 등록되었습니다 !
+                  </h2>
+                </div>
+              </div>
+            )}
+            {showConfirmModal && (
+              <ConfirmModal
+                handleDelete={confirmDeletePost}
+                closeDeleteModal={closeDeleteModal}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
@@ -197,3 +243,11 @@ const CommunityDetail = () => {
 };
 
 export default CommunityDetail;
+
+// 댓글 로직 에러 전부 수정 및 해결
+
+// HTTP 로그 확인해본결과 204 No Content 요청이 성공으로 처리되고
+// 서버에 반환할 데이터 없음을 뜻함
+// 댓글 삭제 성공적으로 백엔드에게 넘어가는거같음
+
+// 댓글 리스트 컨테이너 UI 동적으로 처리되게끔 UI 변경
