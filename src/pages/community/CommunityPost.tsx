@@ -1,40 +1,19 @@
-type FormData = {
-  category: string;
-  title: string;
-  content: string;
-  images: File[] | null; // image는 null 또는 File 타입
-};
-
-type ErrorState = {
-  category: string | null;
-  image: string | null | undefined;
-};
-
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosAuthInstance from '../../api/axiosAuthInstance';
 import ConfirmModal from '../../components/modal/ConfirmModal';
+import { initFormData, initError, ERROR_MESSAGES } from './const';
+import type { FormData, FormType, ErrorState } from './type';
 
-function CommunityPost({ type }: { type: 'post' | 'edit' }) {
-  const [formData, setFormData] = useState<FormData>({
-    category: '1',
-    title: '',
-    content: '',
-    images: [],
-  });
+type Props = {
+  type: FormType;
+};
 
-  const ERROR_MESSAGES = {
-    categoryRequired: '카테고리를 선택해야 합니다.',
-    maxFileLimit: '최대 3개의 파일만 업로드 가능합니다.',
-    imageFileOnly: '이미지 파일만 업로드 가능합니다.',
-  };
-
-  const [error, setError] = useState<ErrorState>({
-    category: null,
-    image: null,
-  });
+function CommunityPost({ type }: Props) {
+  const [formData, setFormData] = useState<FormData>(initFormData);
+  const [error, setError] = useState<ErrorState>(initError);
 
   const { id } = useParams();
   const navigate = useNavigate();
