@@ -20,7 +20,7 @@
   <img src="https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt=VisualStudioCode />
   <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   <img src="https://img.shields.io/badge/Zep-2C2F33?style=for-the-badge&logoColor=white" alt="Zep" />
-</div>
+
 
 ## 네이밍 컨벤션
 
@@ -195,3 +195,4 @@ Prettier를 사용하여 코드 포맷팅을 관리합니다. 아래와 같이 `
 │   │   │   ├── MyPage.tsx
 │
 ```
+</div>
