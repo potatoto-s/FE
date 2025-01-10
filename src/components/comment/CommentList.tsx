@@ -45,7 +45,14 @@ const CommentList = ({
                         {formatDate(created_at)}
                       </span>
                     </div>
-                    <p className="text-gray-800 text-base pl-1">{content}</p>
+                    <p className="flex items-center text-gray-800 text-base pl-1">
+                      {content.replace(' (수정됨)', '')}
+                      {content.includes('(수정됨)') && (
+                        <span className="text-gray-400 text-xs ml-2">
+                          (수정됨)
+                        </span>
+                      )}
+                    </p>
                   </div>
                   {isAuthor && ( // 댓글 작성자와 일치할시 수정 및 삭제 버튼 표시
                     <div className="flex items-center mb-2">

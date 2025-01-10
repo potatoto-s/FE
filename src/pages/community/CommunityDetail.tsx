@@ -23,45 +23,83 @@ const CommunityDetail = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>('');
   const [likes, setLikes] = useState<number>(0);
-  const [liked, setLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const [post, setPost] = useState<Post | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const navigate = useNavigate();
 
+  //게시글 세부 정보 로드
   useEffect(() => {
     const loadPostDetails = async () => {
       if (id) {
-        const postDetail = await fetchPostDetail(id);
-        setPost(postDetail);
-        setComments(postDetail.comments);
-        setLiked(postDetail.is_liked);
+        try {
+          const postDetail = await fetchPostDetail(id);
+          setPost(postDetail);
+          setComments(postDetail.comments);
+          setLikes(postDetail.likes || 0);
+          setIsLiked(postDetail.is_liked);
+        } catch (error) {
+          console.error('게시글 로드 오류 발생', error);
+        }
       }
     };
     loadPostDetails();
-  }, []);
+  }, []); // 빈 배열로 설정
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value);
   };
 
+  // 댓글 처리 로직
   const handleCommentSubmit = async () => {
-    if (!(user && post && newComment.trim().length > 0)) return;
+    if (!user) {
+      // 비로그인 일시 등록 버튼 클릭시 로그인페이지 이동
+      setShowLoginModal(true);
+      setTimeout(() => {
+        setShowLoginModal(false);
+        navigate('/login');
+      }, 2000);
+      return;
+    }
+    if (!(user && post && newComment.trim().length > 0)) {
+      setShowErrorModal(true);
+      setTimeout(() => setShowErrorModal(false), 2000);
+      return;
+    } else {
+      setShowErrorModal(false);
+    }
 
+    // 댓글 수정 처리
     const handleCommentEdit = async () => {
       if (!editingCommentId) throw new Error('Invalid editingCommentId');
-      await updateComment(editingCommentId, newComment);
-      setComments(
-        comments.map((comment) =>
-          comment.id === editingCommentId
-            ? { ...comment, content: newComment }
-            : comment
-        )
-      );
-      setEditingCommentId(null);
+
+      const updatedComment = `${newComment} (수정됨)`;
+
+      try {
+        await updateComment(editingCommentId, updatedComment);
+
+        setComments(
+          comments.map((comment) =>
+            comment.id === editingCommentId
+              ? { ...comment, content: updatedComment }
+              : comment
+          )
+        );
+        setEditingCommentId(null);
+        setShowEditModal(true);
+        setTimeout(() => setShowEditModal(false), 2000);
+      } catch (error) {
+        console.error('댓글 수정 에러 발생', error);
+      }
     };
 
+    // 댓글 생성 처리
     const handleCommentCreate = async () => {
       const res = await createComment(post.id, newComment);
       const newCommentEntry: Comment = {
@@ -77,6 +115,8 @@ const CommunityDetail = () => {
         },
       };
       setComments([newCommentEntry, ...comments]);
+      setShowModal(true);
+      setTimeout(() => setShowModal(false), 2000);
     };
 
     try {
@@ -86,31 +126,42 @@ const CommunityDetail = () => {
         await handleCommentCreate();
       }
       setNewComment('');
-      setShowModal(true);
-      setTimeout(() => setShowModal(false), 2000);
     } catch (error) {
       console.error('댓글 등록 에러 발생', error); // 체크용
     }
   };
 
+  // 댓글 삭제 처리
   const handleCommentDelete = async (id: number) => {
     await deleteComment(id);
     setComments(comments.filter((comment) => comment.id !== id));
+    setShowDeleteModal(true);
+    setTimeout(() => setShowDeleteModal(false), 2000);
   };
 
+  // 댓글 수정 모드 활성화
   const handleEditComment = (id: number) => {
     const commentToEdit = comments.find((comment) => comment.id === id);
     if (commentToEdit) {
-      setNewComment(commentToEdit.content);
+      setNewComment(commentToEdit.content.replace(' (수정됨)', ''));
       setEditingCommentId(id);
     }
   };
 
+  // 좋아요 토글 처리
   const handleLike = async () => {
-    const newLikedStatus = !liked;
-    await toggleLikePost(newLikedStatus, post?.id || 0);
-    setLikes(likes + (newLikedStatus ? 1 : -1));
-    setLiked(newLikedStatus);
+    if (!user || !post) return;
+    const newLikedStatus = !isLiked;
+    setIsLiked(newLikedStatus);
+    setLikes((prevLikes) => prevLikes + (newLikedStatus ? 1 : -1));
+
+    try {
+      await toggleLikePost(newLikedStatus, post.id);
+    } catch (error) {
+      console.error('좋아요 상태 업데이트 오류 발생', error);
+      setIsLiked(!newLikedStatus); // 오류시 되돌리기
+      setLikes((prevLikes) => prevLikes - (newLikedStatus ? 1 : -1)); // 원래 상태로 되돌리기
+    }
   };
 
   const handleEditButtonClick = () => {
@@ -203,7 +254,7 @@ const CommunityDetail = () => {
             <div className="flex justify-center mt-10 mb-10">
               <button
                 onClick={handleLike}
-                className={`border rounded-lg px-4 py-1 flex items-center transition duration-300 ${liked ? 'bg-[#F26749] text-white border-[#F26749] font-bold' : 'border-[#F26749] text-[#F26749] font-bold'}`}
+                className={`border rounded-lg px-4 py-1 flex items-center transition duration-300 ${isLiked ? 'bg-[#F26749] text-white border-[#F26749] font-bold' : 'border-[#F26749] text-[#F26749] font-bold'}`}
               >
                 <BsChatHeart className="mr-1 h-5 w-5" />
                 좋아요 ! {likes}
@@ -220,11 +271,12 @@ const CommunityDetail = () => {
               onDelete={handleCommentDelete}
               onEdit={handleEditComment}
             />
+
             {showModal && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                   <h2 className="text-lg font-semibold text-center">
-                    댓글이 등록되었습니다 !
+                    댓글이 등록 되었습니다 !
                   </h2>
                 </div>
               </div>
@@ -235,6 +287,42 @@ const CommunityDetail = () => {
                 closeDeleteModal={closeDeleteModal}
               />
             )}
+            {showDeleteModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <h2 className="ext-lg font-semibold text-center">
+                    댓글이 삭제 되었습니다 !
+                  </h2>
+                </div>
+              </div>
+            )}
+            {showErrorModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <h2 className="ext-lg font-semibold text-center">
+                    최소 1글자 이상 입력하세요 !
+                  </h2>
+                </div>
+              </div>
+            )}
+            {showEditModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <h2 className="ext-lg font-semibold text-center">
+                    댓글이 수정 되었습니다 !
+                  </h2>
+                </div>
+              </div>
+            )}
+            {showLoginModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <h2 className="ext-lg font-semibold text-center">
+                    로그인 후 댓글을 등록 할 수 있습니다 !
+                  </h2>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -243,11 +331,3 @@ const CommunityDetail = () => {
 };
 
 export default CommunityDetail;
-
-// 댓글 로직 에러 전부 수정 및 해결
-
-// HTTP 로그 확인해본결과 204 No Content 요청이 성공으로 처리되고
-// 서버에 반환할 데이터 없음을 뜻함
-// 댓글 삭제 성공적으로 백엔드에게 넘어가는거같음
-
-// 댓글 리스트 컨테이너 UI 동적으로 처리되게끔 UI 변경
