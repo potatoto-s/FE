@@ -1,4 +1,6 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=Hands_with&fontSize=90" />
+<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 10px;">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=Hands_with&fontSize=90" />
+</div>
 
 # STACK
 
