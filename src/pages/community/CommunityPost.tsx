@@ -72,7 +72,7 @@ function CommunityPost({ type }: Props) {
             aria-label="카테고리 선택"
             className="w-full p-2 border rounded focus:outline-none focus:ring-2  focus:ring-[#F28749]"
           >
-            <option value="1" disabled>
+            <option value="ALL" disabled>
               선택
             </option>
             <option value="BALLOON">풍선/페이퍼아트</option>

@@ -72,14 +72,14 @@ function useCommunityPostHook({
     });
 
     // 에러 상태 초기화: 카테고리 선택 시 초기화
-    if (name === 'category' && value !== '1') {
+    if (name === 'category' && value !== 'ALL') {
       setError((prevError) => ({ ...prevError, category: null }));
     }
   };
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.category === '1') {
+    if (formData.category === 'ALL') {
       setError((prevError) => ({
         ...prevError,
         category: ERROR_MESSAGES.categoryRequired,
