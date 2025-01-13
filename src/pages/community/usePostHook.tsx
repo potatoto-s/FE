@@ -87,6 +87,14 @@ function useCommunityPostHook({
       return;
     }
 
+    if (formData.content.length < 10) {
+      setError((prevError) => ({
+        ...prevError,
+        content: ERROR_MESSAGES.contentMinLength,
+      }));
+      return;
+    }
+
     try {
       const payload = new FormData();
       payload.append('category', formData.category);

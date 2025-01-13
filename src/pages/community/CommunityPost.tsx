@@ -49,8 +49,8 @@ function CommunityPost({ type }: Props) {
     showDeleteModal,
     setShowDeleteModal,
   });
+  // console.log(formData);
 
-  console.log(formData);
   return (
     <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
       <div className="flex items-center mb-8">
@@ -116,6 +116,9 @@ function CommunityPost({ type }: Props) {
             required
             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] resize-none h-[500px] overflow-auto"
           ></textarea>
+          {error.content && (
+            <div className="text-red-500 text-sm mt-2">{error.content}</div>
+          )}
         </div>
 
         {/* 이미지 첨부 */}
