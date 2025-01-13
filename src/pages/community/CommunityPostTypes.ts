@@ -1,7 +1,16 @@
 export type FormType = 'post' | 'edit';
 
 export type FormData = {
-  category: string;
+  category:
+    | 'ALL'
+    | 'BALLOON'
+    | 'GIFT'
+    | 'WOOD'
+    | 'RESIN'
+    | 'DIFFUSER'
+    | 'RATTAN'
+    | 'FLOWER'
+    | 'TOTAL';
   title: string;
   content: string;
   images: File[] | null; // image는 null 또는 File 타입
