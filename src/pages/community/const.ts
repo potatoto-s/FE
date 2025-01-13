@@ -1,4 +1,4 @@
-import type { FormData, ErrorState } from './type';
+import type { FormData, ErrorState } from './CommunityPostTypes';
 
 export const initFormData: FormData = {
   category: '1',

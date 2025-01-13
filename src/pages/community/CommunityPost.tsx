@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ConfirmModal from '../../components/modal/ConfirmModal';
 import { initFormData, initError, ERROR_MESSAGES } from './const';
-import type { FormData, FormType, ErrorState } from './type';
+import type { FormData, FormType, ErrorState } from './CommunityPostTypes';
 import {
   getPostById,
   createPost,
