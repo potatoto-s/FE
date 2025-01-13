@@ -3,7 +3,7 @@ import { GoFileSymlinkFile } from 'react-icons/go';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ConfirmModal from '../../components/modal/ConfirmModal';
-import { initFormData, initError, ERROR_MESSAGES } from './const';
+import { initFormData, initError, ERROR_MESSAGES } from './CommunityPostConst';
 import type { FormData, FormType, ErrorState } from './CommunityPostTypes';
 import {
   getPostById,
@@ -166,7 +166,7 @@ function CommunityPost({ type }: Props) {
   const handleDelete = async () => {
     if (id) {
       try {
-        const { status } = await deletePost(id);
+        const status = await deletePost(id);
         if (status === 204) {
           closeDeleteModal(); // 삭제 후 모달 닫기
           navigate('/community');

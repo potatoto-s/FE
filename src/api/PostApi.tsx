@@ -42,7 +42,7 @@ export const updatePost = async (id: string, payload: FormData) => {
 export const deletePost = async (id: string) => {
   try {
     const response = await axiosAuthInstance.delete(`/api/posts/${id}/delete/`);
-    return response;
+    return response.status;
   } catch (error) {
     console.error('Failed to delete post:', error);
   }
