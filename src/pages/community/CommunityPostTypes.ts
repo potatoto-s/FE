@@ -14,6 +14,8 @@ export type FormData = {
   title: string;
   content: string;
   images: (File | { id: number; image_url: string })[] | null; // image는 null 또는 File 타입
+  add_images?: File[];
+  remove_image_ids?: number[];
 };
 
 export type ErrorState = {
