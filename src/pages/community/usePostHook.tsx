@@ -5,12 +5,7 @@ import type {
   FormData,
   ErrorState,
 } from '@pages/community/CommunityPostTypes';
-import {
-  getPostById,
-  createPost,
-  updatePost,
-  deletePost,
-} from '../../api/PostApi';
+import { getPostById, createPost, updatePost, deletePost } from '@api/PostApi';
 import { useNavigate, useParams } from 'react-router-dom';
 
 type Props = {

@@ -13,9 +13,9 @@ import {
   deleteComment,
   toggleLikePost,
   deletePost,
-} from './CommunityDetailAPI';
-import useUserStore from '../../stores/userStore';
-import { Comment, Post } from './CommunityDetailTypes';
+} from '@pages/community/CommunityDetailAPI';
+import useUserStore from '@stores/userStore';
+import { Post, Comment } from '@pages/community/CommunityDetailTypes';
 
 const CommunityDetail = () => {
   const { user } = useUserStore();
