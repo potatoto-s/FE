@@ -9,5 +9,6 @@ export type FormData = {
 
 export type ErrorState = {
   category: string | null;
+  content: string | null;
   image: string | null | undefined;
 };
