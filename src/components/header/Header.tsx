@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CgProfile } from 'react-icons/cg';
-import useAuthStore from '../../stores/authStore';
+import useAuthStore from '@stores/authStore';
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

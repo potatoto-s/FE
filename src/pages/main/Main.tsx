@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../../components/modal/MainModal';
+import Modal from '@components/modal/MainModal';
 import { PiThumbsUp } from 'react-icons/pi';
 
 const Main: React.FC = () => {

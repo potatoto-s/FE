@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../api/axiosInstance';
+import axiosInstance from '@api/axiosInstance';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import useUserStore from '../../stores/userStore';
-import useDebounce from '../../hooks/useDebounce';
+import useUserStore from '@stores/userStore';
+import useDebounce from '@hooks/useDebounce';
 
 type Post = {
   id: number;

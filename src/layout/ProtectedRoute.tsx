@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import useUserStore from '../stores/userStore';
+import useUserStore from '@stores/userStore';
 
 // WorkshopRoutes: 워크숍 사용자 접근 가능
 export function WorkshopRoutes() {

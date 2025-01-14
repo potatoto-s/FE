@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
-import { signUpSchema } from '../../schemas/signUpSchemas';
-import axiosInstance from '../../api/axiosInstance';
-import SignUpInput from './SignUpInput';
+import { signUpSchema } from '@schemas/signUpSchemas';
+import axiosInstance from '@api/axiosInstance';
+import SignUpInput from '@pages/signup/SignUpInput';
 
 const SignUp = () => {
   const {
