@@ -96,21 +96,20 @@ function useCommunityPostHook({
       payload.append('title', formData.title);
       payload.append('content', formData.content);
       formData.images?.forEach((image) => {
-        console.log('image', image);
-        if (pageType === 'post') {
-          if (image instanceof File) {
-            payload.append('images', URL.createObjectURL(image));
-          }
-        } else if (pageType === 'edit') {
-          if (image instanceof File) {
-            payload.append('add_images', URL.createObjectURL(image));
-            console.log('image', image);
-          } else if ('id' in image && 'image_url' in image) {
-            payload.append('remove_image_ids', image.id.toString());
-            console.log('image', image.id);
-          }
+        if (pageType === 'post' && image instanceof File) {
+          payload.append('images', image);
+        } else if (pageType === 'edit' && image instanceof File) {
+          payload.append('add_images', image);
         }
       });
+
+      if (formData.remove_image_ids?.length) {
+        payload.append(
+          'remove_image_ids',
+          formData.remove_image_ids.toString()
+        );
+      }
+
       let response;
       if (pageType === 'post') {
         response = await createPost(payload);
@@ -127,6 +126,36 @@ function useCommunityPostHook({
     }
   };
 
+  // 미리보기 클릭 시 해당 파일 삭제
+  const handleDeleteFile = (
+    fileToDelete: (File | { id: number; image_url: string })[]
+  ) => {
+    const removedIds: number[] = fileToDelete
+      .filter((file) => !(file instanceof File))
+      .map((file) => (file as { id: number }).id);
+
+    setFormData((prevFormData) => {
+      const updatedImages =
+        prevFormData.images?.filter((file) => {
+          const isFileToDelete = fileToDelete.some(
+            (toDelete) =>
+              (toDelete instanceof File && toDelete === file) ||
+              (!(toDelete instanceof File) &&
+                toDelete.id === (file as { id: number }).id)
+          );
+          return !isFileToDelete;
+        }) || [];
+
+      return {
+        ...prevFormData,
+        images: updatedImages,
+        remove_image_ids: [
+          ...(prevFormData.remove_image_ids?.slice() || []),
+          ...removedIds,
+        ],
+      };
+    });
+  };
   const handleButtonClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
     if (fileInputRef.current) {
@@ -135,58 +164,40 @@ function useCommunityPostHook({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-
-      // 유효성 검사: 이미지 파일만 허용
-      if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
-        setError((prevError) => ({
-          ...prevError,
-          image: ERROR_MESSAGES.imageFileOnly,
-        }));
-        return;
-      }
-
-      // 유효성 검사: 최대 3개의 파일만 업로드
-      if ((formData.images?.length || 0) + selectedFiles.length > 3) {
-        setError((prevError: ErrorState) => ({
-          ...prevError,
-          image: ERROR_MESSAGES.maxFileLimit,
-        }));
-        return;
-      }
-
-      // 파일 중복선택
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        images: [...(prevFormData.images || []), ...selectedFiles],
-      }));
-      setImageInputResetKey(Date.now());
-      setError((prevError) => ({ ...prevError, image: undefined }));
+    const clearInput = () => {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+    if (!e.target.files) {
+      return; // 파일이 없으면 리턴
     }
-  };
 
-  // 미리보기 클릭 시 해당 파일 삭제
-  const handleDeleteFile = (
-    fileToDelete: (File | { id: number; image_url: string })[]
-  ) => {
+    const selectedFiles = Array.from(e.target.files);
+    // 유효성 검사: 이미지 파일만 허용
+    if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
+      setError((prevError) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.imageFileOnly,
+      }));
+
+      return clearInput();
+    }
+
+    // 유효성 검사: 최대 3개의 파일만 업로드
+    if ((formData.images?.length || 0) + selectedFiles.length > 3) {
+      setError((prevError: ErrorState) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.maxFileLimit,
+      }));
+      return clearInput();
+    }
+
+    // 파일 중복선택
     setFormData((prevFormData) => ({
       ...prevFormData,
-      images: prevFormData.images
-        ? prevFormData.images.filter((file) => {
-            if (file instanceof File) {
-              return !fileToDelete.some(
-                (toDelete) => toDelete instanceof File && toDelete === file
-              );
-            } else {
-              return !fileToDelete.some(
-                (toDelete) =>
-                  !(toDelete instanceof File) && toDelete.id === file.id
-              );
-            }
-          })
-        : [],
+      images: [...(prevFormData.images || []), ...selectedFiles],
     }));
+    setImageInputResetKey(Date.now());
+    setError((prevError) => ({ ...prevError, image: undefined }));
   };
 
   const handleDeleteClick = () => {
