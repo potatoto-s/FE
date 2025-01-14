@@ -8,6 +8,7 @@ export interface Author {
 
 export interface Comment {
   id: number;
+  nickname?: string;
   content: string;
   created_at: string;
   updated_at: string;

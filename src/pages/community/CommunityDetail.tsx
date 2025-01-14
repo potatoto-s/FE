@@ -35,6 +35,7 @@ const CommunityDetail = () => {
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [showLikeLoginModal, setshowLikeLoginModal] = useState<boolean>(false);
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
   //게시글 세부 정보 로드
@@ -109,6 +110,7 @@ const CommunityDetail = () => {
     // 댓글 생성 처리
     const handleCommentCreate = async () => {
       const res = await createComment(post.id, newComment);
+      console.log(res);
       const newCommentEntry: Comment = {
         id: res.id,
         content: res.content,
@@ -163,13 +165,21 @@ const CommunityDetail = () => {
 
   // 좋아요 토글 처리
   const handleLike = async () => {
-    if (!user || !post) return;
+    if (!user) {
+      setshowLikeLoginModal(true);
+      setTimeout(() => {
+        setshowLikeLoginModal(false);
+        navigate('/login');
+      }, 2000);
+      return;
+    }
+
     const newLikedStatus = !isLiked;
     setIsLiked(newLikedStatus);
     setLikes((prevLikes) => prevLikes + (newLikedStatus ? 1 : -1));
 
     try {
-      await toggleLikePost(newLikedStatus, post.id);
+      await toggleLikePost(newLikedStatus, post!.id);
     } catch (error) {
       console.error('좋아요 상태 업데이트 오류 발생', error);
       setIsLiked(!newLikedStatus); // 오류시 되돌리기
@@ -332,6 +342,15 @@ const CommunityDetail = () => {
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                   <h2 className="ext-lg font-semibold text-center">
                     로그인 후 댓글을 등록 할 수 있습니다 !
+                  </h2>
+                </div>
+              </div>
+            )}
+            {showLikeLoginModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg">
+                  <h2 className="ext-lg font-semibold text-center">
+                    로그인 후 좋아요를 누를 수 있습니다 !
                   </h2>
                 </div>
               </div>

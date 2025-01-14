@@ -91,7 +91,7 @@ const SignUp = () => {
   // 폼 제출 처리
   const onSubmit = async (data: any) => {
     try {
-      await axiosInstance.post('/api/user/signup/', data);
+      await axiosInstance.post('/api/users/signup/', data);
       alert('회원가입이 완료되었습니다.');
       navigate('/login');
     } catch {
