@@ -13,6 +13,7 @@ import {
   deleteComment,
   toggleLikePost,
   deletePost,
+  fetchLikeStatus,
   // fetchComments,
 } from './CommunityDetailAPI';
 import useUserStore from '../../stores/userStore';
@@ -49,9 +50,8 @@ const CommunityDetail = () => {
           setLikes(postDetail.like_count);
           setIsLiked(postDetail.is_liked);
           setcommentCount(postDetail.comment_count);
-
-          // const comments = await fetchComments(id);
-          // setComments(comments);
+          const likeStatus = await fetchLikeStatus(id);
+          setIsLiked(likeStatus.is_liked);
         } catch (error) {
           console.error('게시글 로드 오류 발생', error);
         }

@@ -66,6 +66,12 @@ export const createPost = async (data: FormData) => {
   return response.data;
 };
 
+// 게시글 좋아요 상태 함수
+export const fetchLikeStatus = async (postId: number | string) => {
+  const response = await axiosAuthInstance.get(`/api/posts/${postId}/liked/`);
+  return response.data;
+};
+
 // 댓글 가져오기
 // export const fetchComments = async (postId: number | string) => {
 //   const response = await axiosInstance.get(`/api/comment/comments/`, {
