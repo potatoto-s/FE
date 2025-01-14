@@ -38,6 +38,8 @@ const SignUp = () => {
 
   // 이메일 중복 확인
   const handleCheckEmail = async () => {
+    const isValidEmail = await trigger('email');
+    if (!isValidEmail) return;
     try {
       const response = await axiosInstance.post('/api/users/check/email/', {
         email,
@@ -64,6 +66,9 @@ const SignUp = () => {
 
   // 닉네임 중복 확인
   const handleCheckNickname = async () => {
+    const isValidNickname = await trigger('nickname');
+    if (!isValidNickname) return;
+
     try {
       const response = await axiosInstance.post('/api/users/check/nickname/', {
         nickname,
@@ -124,6 +129,7 @@ const SignUp = () => {
                   : ''
             }
             messageColor={isEmailChecked ? 'green' : 'red'}
+            placeholder="1234@example.com"
           >
             <button
               type="button"
