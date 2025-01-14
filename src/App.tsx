@@ -12,7 +12,11 @@ import SignUp from './pages/signup/SignUp';
 import CommunityPost from './pages/community/CommunityPost';
 import Layout from './layout/Layout';
 import CategoryLayout from './layout/CategoryLayout';
-import { LoginRoutes, PublicRoutes, WorkshopRoutes } from './layout/ProtectedRoute';
+import {
+  LoginRoutes,
+  PublicRoutes,
+  WorkshopRoutes,
+} from './layout/ProtectedRoute';
 
 const App = () => {
   return (
