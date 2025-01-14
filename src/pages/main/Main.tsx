@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import Modal from '@components/modal/MainModal';
 import { PiThumbsUp } from 'react-icons/pi';
 
@@ -14,6 +15,44 @@ const Main: React.FC = () => {
     isOpen: false,
   });
 
+  const categories = [
+    { id: 'BALLOON', label: '풍선 / 페이퍼아트' },
+    { id: 'GIFT', label: '선물포장 / 보자기' },
+    { id: 'WOOD', label: '목공 / 도자기 / 가죽' },
+    { id: 'DIFFUSER', label: '디퓨저 / 캔들 / 석고 방향제' },
+    { id: 'RESIN', label: '레진 / 비즈공예' },
+    { id: 'RATTAN', label: '라탄 / 마크라메' },
+    { id: 'FLOWER', label: '플라워' },
+    { id: 'TOTAL', label: '토탈공예' },
+  ];
+
+  const [posts, setPosts] = useState<Record<string, any[]>>({});
+  const [topTenPosts, setTopTenPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadPosts() {
+      try {
+        // 좋아요데이터 요청
+        const topLikedResponse = await fetchPostList({
+          top_liked: true,
+          limit: 10,
+        });
+        setTopTenPosts(topLikedResponse.data);
+
+        // 카테고리별 데이터 요청
+        const categoryPosts: Record<string, any[]> = {};
+        for (const category of categories) {
+          const data = await fetchCategoryPostList(category.id); // 카테고리별 데이터 요청
+          categoryPosts[category.id] = data.slice(0, 5); // 게시글 5개씩
+        }
+        setPosts(categoryPosts);
+      } catch (error) {
+        console.error('게시글 불러오기 실패:', error);
+      }
+    }
+
+    loadPosts();
+  }, []);
   const openModal = (
     title: string,
     content: string,
@@ -38,13 +77,7 @@ const Main: React.FC = () => {
       isOpen: false,
     });
   };
-  const handleCommunityClick = (postId: number) => {
-    navigate(`/community/${postId}`);
-  };
 
-  const handleDetailClick = (postId: number) => {
-    navigate(`/communitydetail/${postId}`);
-  };
   return (
     <div className="bg-gray-100 text-gray-800">
       <section className="relative h-80 bg-[#FDCF8B] flex items-center justify-center text-center ">
@@ -209,63 +242,84 @@ const Main: React.FC = () => {
         </div>
         <div className="flex justify-center items-start w-full">
           <div className="w-[900px]">
+            {/* Hot Talk: 좋아요 순으로 Top 10 */}
             <div className="mb-10">
               <h3 className="text-xl font-bold mb-4">주간 Top 10</h3>
               <div className="grid grid-cols-2 gap-4">
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between bg-white p-3 rounded-lg shadow-md cursor-pointer"
-                    onClick={() => handleDetailClick(index + 1)}
-                  >
-                    <span className="text-gray-600 truncate">
-                      제목 {index + 1}
-                    </span>
-                    <span className="text-orange-500 mr-[300px] mt-1">
-                      <PiThumbsUp />
-                    </span>
-                    <span className="text-gray-500">작성자</span>
-                  </div>
-                ))}
+                {topTenPosts.length > 0 ? (
+                  topTenPosts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="flex justify-between items-center bg-white p-3 rounded-lg shadow-md cursor-pointer"
+                      onClick={() => navigate(`/communitydetail/${post.id}`)}
+                    >
+                      {/* 제목과 좋아요 */}
+                      <div className="flex items-center w-1/2 space-x-2">
+                        <span
+                          className="text-gray-600 truncate"
+                          style={{ maxWidth: '120px' }}
+                          title={post.title} // 제목 전체 보여주기
+                        >
+                          {post.title}
+                        </span>
+                        <span className="text-pink-700 text-sm flex items-center">
+                          {post.like_count}
+                        </span>
+                      </div>
+                      {/*작성즈아 */}
+                      <span
+                        className="text-gray-500 truncate text-right"
+                        style={{ maxWidth: '100px' }}
+                        title={post.author?.nickname || '작성자'}
+                      >
+                        {post.author?.nickname || '작성자'}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div>데이터가 없습니다.</div>
+                )}
               </div>
             </div>
 
+            {/* 카테고리별 최신순으로 5개 */}
             <div className="grid grid-cols-3 gap-6 mt-20">
-              {[
-                '풍선 / 페이퍼아트',
-                '선물포장 / 보자기',
-                '목공 / 도자기 / 가죽',
-                '디퓨저 / 캔들 / 석고 방향제',
-                '레진 / 비즈공예',
-                '라탄 / 마크라메',
-                '플라워',
-                '토탈공예',
-              ].map((category, index) => (
-                <div key={index}>
+              {categories.map((category) => (
+                <div key={category.id}>
                   <div className="flex justify-between items-center mb-4">
-                    <h4 className="text-lg font-semibold">{category}</h4>
-                    <a
-                      href={`/category/${index + 1}`}
+                    <h4 className="text-lg font-semibold">{category.label}</h4>
+                    <button
+                      onClick={() =>
+                        navigate(`/community?category=${category.id}`)
+                      }
                       className="text-gray-400 text-sm"
                     >
                       더보기 &gt;
-                    </a>
+                    </button>
                   </div>
                   <ul className="space-y-2">
-                    {Array.from({ length: 5 }).map((_, subIndex) => (
-                      <li
-                        key={subIndex}
-                        className="flex justify-between bg-white p-2 rounded-lg shadow-md cursor-pointer"
-                        onClick={() => handleCommunityClick(subIndex + 1)}
-                      >
-                        <span className="text-gray-700 truncate">
-                          예시 제목 {subIndex + 1}
-                        </span>
-                        <span className="text-orange-500 text-sm">
-                          [{subIndex + 1}]
-                        </span>
+                    {posts[category.id]?.length > 0 ? (
+                      posts[category.id].slice(0, 3).map((post) => (
+                        <li
+                          key={post.id}
+                          className="flex justify-between bg-white p-2 rounded-lg shadow-md cursor-pointer"
+                          onClick={() =>
+                            navigate(`/communitydetail/${post.id}`)
+                          }
+                        >
+                          <span className="text-gray-700 truncate">
+                            {post.title}
+                          </span>
+                          <span className="text-orange-500 text-sm">
+                            [{post.comment_count}]
+                          </span>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-gray-500">
+                        게시물이 없습니다.(카테고리 ID: {category.id})
                       </li>
-                    ))}
+                    )}
                   </ul>
                 </div>
               ))}
