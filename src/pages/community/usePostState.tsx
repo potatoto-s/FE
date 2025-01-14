@@ -8,10 +8,7 @@ function useCommunityPostState({ type }: { type: FormType }) {
   const [formData, setFormData] = useState<FormData>(initFormData);
   const [error, setError] = useState<ErrorState>(initError);
   const [pageType, setPageType] = useState<FormType>(type);
-  const [files, setFiles] = useState<File[]>([]);
-  const [fileInputKey, setFileInputKey] = useState(Date.now());
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [imageInputResetKey, setImageInputResetKey] = useState(Date.now());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return {
@@ -22,12 +19,8 @@ function useCommunityPostState({ type }: { type: FormType }) {
     setError,
     pageType,
     setPageType,
-    files,
-    setFiles,
-    fileInputKey,
-    setFileInputKey,
-    isLoading,
-    setIsLoading,
+    imageInputResetKey,
+    setImageInputResetKey,
     showDeleteModal,
     setShowDeleteModal,
   };

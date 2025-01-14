@@ -16,10 +16,8 @@ type Props = {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   setError: React.Dispatch<React.SetStateAction<ErrorState>>;
   pageType: FormType;
-  files: File[];
-  fileInputKey: string | number;
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
-  setFileInputKey: React.Dispatch<React.SetStateAction<number>>;
+  imageInputResetKey: number;
+  setImageInputResetKey: React.Dispatch<React.SetStateAction<number>>;
   showDeleteModal: boolean;
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -30,9 +28,7 @@ function useCommunityPostHook({
   setFormData,
   setError,
   pageType,
-  files,
-  setFiles,
-  setFileInputKey,
+  setImageInputResetKey,
   setShowDeleteModal,
 }: Props) {
   const { id } = useParams();
@@ -65,7 +61,6 @@ function useCommunityPostHook({
     >
   ) => {
     const { name, value } = event.target;
-    //서버 제출 데이터
     setFormData({
       ...formData,
       [name]: value,
@@ -101,7 +96,20 @@ function useCommunityPostHook({
       payload.append('title', formData.title);
       payload.append('content', formData.content);
       formData.images?.forEach((image) => {
-        payload.append('images', image);
+        console.log('image', image);
+        if (pageType === 'post') {
+          if (image instanceof File) {
+            payload.append('images', URL.createObjectURL(image));
+          }
+        } else if (pageType === 'edit') {
+          if (image instanceof File) {
+            payload.append('add_images', URL.createObjectURL(image));
+            console.log('image', image);
+          } else if ('id' in image && 'image_url' in image) {
+            payload.append('remove_image_ids', image.id.toString());
+            console.log('image', image.id);
+          }
+        }
       });
       let response;
       if (pageType === 'post') {
@@ -140,7 +148,7 @@ function useCommunityPostHook({
       }
 
       // 유효성 검사: 최대 3개의 파일만 업로드
-      if (files.length + selectedFiles.length > 3) {
+      if ((formData.images?.length || 0) + selectedFiles.length > 3) {
         setError((prevError: ErrorState) => ({
           ...prevError,
           image: ERROR_MESSAGES.maxFileLimit,
@@ -148,25 +156,35 @@ function useCommunityPostHook({
         return;
       }
 
-      // 파일 목록 상태와 에러 초기화
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
       // 파일 중복선택
-      setFileInputKey(Date.now());
       setFormData((prevFormData) => ({
         ...prevFormData,
         images: [...(prevFormData.images || []), ...selectedFiles],
       }));
+      setImageInputResetKey(Date.now());
       setError((prevError) => ({ ...prevError, image: undefined }));
     }
   };
 
   // 미리보기 클릭 시 해당 파일 삭제
-  const handleDeleteFile = (fileToDelete: File) => {
-    setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToDelete));
+  const handleDeleteFile = (
+    fileToDelete: (File | { id: number; image_url: string })[]
+  ) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       images: prevFormData.images
-        ? prevFormData.images.filter((file) => file !== fileToDelete)
+        ? prevFormData.images.filter((file) => {
+            if (file instanceof File) {
+              return !fileToDelete.some(
+                (toDelete) => toDelete instanceof File && toDelete === file
+              );
+            } else {
+              return !fileToDelete.some(
+                (toDelete) =>
+                  !(toDelete instanceof File) && toDelete.id === file.id
+              );
+            }
+          })
         : [],
     }));
   };

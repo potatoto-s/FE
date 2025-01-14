@@ -17,12 +17,9 @@ function CommunityPost({ type }: Props) {
     setFormData,
     setError,
     pageType,
-    files,
-    fileInputKey,
-    setFiles,
-    setFileInputKey,
+    imageInputResetKey,
+    setImageInputResetKey,
     showDeleteModal,
-
     setShowDeleteModal,
   } = useCommunityPostState({ type });
 
@@ -42,10 +39,8 @@ function CommunityPost({ type }: Props) {
     setFormData,
     setError,
     pageType,
-    files,
-    fileInputKey,
-    setFiles,
-    setFileInputKey,
+    imageInputResetKey,
+    setImageInputResetKey,
     showDeleteModal,
     setShowDeleteModal,
   });
@@ -124,10 +119,11 @@ function CommunityPost({ type }: Props) {
         {/* 이미지 첨부 */}
         <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
           <div className="flex flex-col items-start justify-center">
-            {files.length > 0 ? (
-              files.map((file, index) => (
+            {formData.images?.length ? (
+              formData.images.map((file, index) => (
                 <div key={index} className="text-[#a9a9a9]">
-                  {`${index + 1}. ` + file.name}
+                  {`${index + 1}. ` +
+                    (file instanceof File ? file.name : file.image_url)}
                 </div>
               ))
             ) : (
@@ -143,7 +139,7 @@ function CommunityPost({ type }: Props) {
             </button>
             <input
               type="file"
-              key={fileInputKey}
+              key={imageInputResetKey}
               id="image"
               name="image"
               accept="image/*"
@@ -160,22 +156,26 @@ function CommunityPost({ type }: Props) {
         {/* 첨부된 이미지 미리보기 */}
         <div className="flex justify-between mb-4 gap-4 max-sm:flex-col">
           {/* 이미지 미리보기 */}
-          {files.map((file, index) => (
+          {formData.images?.map((file, index) => (
             <li
               key={index}
-              onClick={() => handleDeleteFile(file)}
+              onClick={() => handleDeleteFile([file])}
               className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
             >
               <img
-                src={URL.createObjectURL(file)}
-                alt={file.name}
+                src={
+                  file instanceof File
+                    ? URL.createObjectURL(file)
+                    : file.image_url
+                }
+                alt={file instanceof File ? file.name : file.image_url}
                 className="w-full h-full rounded object-cover"
               />
             </li>
           ))}
 
           {/* 기본 이미지 아이콘은 length가 3에 도달할 때까지 표시 */}
-          {[...Array(3 - files.length)].map((_, index) => (
+          {[...Array(3 - (formData.images?.length || 0))].map((_, index) => (
             <li
               key={index}
               className="h-60 w-64 flex justify-center items-center rounded bg-[#EFEFEF] max-sm:w-full"
