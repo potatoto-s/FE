@@ -1,12 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { contactApi } from '../../api/ContactApi';
-import ContactInputName from '../../components/contact/contactInputName';
-import ContactInputEmail from '../../components/contact/contactInputEmail';
-import ContactInputPhone from '../../components/contact/contactInputPhone';
-import ContactInputOrganizationName from '../../components/contact/contactInputOrganizationName';
-import ContactInputMessage from '../../components/contact/contactInputMessage';
-import ContactInputPreferredReply from '../../components/contact/contactInputPreferredReply';
+import { contactApi } from '@api/ContactApi';
+import ContactInputName from '@components/contact/contactInputName';
+import ContactInputEmail from '@components/contact/contactInputEmail';
+import ContactInputPhone from '@components/contact/contactInputPhone';
+import ContactInputOrganizationName from '@components/contact/contactInputOrganizationName';
+import ContactInputMessage from '@components/contact/contactInputMessage';
+import ContactInputPreferredReply from '@components/contact/contactInputPreferredReply';
 
 const ContactForm = () => {
   const location = useLocation();

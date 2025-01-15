@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import useUserStore from './userStore';
+import useUserStore from '@stores/userStore';
 
 interface AuthState {
   accessToken: string | null;

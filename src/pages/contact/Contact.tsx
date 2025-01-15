@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import ContactType from '../../components/contact/contactType';
+import ContactType from '@components/contact/contactType';
 
 const Contact = () => {
   const navigate = useNavigate();

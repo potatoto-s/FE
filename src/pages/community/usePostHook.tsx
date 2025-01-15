@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { ERROR_MESSAGES } from './CommunityPostConst';
-import type { FormType, FormData, ErrorState } from './CommunityPostTypes';
-import {
-  getPostById,
-  createPost,
-  updatePost,
-  deletePost,
-} from '../../api/PostApi';
+import { ERROR_MESSAGES } from '@pages/community/CommunityPostConst';
+import type {
+  FormType,
+  FormData,
+  ErrorState,
+} from '@pages/community/CommunityPostTypes';
+import { getPostById, createPost, updatePost, deletePost } from '@api/PostApi';
 import { useNavigate, useParams } from 'react-router-dom';
 
 type Props = {
@@ -16,10 +15,8 @@ type Props = {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   setError: React.Dispatch<React.SetStateAction<ErrorState>>;
   pageType: FormType;
-  files: File[];
-  fileInputKey: string | number;
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
-  setFileInputKey: React.Dispatch<React.SetStateAction<number>>;
+  imageInputResetKey: number;
+  setImageInputResetKey: React.Dispatch<React.SetStateAction<number>>;
   showDeleteModal: boolean;
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -30,9 +27,7 @@ function useCommunityPostHook({
   setFormData,
   setError,
   pageType,
-  files,
-  setFiles,
-  setFileInputKey,
+  setImageInputResetKey,
   setShowDeleteModal,
 }: Props) {
   const { id } = useParams();
@@ -65,21 +60,20 @@ function useCommunityPostHook({
     >
   ) => {
     const { name, value } = event.target;
-    //서버 제출 데이터
     setFormData({
       ...formData,
       [name]: value,
     });
 
     // 에러 상태 초기화: 카테고리 선택 시 초기화
-    if (name === 'category' && value !== '1') {
+    if (name === 'category' && value !== 'ALL') {
       setError((prevError) => ({ ...prevError, category: null }));
     }
   };
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.category === '1') {
+    if (formData.category === 'ALL') {
       setError((prevError) => ({
         ...prevError,
         category: ERROR_MESSAGES.categoryRequired,
@@ -101,8 +95,20 @@ function useCommunityPostHook({
       payload.append('title', formData.title);
       payload.append('content', formData.content);
       formData.images?.forEach((image) => {
-        payload.append('images', image);
+        if (pageType === 'post' && image instanceof File) {
+          payload.append('images', image);
+        } else if (pageType === 'edit' && image instanceof File) {
+          payload.append('add_images', image);
+        }
       });
+
+      if (formData.remove_image_ids?.length) {
+        payload.append(
+          'remove_image_ids',
+          formData.remove_image_ids.toString()
+        );
+      }
+
       let response;
       if (pageType === 'post') {
         response = await createPost(payload);
@@ -119,6 +125,36 @@ function useCommunityPostHook({
     }
   };
 
+  // 미리보기 클릭 시 해당 파일 삭제
+  const handleDeleteFile = (
+    fileToDelete: (File | { id: number; image_url: string })[]
+  ) => {
+    const removedIds: number[] = fileToDelete
+      .filter((file) => !(file instanceof File))
+      .map((file) => (file as { id: number }).id);
+
+    setFormData((prevFormData) => {
+      const updatedImages =
+        prevFormData.images?.filter((file) => {
+          const isFileToDelete = fileToDelete.some(
+            (toDelete) =>
+              (toDelete instanceof File && toDelete === file) ||
+              (!(toDelete instanceof File) &&
+                toDelete.id === (file as { id: number }).id)
+          );
+          return !isFileToDelete;
+        }) || [];
+
+      return {
+        ...prevFormData,
+        images: updatedImages,
+        remove_image_ids: [
+          ...(prevFormData.remove_image_ids?.slice() || []),
+          ...removedIds,
+        ],
+      };
+    });
+  };
   const handleButtonClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
     if (fileInputRef.current) {
@@ -127,48 +163,40 @@ function useCommunityPostHook({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-
-      // 유효성 검사: 이미지 파일만 허용
-      if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
-        setError((prevError) => ({
-          ...prevError,
-          image: ERROR_MESSAGES.imageFileOnly,
-        }));
-        return;
-      }
-
-      // 유효성 검사: 최대 3개의 파일만 업로드
-      if (files.length + selectedFiles.length > 3) {
-        setError((prevError: ErrorState) => ({
-          ...prevError,
-          image: ERROR_MESSAGES.maxFileLimit,
-        }));
-        return;
-      }
-
-      // 파일 목록 상태와 에러 초기화
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-      // 파일 중복선택
-      setFileInputKey(Date.now());
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        images: [...(prevFormData.images || []), ...selectedFiles],
-      }));
-      setError((prevError) => ({ ...prevError, image: undefined }));
+    const clearInput = () => {
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+    if (!e.target.files) {
+      return; // 파일이 없으면 리턴
     }
-  };
 
-  // 미리보기 클릭 시 해당 파일 삭제
-  const handleDeleteFile = (fileToDelete: File) => {
-    setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToDelete));
+    const selectedFiles = Array.from(e.target.files);
+    // 유효성 검사: 이미지 파일만 허용
+    if (selectedFiles.some((file) => !file.type.startsWith('image/'))) {
+      setError((prevError) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.imageFileOnly,
+      }));
+
+      return clearInput();
+    }
+
+    // 유효성 검사: 최대 3개의 파일만 업로드
+    if ((formData.images?.length || 0) + selectedFiles.length > 3) {
+      setError((prevError: ErrorState) => ({
+        ...prevError,
+        image: ERROR_MESSAGES.maxFileLimit,
+      }));
+      return clearInput();
+    }
+
+    // 파일 중복선택
     setFormData((prevFormData) => ({
       ...prevFormData,
-      images: prevFormData.images
-        ? prevFormData.images.filter((file) => file !== fileToDelete)
-        : [],
+      images: [...(prevFormData.images || []), ...selectedFiles],
     }));
+    setImageInputResetKey(Date.now());
+    setError((prevError) => ({ ...prevError, image: undefined }));
   };
 
   const handleDeleteClick = () => {

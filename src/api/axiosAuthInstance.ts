@@ -1,5 +1,5 @@
 import axios from 'axios';
-import useAuthStore from '../stores/authStore';
+import useAuthStore from '@stores/authStore';
 
 const axiosAuthInstance = axios.create({
   baseURL: 'https://hands.p-e.kr', // 실제 API 주소로 수정
