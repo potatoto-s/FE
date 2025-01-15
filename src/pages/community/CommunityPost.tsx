@@ -32,6 +32,7 @@ function CommunityPost({ type }: Props) {
     handleDeleteClick,
     closeDeleteModal,
     handleDelete,
+    handleBackButtonClick,
   } = useCommunityPostHook({
     fileInputRef,
     formData,
@@ -47,7 +48,10 @@ function CommunityPost({ type }: Props) {
 
   return (
     <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
-      <div className="flex cursor-pointer items-center mb-8 text-2xl font-bold text-gray-600">
+      <div
+        onClick={handleBackButtonClick}
+        className="flex cursor-pointer items-center mb-8 text-2xl font-bold text-gray-600"
+      >
         <IoChevronBackOutline /> 게시판
       </div>
 
