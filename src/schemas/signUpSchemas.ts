@@ -4,6 +4,10 @@ export const signUpSchema = yup.object({
   email: yup
     .string()
     .email('유효한 이메일 형식이 아닙니다.')
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      '유효한 이메일 형식이 아닙니다.'
+    )
     .required('이메일을 입력해주세요.'),
   password: yup
     .string()
