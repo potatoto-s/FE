@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useUserStore from '../../stores/userStore';
 import useDebounce from '../../hooks/useDebounce';
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 type Post = {
   id: number;
@@ -22,54 +26,65 @@ type Author = {
 
 const Community: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>(''); // 검색어 상태
-  // const [visibleCount, setVisibleCount] = useState<number>(10); // 한 번에 표시할 게시글 수
-  const [lists, setLists] = useState<Post[]>([]);
-  const [filteredLists, setFilteredLists] = useState<Post[]>([]); // 필터링된 게시글 리스트
+  const [lists, setLists] = useState<Post[]>([]); // 게시글 리스트
+  const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 상태
+  const [hasNext, setHasNext] = useState<boolean>(false); // 다음 페이지 여부
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 로딩 상태
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
   const { user } = useUserStore(); // 사용자 정보를 가져오는 커스텀 훅
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
-  console.log(searchParams);
-  console.log(category);
   const debouncedSearchQuery = useDebounce(searchQuery, 1000); // 디바운스를 적용한 검색어
-
-  // 검색어에 따라 게시글 필터링
-  useEffect(() => {
-    // 디바운스된 검색어를 기준으로 게시글 필터링
-    const filtered = lists.filter((post) =>
-      post.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    );
-    setFilteredLists(filtered);
-  }, [debouncedSearchQuery, lists]);
+  const postsPerPage = 10; // 한 페이지당 게시글 수
 
   // 게시글 리스트를 서버에서 가져오는 함수
-  useEffect(() => {
-    const fetchPostList = async () => {
-      if (category) {
-        const res = await axiosInstance.get(`/api/posts/?category=${category}`);
-        setLists(res.data.data);
-      } else {
-        const res = await axiosInstance.get('/api/posts/');
-        console.log('API 응답:', res.data); // 응답 확인
-        setLists(res.data.data);
+  const fetchPostList = useCallback(
+    async (page: number) => {
+      setIsLoading(true); // 로딩 시작
+      try {
+        const res = await axiosInstance.get('/api/posts/', {
+          params: {
+            cursor: (page - 1) * postsPerPage, // 페이지 계산
+            limit: postsPerPage, // 한 페이지당 데이터 수
+            category: category || undefined, // 카테고리 필터
+            search: debouncedSearchQuery || undefined, // 검색어 필터
+          },
+        });
+        setLists(res.data.data); // 리스트 설정
+        setHasNext(res.data.has_next); // 다음 페이지 여부 설정
+      } catch (error) {
+        console.error('게시글을 가져오는 중 오류 발생:', error);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
-    };
+    },
+    [category, debouncedSearchQuery, postsPerPage] // 의존성 추가
+  );
 
-    fetchPostList();
-  }, [category]);
+  // 초기 데이터 로드 및 검색어, 카테고리 변경 시 데이터 로드
+  useEffect(() => {
+    fetchPostList(currentPage);
+  }, [category, debouncedSearchQuery, currentPage, fetchPostList]);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value); // 현재 페이지 변경
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-[#FFFBEF]">
-      <div className="w-[81.25rem] px-4 mt-[6.25rem]">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-[#F28749] text-2xl font-bold">커뮤니티</h1>
-          <div className="flex items-center gap-4">
+      <div className="w-full max-w-[81.25rem] px-4 mt-[6.25rem]">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <h1 className="text-[#F28749] text-xl md:text-2xl font-bold mb-4 md:mb-0">
+            커뮤니티
+          </h1>
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <input
               type="text"
               placeholder="검색어를 입력하세요"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="border rounded-lg px-4 py-2 w-[20rem] focus:outline-none focus:ring-2 focus:ring-[#F28749]"
+              className="border rounded-lg px-4 py-2 w-full md:w-[20rem] focus:outline-none focus:ring-2 focus:ring-[#F28749]"
             />
             {user?.role === 'WORKSHOP' && (
               <button
@@ -83,22 +98,24 @@ const Community: React.FC = () => {
         </div>
 
         <div className="bg-white shadow-md rounded-lg p-4">
-          {filteredLists.length > 0 ? (
-            filteredLists.map((post, index) => (
+          {isLoading ? (
+            <div className="text-center text-gray-500 py-4">로딩 중...</div>
+          ) : lists.length > 0 ? (
+            lists.map((post, index) => (
               <Link
                 to={`/communitydetail/${post.id}`}
                 key={index}
-                className="flex items-center justify-between border-b last:border-b-0 py-4 text-[#0F0F0F]"
+                className="flex flex-col md:flex-row items-center justify-between border-b last:border-b-0 py-4 text-[#0F0F0F]"
               >
                 <div className="flex items-center">
                   <span className="text-[#F28749] font-medium mr-4">
-                    {post.category}]
+                    [{post.category}]
                   </span>
                   <span className="text-lg font-bold">{post.title}</span>
                 </div>
-                <div className="flex items-center text-sm text-gray-500">
-                  <span className="mr-4">{post.author.nickname}</span>
-                  <span className="mr-4">{post.created_at}</span>
+                <div className="flex flex-col md:flex-row items-center text-sm text-gray-500">
+                  <span className="mr-0 md:mr-4">{post.author.nickname}</span>
+                  <span className="mr-0 md:mr-4">{post.created_at}</span>
                   <span>{post.view_count} 조회</span>
                 </div>
               </Link>
@@ -108,6 +125,22 @@ const Community: React.FC = () => {
               검색 결과가 없습니다.
             </div>
           )}
+        </div>
+
+        {/* 페이지네이션 */}
+        <div className="flex justify-center mt-4">
+          <Pagination
+            count={Math.ceil(lists.length / postsPerPage)} // 전체 페이지 수 계산
+            page={currentPage} // 현재 페이지
+            onChange={handlePageChange} // 페이지 변경 핸들러
+            renderItem={(item) => (
+              <PaginationItem
+                slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                {...item}
+                disabled={item.type === 'next' && !hasNext} // 다음 버튼 비활성화 조건 추가
+              />
+            )}
+          />
         </div>
       </div>
     </div>
