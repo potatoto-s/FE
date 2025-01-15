@@ -35,19 +35,26 @@ const CommentList = ({
                 >
                   <div className="flex-1 px-2">
                     <div className="flex items-center mb-1">
-                      <span className="text-gary-500 text-sm mr-2">
-                        {author.role}
-                      </span>
-                      <span className="text-[#F26749] text-sm mr-2">
+                      <span className="text-[#F26749] text-xs mr-2">
                         {authorName}
+                      </span>
+                      <span className="text-xs mr-2">
+                        {author.role === 'WORKSHOP' ? '👩🏻‍🎨' : '🏢'}
                       </span>
                       <span className="text-gray-400 text-xs">
                         {formatDate(created_at)}
                       </span>
                     </div>
-                    <p className="text-gray-800 text-base pl-1">{content}</p>
+                    <p className="flex items-center text-gray-800 text-base pl-1">
+                      {content.replace(' (수정됨)', '')}
+                      {content.includes('(수정됨)') && (
+                        <span className="text-gray-400 text-xs ml-2">
+                          (수정됨)
+                        </span>
+                      )}
+                    </p>
                   </div>
-                  {isAuthor && ( // 댓글 작성자와 일치할시 수정 및 삭제 버튼 표시
+                  {isAuthor && (
                     <div className="flex items-center mb-2">
                       <button
                         className="text-gray-600 hover:text-blue-600 mr-1"

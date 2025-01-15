@@ -1,6 +1,6 @@
 export interface Author {
   id: number;
-  nickname?: string;
+  nickname: string;
   role: string;
   company_name?: string;
   workshop_name?: string;
@@ -8,6 +8,7 @@ export interface Author {
 
 export interface Comment {
   id: number;
+  nickname?: string;
   content: string;
   created_at: string;
   updated_at: string;
