@@ -217,18 +217,21 @@ const CommunityDetail = () => {
   return (
     <div className="flex justify-center items-center px-4">
       <div className="w-full max-w-[81.25rem] bg-white p-6 shadow-lg rounded-lg mt-[6.25rem] mb-[6.25rem]">
-        <button onClick={handleBackButtonClick} className="mb-4 text-gray-400">
+        <button
+          onClick={handleBackButtonClick}
+          className="mb-4 text-gray-400 text-sm"
+        >
           뒤로가기
         </button>
         {post && (
           <>
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center">
-                <h1 className="text-black text-2xl font-medium">
+                <h1 className="text-black text-lg font-medium">
                   [{post.category}]
                 </h1>
-                <h1 className="text-xl font-bold ml-2">{post.title}</h1>
-                <span className="text-gray-500 text-lg ml-2 flex items-center">
+                <h1 className="text-lg font-bold ml-2">{post.title}</h1>
+                <span className="text-gray-500 text-base ml-2 flex items-center">
                   <FaCommentDots className="mr-1" />({commentCount})
                 </span>
               </div>
@@ -250,8 +253,10 @@ const CommunityDetail = () => {
               )}
             </div>
             <div className="text-gray-400 mb-10">
-              <span className="font-bold mr-2">{post.author.nickname} </span>
-              <span className="text-[#F26749] mr-2">
+              <span className="font-bold mr-2 text-sm">
+                {post.author.nickname}
+              </span>
+              <span className="text-[#F26749] mr-2 text-sm">
                 {post.author.workshop_name || post.author.company_name}
               </span>
               <span className="text-sm">
