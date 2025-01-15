@@ -1,7 +1,6 @@
 import { IoCloseOutline } from 'react-icons/io5';
 import { BiEditAlt } from 'react-icons/bi';
 import { CommentListProps } from '../../pages/community/CommunityDetailTypes';
-import useUserStore from '../../stores/userStore';
 
 const CommentList = ({
   comments,
@@ -9,7 +8,6 @@ const CommentList = ({
   onDelete,
   onEdit,
 }: CommentListProps) => {
-  const { user } = useUserStore();
   const isNotDeletedComments = comments.filter(
     (comment) => !comment.is_deleted
   );
@@ -37,11 +35,11 @@ const CommentList = ({
                 >
                   <div className="flex-1 px-2">
                     <div className="flex items-center mb-1">
-                      <span className="text-gary-500 text-sm mr-2">
-                        {user ? user.nickname : '비로그인'}
-                      </span>
-                      <span className="text-[#F26749] text-sm mr-2">
+                      <span className="text-[#F26749] text-xs mr-2">
                         {authorName}
+                      </span>
+                      <span className="text-xs mr-2">
+                        {author.role === 'WORKSHOP' ? '👩🏻‍🎨' : '🏢'}
                       </span>
                       <span className="text-gray-400 text-xs">
                         {formatDate(created_at)}
@@ -56,7 +54,7 @@ const CommentList = ({
                       )}
                     </p>
                   </div>
-                  {isAuthor && ( // 댓글 작성자와 일치할시 수정 및 삭제 버튼 표시
+                  {isAuthor && (
                     <div className="flex items-center mb-2">
                       <button
                         className="text-gray-600 hover:text-blue-600 mr-1"

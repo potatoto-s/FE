@@ -1,6 +1,6 @@
 export interface Author {
   id: number;
-  nickname?: string;
+  nickname: string;
   role: string;
   company_name?: string;
   workshop_name?: string;
