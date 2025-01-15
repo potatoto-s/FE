@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/modal/MainModal';
-// import { PiThumbsUp } from 'react-icons/pi';
+import { TbThumbUp } from 'react-icons/tb';
 import { fetchPostList } from '../../api/PostList';
 import { fetchCategoryPostList } from '../../api/CategoryApi';
 
@@ -262,6 +262,7 @@ const Main: React.FC = () => {
                           title={post.title} // 제목 전체 보여주기
                         >
                           {post.title}
+                          <TbThumbUp />
                         </span>
                         <span className="text-pink-700 text-sm flex items-center">
                           {post.like_count}
