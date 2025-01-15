@@ -1,4 +1,4 @@
-import axiosAuthInstance from './axiosAuthInstance';
+import axiosAuthInstance from '@api/axiosAuthInstance';
 
 // 사용자 프로필 업데이트 API
 export const updateUserProfile = async (updatedData: {

@@ -1,6 +1,10 @@
 import { useRef, useState } from 'react';
-import { initFormData, initError } from './CommunityPostConst';
-import type { FormData, FormType, ErrorState } from './CommunityPostTypes';
+import { initFormData, initError } from '@pages/community/CommunityPostConst';
+import type {
+  FormData,
+  FormType,
+  ErrorState,
+} from '@pages/community/CommunityPostTypes';
 
 function useCommunityPostState({ type }: { type: FormType }) {
   const fileInputRef = useRef<HTMLInputElement>(null);

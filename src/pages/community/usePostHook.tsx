@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { ERROR_MESSAGES } from './CommunityPostConst';
-import type { FormType, FormData, ErrorState } from './CommunityPostTypes';
-import {
-  getPostById,
-  createPost,
-  updatePost,
-  deletePost,
-} from '../../api/PostApi';
+import { ERROR_MESSAGES } from '@pages/community/CommunityPostConst';
+import type {
+  FormType,
+  FormData,
+  ErrorState,
+} from '@pages/community/CommunityPostTypes';
+import { getPostById, createPost, updatePost, deletePost } from '@api/PostApi';
 import { useNavigate, useParams } from 'react-router-dom';
 
 type Props = {

@@ -1,6 +1,6 @@
 import { IoCloseOutline } from 'react-icons/io5';
 import { BiEditAlt } from 'react-icons/bi';
-import { CommentListProps } from '../../pages/community/CommunityDetailTypes';
+import { CommentListProps } from '@pages/community/CommunityDetailTypes';
 
 const CommentList = ({
   comments,

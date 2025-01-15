@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { FaCommentDots } from 'react-icons/fa';
 import { BsChatHeart } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import CommentList from '../../components/comment/CommentList';
-import CommentInput from '../../components/comment/CommentInput';
-import ConfirmModal from '../../components/modal/ConfirmModal';
+import CommentList from '@components/comment/CommentList';
+import CommentInput from '@components/comment/CommentInput';
+import ConfirmModal from '@components/modal/ConfirmModal';
 import {
   fetchPostDetail,
   createComment,
@@ -13,9 +13,9 @@ import {
   deleteComment,
   toggleLikePost,
   deletePost,
-} from './CommunityDetailAPI';
-import useUserStore from '../../stores/userStore';
-import { Comment, Post } from './CommunityDetailTypes';
+} from '@pages/community/CommunityDetailAPI';
+import useUserStore from '@stores/userStore';
+import { Post, Comment } from '@pages/community/CommunityDetailTypes';
 
 const CommunityDetail = () => {
   const { user } = useUserStore();

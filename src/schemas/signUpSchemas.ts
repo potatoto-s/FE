@@ -4,6 +4,10 @@ export const signUpSchema = yup.object({
   email: yup
     .string()
     .email('유효한 이메일 형식이 아닙니다.')
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      '유효한 이메일 형식이 아닙니다.'
+    )
     .required('이메일을 입력해주세요.'),
   password: yup
     .string()
@@ -21,10 +25,10 @@ export const signUpSchema = yup.object({
     .required('닉네임을 입력해주세요.'),
   phone: yup
     .string()
-    // .matches(
-    //   /^(\d{3}-\d{3,4}-\d{4})$/,
-    //   '전화번호는 "010-1234-5678" 형식으로 입력해주세요.'
-    // )
+    .matches(
+      /^(\d{3}-\d{3,4}-\d{4})$/,
+      '전화번호는 "010-1234-5678" 형식으로 입력해주세요.'
+    )
     .required('전화번호를 입력해주세요.'),
   role: yup.string().required('회원 구분을 선택해주세요.'),
   workshop_name: yup.string().when('role', {

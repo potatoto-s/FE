@@ -1,9 +1,9 @@
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { GoFileSymlinkFile } from 'react-icons/go';
-import ConfirmModal from '../../components/modal/ConfirmModal';
-import useCommunityPostState from './usePostState';
-import useCommunityPostHook from './usePostHook';
-import { FormType } from './CommunityPostTypes';
+import ConfirmModal from '@components/modal/ConfirmModal';
+import useCommunityPostState from '@pages/community/usePostState';
+import useCommunityPostHook from '@pages/community/usePostHook';
+import { FormType } from '@pages/community/CommunityPostTypes';
 
 type Props = {
   type: FormType;
