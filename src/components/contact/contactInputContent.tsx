@@ -4,19 +4,19 @@ type Props = {
   register: UseFormRegister<FieldValues>;
   error: string | undefined;
 };
-function ContactInputMessage({ register, error }: Props) {
+function ContactInputContent({ register, error }: Props) {
   return (
     <>
       <label
-        htmlFor="message"
+        htmlFor="content"
         className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE] mb-[2rem]"
       >
         문의 내용*
       </label>
       <textarea
-        id="message"
+        id="content"
         className="resize-none pl-[0.3rem] md:w-[33rem] w-[28rem] h-[16rem] border-2 mb-[2.5rem] border-[#AEAEAE] focus:outline-none "
-        {...register('message', {
+        {...register('content', {
           required: true,
         })}
       />
@@ -29,4 +29,4 @@ function ContactInputMessage({ register, error }: Props) {
   );
 }
 
-export default ContactInputMessage;
+export default ContactInputContent;
