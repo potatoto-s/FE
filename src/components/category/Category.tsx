@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IoMenuOutline, IoCloseOutline } from 'react-icons/io5';
+import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function Category() {
@@ -19,9 +19,10 @@ function Category() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const category = searchParams.get(`category`);
+  const category = searchParams.get('category');
+
   useEffect(() => {
-    setSelectedCategory(category ?? '');
+    setSelectedCategory(category ?? 'ALL');
   }, [category]);
 
   const handleCategoryClick = (id: string) => {
@@ -36,13 +37,32 @@ function Category() {
 
   return (
     <div className="w-full bg-white border-t-2 border-b-2 border-[#F0F0F0]">
-      {/* 데스크탑 레이아웃 */}
-      <div className="hidden md:flex w-[1300px] h-[80px] items-center justify-between mx-auto">
+      {/* 데스크탑 및 큰 화면 레이아웃 */}
+      <div className="hidden lg:flex w-full max-w-[1300px] h-[80px] items-center justify-between mx-auto px-4">
         {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => handleCategoryClick(category.id)}
             className={`text-[14px] md:text-[16px] lg:text-[18px] font-medium leading-normal tracking-[1px] px-4 focus:outline-none transition-colors duration-200
+              ${
+                selectedCategory === category.id
+                  ? 'text-[#F28749] border-b-2 border-[#F28749] pb-1'
+                  : 'text-[#000]'
+              }
+            `}
+          >
+            {category.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 태블릿 및 작은 화면에서 줄어드는 레이아웃 */}
+      <div className="hidden md:flex lg:hidden flex-wrap justify-center items-center px-4 py-2 gap-2">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => handleCategoryClick(category.id)}
+            className={`text-[12px] md:text-[14px] font-medium leading-normal tracking-[1px] px-2 py-1 focus:outline-none transition-colors duration-200
               ${
                 selectedCategory === category.id
                   ? 'text-[#F28749] border-b-2 border-[#F28749] pb-1'
@@ -62,7 +82,7 @@ function Category() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="text-[#F28749] text-2xl focus:outline-none"
         >
-          {isMenuOpen ? <IoCloseOutline /> : <IoMenuOutline />}
+          {isMenuOpen ? <IoChevronUp /> : <IoChevronDown />}
         </button>
       </div>
       {isMenuOpen && (
