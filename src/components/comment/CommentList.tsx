@@ -1,6 +1,7 @@
 import { IoCloseOutline } from 'react-icons/io5';
 import { BiEditAlt } from 'react-icons/bi';
-import { CommentListProps } from '@pages/community/CommunityDetailTypes';
+import { CommentListProps } from '@/types/CommunityDetailTypes';
+import dayjs from 'dayjs';
 
 const CommentList = ({
   comments,
@@ -12,8 +13,7 @@ const CommentList = ({
     (comment) => !comment.is_deleted
   );
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
+    return dayjs(dateString).format('YYYY. MM. DD. HH:mm');
   };
   return (
     <div className="mt-6">
@@ -27,6 +27,7 @@ const CommentList = ({
           {isNotDeletedComments.map(
             ({ id, author, created_at, content }, index) => {
               const authorName = author?.workshop_name || author?.company_name;
+              const authorRole = author.role === 'WORKSHOP' ? '👩🏻‍🎨' : '🏢';
               const isAuthor = author.id === Number(currentUserId);
               return (
                 <li
@@ -38,9 +39,7 @@ const CommentList = ({
                       <span className="text-[#F26749] text-xs mr-2">
                         {authorName}
                       </span>
-                      <span className="text-xs mr-2">
-                        {author.role === 'WORKSHOP' ? '👩🏻‍🎨' : '🏢'}
-                      </span>
+                      <span className="text-xs mr-2">{authorRole}</span>
                       <span className="text-gray-400 text-xs">
                         {formatDate(created_at)}
                       </span>

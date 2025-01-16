@@ -5,7 +5,7 @@ import ContactInputName from '@components/contact/contactInputName';
 import ContactInputEmail from '@components/contact/contactInputEmail';
 import ContactInputPhone from '@components/contact/contactInputPhone';
 import ContactInputOrganizationName from '@components/contact/contactInputOrganizationName';
-import ContactInputMessage from '@components/contact/contactInputMessage';
+import ContactInputContent from '@components/contact/contactInputContent';
 import ContactInputPreferredReply from '@components/contact/contactInputPreferredReply';
 
 const ContactForm = () => {
@@ -20,8 +20,9 @@ const ContactForm = () => {
 
   const onSubmit = async (data: any) => {
     console.log(data);
+    console.log(type);
     try {
-      await contactApi(data);
+      await contactApi(data, type);
       reset();
       alert('문의가 정상적으로 접수되었습니다.');
     } catch (error) {
@@ -72,20 +73,20 @@ const ContactForm = () => {
             <ContactInputOrganizationName
               type={type}
               register={register}
-              error={errors.organizationName?.message as string | undefined}
+              error={errors.organization_name?.message as string | undefined}
             />
           </div>
           <div className="flex flex-col">
             {/* 문의 내용 */}
-            <ContactInputMessage
+            <ContactInputContent
               register={register}
-              error={errors.message ? '문의 내용을 입력해주세요.' : undefined}
+              error={errors.content ? '문의 내용을 입력해주세요.' : undefined}
             />
             {/* 선호 연락 방법 */}
             <ContactInputPreferredReply
               register={register}
               error={
-                errors.prefered_reply
+                errors.preferred_contact
                   ? '선호 연락 방법을 입력해주세요.'
                   : undefined
               }
