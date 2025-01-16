@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CommentInputProps {
   newComment: string;
@@ -12,17 +12,36 @@ const CommentInput = ({
   onCommentSubmit,
 }: CommentInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [placeholder, setPlaceholder] = useState(
+    window.innerWidth >= 640
+      ? '댓글에는 욕설이나 비속어 사용을 삼가해 주세요. 모두가 편안하게 소통할 수 있도록 협조 부탁드립니다.'
+      : '댓글에는 욕설이나 비속어 사용을 삼가해 주세요'
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPlaceholder(
+        window.innerWidth >= 640
+          ? '댓글에는 욕설이나 비속어 사용을 삼가해 주세요. 모두가 편안하게 소통할 수 있도록 협조 부탁드립니다.'
+          : '댓글에는 욕설이나 비속어 사용을 삼가해 주세요'
+      );
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="flex items-center mb-4 border border-gray-300 rounded-lg p-2">
       <div className="inline-flex items-center bg-[#565656] text-white px-4 py-1 rounded">
         <span className="whitespace-nowrap">댓글</span>
       </div>
+
       <textarea
         ref={textareaRef}
         value={newComment}
         onChange={onCommentChange}
-        placeholder="댓글에는 욕설이나 비속어 사용을 삼가해 주세요. 모두가 편안하게 소통할 수 있도록 협조 부탁드립니다."
+        placeholder={placeholder}
         className="border-0 rounded-l-none px-4 py-1 w-full ml-2 resize-none h-[4rem] text-sm"
       />
       <button
