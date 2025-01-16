@@ -6,6 +6,3 @@ const NotFound = () => {
   );
 };
 export default NotFound;
-
-// App.tsx 라우터 추가하기 컴포넌트 내부 NotFound.tsx
-// 존재 하지 않는 페이지 라우터
