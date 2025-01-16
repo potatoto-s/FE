@@ -224,10 +224,6 @@ function useCommunityPostHook({
     }
   };
 
-  const handleBackButtonClick = () => {
-    navigate('/community');
-  };
-
   return {
     handleChange,
     handleSave,
@@ -237,7 +233,6 @@ function useCommunityPostHook({
     handleDeleteClick,
     closeDeleteModal,
     handleDelete,
-    handleBackButtonClick,
   };
 }
 

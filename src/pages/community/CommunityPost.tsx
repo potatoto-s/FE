@@ -32,7 +32,6 @@ function CommunityPost({ type }: Props) {
     handleDeleteClick,
     closeDeleteModal,
     handleDelete,
-    handleBackButtonClick,
   } = useCommunityPostHook({
     fileInputRef,
     formData,
@@ -45,13 +44,11 @@ function CommunityPost({ type }: Props) {
     showDeleteModal,
     setShowDeleteModal,
   });
+  // console.log(formData);
 
   return (
     <div className="mx-auto min-h-screen py-20 px-4 bg-[#FFFBEF] max-sm:h-auto">
-      <div
-        onClick={handleBackButtonClick}
-        className="flex cursor-pointer items-center mb-8 text-2xl font-bold text-gray-600"
-      >
+      <div className="flex items-center mb-8">
         <IoChevronBackOutline /> 게시판
       </div>
 
@@ -120,11 +117,11 @@ function CommunityPost({ type }: Props) {
         </div>
 
         {/* 이미지 첨부 */}
-        <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] w-full max-w-4xl mx-auto">
-          <div className="flex flex-col items-start justify-center w-full max-w-[75%]">
+        <div className="flex justify-between p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749]">
+          <div className="flex flex-col items-start justify-center">
             {formData.images?.length ? (
               formData.images.map((file, index) => (
-                <div key={index} className="text-[#a9a9a9] truncate w-full ">
+                <div key={index} className="text-[#a9a9a9]">
                   {`${index + 1}. ` +
                     (file instanceof File ? file.name : file.image_url)}
                 </div>
@@ -138,9 +135,7 @@ function CommunityPost({ type }: Props) {
               onClick={handleButtonClick}
               className=" justify-end p-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#F28749] cursor-pointer"
             >
-              {/* 화면 크기에 따라 버튼 텍스트 변경 */}
-              <span className="hidden sm:inline">이미지첨부</span>
-              <span className="inline sm:hidden">사진첨부</span>
+              이미지첨부
             </button>
             <input
               type="file"
