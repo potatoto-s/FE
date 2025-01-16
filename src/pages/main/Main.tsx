@@ -244,7 +244,7 @@ const Main: React.FC = () => {
         <div className="flex justify-center items-start w-full">
           <div className="w-[900px]">
             {/* Hot Talk: 좋아요 순으로 Top 10 */}
-            <div className="mb-10">
+            <div className="mb-10 ">
               <h3 className="text-xl font-bold mb-4">주간 Top 10</h3>
               <div className="grid grid-cols-2 gap-4">
                 {topTenPosts.length > 0 ? (
@@ -258,20 +258,32 @@ const Main: React.FC = () => {
                       <div className="flex items-center w-1/2 space-x-2">
                         <span
                           className="text-gray-600 truncate"
-                          style={{ maxWidth: '120px' }}
+                          style={{
+                            maxWidth: '120px',
+                            display: 'inline-block',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
                           title={post.title} // 제목 전체 보여주기
                         >
                           {post.title}
+                        </span>
+                        <span className="flex items-center text-pink-700 text-sm space-x-1">
+                          <span>{post.like_count}</span>
                           <TbThumbUp />
                         </span>
-                        <span className="text-pink-700 text-sm flex items-center">
-                          {post.like_count}
-                        </span>
                       </div>
-                      {/*작성즈아 */}
+                      {/* 작성자 */}
                       <span
                         className="text-gray-500 truncate text-right"
-                        style={{ maxWidth: '100px' }}
+                        style={{
+                          maxWidth: '100px',
+                          display: 'inline-block',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
                         title={post.author?.nickname || '작성자'}
                       >
                         {post.author?.nickname || '작성자'}
@@ -285,9 +297,9 @@ const Main: React.FC = () => {
             </div>
 
             {/* 카테고리별 최신순으로 5개 */}
-            <div className="grid grid-cols-3 gap-6 mt-20">
+            <div className="grid grid-cols-3 gap-6 mt-20 min-h-8">
               {categories.map((category) => (
-                <div key={category.id}>
+                <div key={category.id} className="min-h-[150px]">
                   <div className="flex justify-between items-center mb-4">
                     <h4 className="text-lg font-semibold">{category.label}</h4>
                     <button
@@ -318,9 +330,7 @@ const Main: React.FC = () => {
                         </li>
                       ))
                     ) : (
-                      <li className="text-gray-500">
-                        게시물이 없습니다.(카테고리 ID: {category.id})
-                      </li>
+                      <li className="text-gray-500">게시물이 없습니다.</li>
                     )}
                   </ul>
                 </div>
