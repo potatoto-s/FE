@@ -8,7 +8,7 @@ function ContactInputPreferredReply({ register, error }: Props) {
   return (
     <>
       <label
-        htmlFor="prefered_reply"
+        htmlFor="preferred_contact"
         className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE] mb-[0.5rem]"
       >
         선호 연락 방법 (이메일 / 휴대전화)*
@@ -16,18 +16,18 @@ function ContactInputPreferredReply({ register, error }: Props) {
       <div className="flex">
         <input
           type="radio"
-          value="email"
+          value="EMAIL"
           className="mr-[1.4rem]"
-          {...register('prefered_reply', {
+          {...register('preferred_contact', {
             required: '선호 연락 방법을 입력해주세요.',
           })}
         />
         <p className="text-[1rem] text-[#AEAEAE] mr-[12rem]">이메일</p>
         <input
           type="radio"
-          value="phone"
+          value="PHONE"
           className="mr-[1rem]"
-          {...register('prefered_reply', {
+          {...register('preferred_contact', {
             required: true,
           })}
         />

@@ -10,7 +10,7 @@ function ContactInputOrganizationName({ type, register, error }: Props) {
     <>
       {type === 'COMPANY' && (
         <label
-          htmlFor="organizationName"
+          htmlFor="organization_name"
           className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
         >
           기업 이름*
@@ -18,7 +18,7 @@ function ContactInputOrganizationName({ type, register, error }: Props) {
       )}
       {type === 'WORKSHOP' && (
         <label
-          htmlFor="organizationName"
+          htmlFor="organization_name"
           className="lg:w-[33rem] w-[28rem] text-[1.2rem] text-[#AEAEAE]"
         >
           공방 이름*
@@ -26,9 +26,9 @@ function ContactInputOrganizationName({ type, register, error }: Props) {
       )}
       <input
         type="text"
-        id="organizationName"
+        id="organization_name"
         className="pl-[0.3rem] mb-[2.5rem] md:w-[33rem] w-[28rem] h-[2.3rem] border-b-2 border-[#AEAEAE] focus:outline-none lg:mr-[4.5rem] "
-        {...register('organizationName', {
+        {...register('organization_name', {
           required: '회사 이름을 입력해주세요.',
           maxLength: {
             value: 100,
