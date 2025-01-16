@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import FormInput from '../../components/MyPageEditor/EditorInput';
-import axiosAuthInstance from '../../api/axiosAuthInstance';
-import { updateUserProfile } from '../../api/ProfilePatchApi';
+import FormInput from '@components/MyPageEditor/EditorInput';
+import axiosAuthInstance from '@api/axiosAuthInstance';
+import { updateUserProfile } from '@api/ProfilePatchApi';
 
 const MyPageEditor: React.FC = () => {
   const location = useLocation();

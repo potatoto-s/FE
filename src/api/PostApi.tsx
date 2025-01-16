@@ -1,4 +1,4 @@
-import axiosAuthInstance from './axiosAuthInstance';
+import axiosAuthInstance from '@api/axiosAuthInstance';
 
 export const getPostById = async (id: string) => {
   try {

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoMenuOutline, IoCloseOutline } from 'react-icons/io5';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function Category() {
   const categories = [
+    { id: 'ALL', label: '전체' }, // 전체 카테고리 추가
     { id: 'BALLOON', label: '풍선/페이퍼아트' },
     { id: 'GIFT', label: '선물포장/보자기' },
     { id: 'WOOD', label: '목공/도자기/가죽' },
@@ -14,13 +15,22 @@ function Category() {
     { id: 'TOTAL', label: '토탈공예' },
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('ALL'); // 기본값: 전체
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get(`category`);
+  useEffect(() => {
+    setSelectedCategory(category ?? '');
+  }, [category]);
 
   const handleCategoryClick = (id: string) => {
     setSelectedCategory(id);
-    navigate(`/community/?category=${id}`);
+    if (id === 'ALL') {
+      navigate('/community'); // 전체 카테고리 선택 시 기본 엔드포인트로 이동
+    } else {
+      navigate(`/community/?category=${id}`); // 다른 카테고리 선택 시 해당 엔드포인트로 이동
+    }
     setIsMenuOpen(false); // 카테고리 선택 시 메뉴 닫기
   };
 
