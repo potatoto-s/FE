@@ -12,19 +12,18 @@ const CommentInput = ({
   onCommentSubmit,
 }: CommentInputProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [placeholder, setPlaceholder] = useState(
-    window.innerWidth >= 640
+
+  const getPlaceholder = () => {
+    return window.innerWidth >= 640
       ? '댓글에는 욕설이나 비속어 사용을 삼가해 주세요. 모두가 편안하게 소통할 수 있도록 협조 부탁드립니다.'
-      : '댓글에는 욕설이나 비속어 사용을 삼가해 주세요'
-  );
+      : '댓글에는 욕설이나 비속어 사용을 삼가해 주세요';
+  };
+
+  const [placeholder, setPlaceholder] = useState(getPlaceholder());
 
   useEffect(() => {
     const handleResize = () => {
-      setPlaceholder(
-        window.innerWidth >= 640
-          ? '댓글에는 욕설이나 비속어 사용을 삼가해 주세요. 모두가 편안하게 소통할 수 있도록 협조 부탁드립니다.'
-          : '댓글에는 욕설이나 비속어 사용을 삼가해 주세요'
-      );
+      setPlaceholder(getPlaceholder());
     };
 
     window.addEventListener('resize', handleResize);
