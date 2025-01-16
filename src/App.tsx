@@ -12,6 +12,7 @@ import SignUp from '@pages/signup/SignUp';
 import CommunityPost from '@pages/community/CommunityPost';
 import Layout from '@layout/Layout';
 import CategoryLayout from '@layout/CategoryLayout';
+import NotFound from '@pages/notfound/NotFound';
 import {
   LoginRoutes,
   PublicRoutes,
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
