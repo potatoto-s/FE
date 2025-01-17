@@ -50,11 +50,11 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4"
       onClick={onClose}
     >
       <div
-        className="relative bg-white p-8 rounded-lg shadow-lg max-w-4xl w-full"
+        className="relative bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-4xl w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -65,23 +65,23 @@ const Modal: React.FC<ModalProps> = ({
           ✕
         </button>
 
-        <h2 className="text-2xl font-bold mb-3 ml-11 text-left text-[#F28749]">
+        <h2 className="text-xl sm:text-2xl font-bold mb-3 ml-4 sm:ml-11 text-left text-[#F28749]">
           {title}
         </h2>
 
-        <hr className="border-t border-[#F28749] my-4 border-[1px] mx-11" />
+        <hr className="border-t border-[#F28749] my-4 mx-4 sm:mx-11 border-[1px]" />
 
         {currentPage === 1 && (
           <div>
             {imageSrc && (
-              <div className="flex flex-row justify-center mb-6 p-2">
+              <div className="flex flex-col sm:flex-row justify-center mb-6 p-2">
                 <img
                   src={imageSrc}
                   alt={title}
-                  className="w-[300px] max-h-[300px] object-contain rounded-xl shadow-lg ml-10 mr-10 mt-2"
+                  className="w-full sm:w-[300px] max-h-[300px] object-contain rounded-xl shadow-lg sm:ml-10 sm:mr-10 mt-2 mb-4 sm:mb-0"
                 />
                 {info && (
-                  <div className="mr-7 text-lg text-gray-600 font-medium text-justify p-2  space-y-2">
+                  <div className="text-base sm:text-lg text-gray-600 font-medium text-justify p-2 space-y-2">
                     {info.split('\n').map((paragraph, index) => (
                       <p key={index}>{paragraph}</p>
                     ))}
@@ -92,7 +92,7 @@ const Modal: React.FC<ModalProps> = ({
           </div>
         )}
         {currentPage === 2 && (
-          <div className="text-base leading-relaxed space-y-4 text-gray-700 m-11 mt-2">
+          <div className="text-sm sm:text-base leading-relaxed space-y-4 text-gray-700 m-4 sm:m-11 mt-2">
             {parseContent(content, boldSentences)}
           </div>
         )}
@@ -100,7 +100,7 @@ const Modal: React.FC<ModalProps> = ({
           <button
             onClick={handlePrev}
             disabled={currentPage === 1}
-            className={`px-4 py-2 text-white rounded ${
+            className={`px-3 sm:px-4 py-2 text-white rounded text-sm sm:text-base ${
               currentPage === 1
                 ? 'bg-gray-300 cursor-not-allowed'
                 : 'bg-[#F28749] hover:bg-[#e07640]'
@@ -111,7 +111,7 @@ const Modal: React.FC<ModalProps> = ({
           <button
             onClick={handleNext}
             disabled={currentPage === 2}
-            className={`px-4 py-2 text-white rounded ${
+            className={`px-3 sm:px-4 py-2 text-white rounded text-sm sm:text-base ${
               currentPage === 2
                 ? 'bg-gray-300 cursor-not-allowed'
                 : 'bg-[#F28749] hover:bg-[#e07640]'

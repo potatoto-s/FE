@@ -81,8 +81,8 @@ const Main: React.FC = () => {
 
   return (
     <div className="bg-gray-100 text-gray-800">
-      <section className="relative h-80 bg-[#FDCF8B] flex items-center justify-center text-center px-4 md:px-6 lg:px-8 overflow-hidden">
-        <div className="relative bg-opacity-50 text-black p-6 rounded max-w-screen-lg mx-auto">
+      <section className="relative h-80 bg-[#FDCF8B] flex flex-col items-center justify-center text-center px-4 md:px-6 lg:px-8 overflow-hidden">
+        <div className="relative bg-opacity-50 text-black p-4 sm:p-6 rounded max-w-screen-lg mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-4">
             2025년 공예 사업의 새로운 가능성을 발견하세요!
           </h1>
@@ -90,16 +90,18 @@ const Main: React.FC = () => {
             2025년이 시작되었습니다! 새로운 한 해, 공예 사업의 더 큰 가능성을
             열어가세요.
           </p>
-          <p className="mb-2">
+          <p className="mb-2 text-sm md:text-base">
             공방 사장님들을 위한 맞춤형 지원 프로그램과 성공적인 공방 운영을
             위한 최신 트렌드, 실질적인 팁을 제공해 드립니다.
           </p>
-          <p className="font-semibold">"지금, 당신의 공방을 돌아보세요!"</p>
-          <p className="mt-4">
+          <p className="font-semibold text-sm md:text-base">
+            "지금, 당신의 공방을 돌아보세요!"
+          </p>
+          <p className="mt-4 text-sm md:text-base">
             지역 공방 네트워크와의 협업 기회를 확대하고, 더 많은 고객에게 다가갈
             수 있는 판매 채널도 제안합니다.
           </p>
-          <p className="mt-2">
+          <p className="mt-2 text-sm md:text-base">
             지금 바로 커뮤니티에 가입하셔서 특별한 혜택과 함께 새로운 영감을
             얻어보세요!
           </p>
@@ -108,13 +110,13 @@ const Main: React.FC = () => {
 
       <section className="py-10 bg-white">
         <div className="flex justify-center ">
-          <h2 className="text-left w-[900px] text-3xl font-semibold mb-6  ">
+          <h2 className="text-left w-full sm:w-[900px] text-2xl sm:text-3xl font-semibold mb-6">
             추천 공방
           </h2>
         </div>
-        <div className="flex justify-center flex-wrap  space-x-4  gap-6 sm:gap-8 lg:gap-10">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-10 px-4">
           <div
-            className="w-[230px] h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl "
+            className="w-[180px] sm:w-[230px] h-[180px] sm:h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl"
             onClick={() =>
               openModal(
                 '가죽마을',
@@ -136,7 +138,7 @@ const Main: React.FC = () => {
             />
           </div>
           <div
-            className="w-[230px] h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl"
+            className="w-[180px] sm:w-[230px] h-[180px] sm:h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl"
             onClick={() =>
               openModal(
                 '페이퍼 아트 스튜디오',
@@ -153,7 +155,7 @@ const Main: React.FC = () => {
             />
           </div>
           <div
-            className="w-[230px] h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl"
+            className="w-[180px] sm:w-[230px] h-[180px] sm:h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl"
             onClick={() =>
               openModal(
                 '라탄 아틀리에',
