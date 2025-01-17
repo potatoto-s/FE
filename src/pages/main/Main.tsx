@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Modal from '@components/modal/MainModal';
-// import { PiThumbsUp } from 'react-icons/pi';
+import { TbThumbUp } from 'react-icons/tb';
 import { fetchPostList } from '@api/PostList';
 import { fetchCategoryPostList } from '@api/CategoryApi';
 
@@ -81,12 +81,12 @@ const Main: React.FC = () => {
 
   return (
     <div className="bg-gray-100 text-gray-800">
-      <section className="relative h-80 bg-[#FDCF8B] flex items-center justify-center text-center ">
-        <div className="relative bg-opacity-50 text-black p-6 rounded">
-          <h1 className="text-3xl font-bold mb-4">
+      <section className="relative h-80 bg-[#FDCF8B] flex items-center justify-center text-center px-4 md:px-6 lg:px-8 overflow-hidden">
+        <div className="relative bg-opacity-50 text-black p-6 rounded max-w-screen-lg mx-auto">
+          <h1 className="text-2xl md:text-3xl font-bold mb-4">
             2025년 공예 사업의 새로운 가능성을 발견하세요!
           </h1>
-          <p className="mb-2">
+          <p className="text-sm md:text-base">
             2025년이 시작되었습니다! 새로운 한 해, 공예 사업의 더 큰 가능성을
             열어가세요.
           </p>
@@ -112,7 +112,7 @@ const Main: React.FC = () => {
             추천 공방
           </h2>
         </div>
-        <div className="flex justify-center items-center space-x-4 gap-[65px]">
+        <div className="flex justify-center flex-wrap  space-x-4  gap-6 sm:gap-8 lg:gap-10">
           <div
             className="w-[230px] h-[230px] rounded-full overflow-hidden cursor-pointer shadow-2xl "
             onClick={() =>
@@ -244,7 +244,7 @@ const Main: React.FC = () => {
         <div className="flex justify-center items-start w-full">
           <div className="w-[900px]">
             {/* Hot Talk: 좋아요 순으로 Top 10 */}
-            <div className="mb-10">
+            <div className="mb-10 min-h-[300px]">
               <h3 className="text-xl font-bold mb-4">주간 Top 10</h3>
               <div className="grid grid-cols-2 gap-4">
                 {topTenPosts.length > 0 ? (
@@ -258,19 +258,32 @@ const Main: React.FC = () => {
                       <div className="flex items-center w-1/2 space-x-2">
                         <span
                           className="text-gray-600 truncate"
-                          style={{ maxWidth: '120px' }}
+                          style={{
+                            maxWidth: '120px',
+                            display: 'inline-block',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
                           title={post.title} // 제목 전체 보여주기
                         >
                           {post.title}
                         </span>
-                        <span className="text-pink-700 text-sm flex items-center">
-                          {post.like_count}
+                        <span className="flex items-center text-pink-700 text-sm space-x-1">
+                          <span>{post.like_count}</span>
+                          <TbThumbUp />
                         </span>
                       </div>
-                      {/*작성즈아 */}
+                      {/* 작성자 */}
                       <span
                         className="text-gray-500 truncate text-right"
-                        style={{ maxWidth: '100px' }}
+                        style={{
+                          maxWidth: '100px',
+                          display: 'inline-block',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
                         title={post.author?.nickname || '작성자'}
                       >
                         {post.author?.nickname || '작성자'}
@@ -284,9 +297,9 @@ const Main: React.FC = () => {
             </div>
 
             {/* 카테고리별 최신순으로 5개 */}
-            <div className="grid grid-cols-3 gap-6 mt-20">
+            <div className="grid grid-cols-3 gap-6 mt-20 min-h-8">
               {categories.map((category) => (
-                <div key={category.id}>
+                <div key={category.id} className="min-h-[200px]">
                   <div className="flex justify-between items-center mb-4">
                     <h4 className="text-lg font-semibold">{category.label}</h4>
                     <button
@@ -317,9 +330,7 @@ const Main: React.FC = () => {
                         </li>
                       ))
                     ) : (
-                      <li className="text-gray-500">
-                        게시물이 없습니다.(카테고리 ID: {category.id})
-                      </li>
+                      <li className="text-gray-500">게시물이 없습니다.</li>
                     )}
                   </ul>
                 </div>

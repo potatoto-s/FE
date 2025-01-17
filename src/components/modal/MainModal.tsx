@@ -81,7 +81,7 @@ const Modal: React.FC<ModalProps> = ({
                   className="w-[300px] max-h-[300px] object-contain rounded-xl shadow-lg ml-10 mr-10 mt-2"
                 />
                 {info && (
-                  <div className="ml-10 mr-10 text-lg text-gray-600 font-medium text-justify p-2 mb-10 space-y-2">
+                  <div className="mr-7 text-lg text-gray-600 font-medium text-justify p-2  space-y-2">
                     {info.split('\n').map((paragraph, index) => (
                       <p key={index}>{paragraph}</p>
                     ))}
