@@ -40,9 +40,11 @@
 
 <div align="center">
   <p>Frontend</p>
+  
   |김호선|정찬희|추서령|
   |---|---|---|
   |<a href="https://github.com/kim-ho-seon">@kim-ho-seon</a>|<a href="https://github.com/pinkchanhee">@pinkchanhee</a>|<a href="https://github.com/jennachuu">@jennachuu</a>|
+
 </div>
 
 
