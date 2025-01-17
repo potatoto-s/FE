@@ -48,12 +48,12 @@
   
   |김호선|정찬희|추서령|
   |---|---|---|
-  |<img src="https://github.com/user-attachments/assets/ff9cc8b0-d3cb-4277-9ddc-56287c081e72">|<img src="https://github.com/user-attachments/assets/866412a8-4fad-472b-bd02-a7ac7771a7fd">|<img src="https://github.com/user-attachments/assets/84fcaa9a-366e-46d1-aa12-e48b3d64c758">|
+  |<img src="https://github.com/user-attachments/assets/ff9cc8b0-d3cb-4277-9ddc-56287c081e72" width="200" height="200"/>|<img src="https://github.com/user-attachments/assets/866412a8-4fad-472b-bd02-a7ac7771a7fd" width="200" height="200"/>|<img src="https://github.com/user-attachments/assets/84fcaa9a-366e-46d1-aa12-e48b3d64c758" width="200" height="200"/>|
   |<div align="center"><a href="https://github.com/kim-ho-seon">@kim-ho-seon</a></div>|<div align="center"><a href="https://github.com/pinkchanhee">@pinkchanhee</a></div>|<div align="center"><a href="https://github.com/jennachuu">@jennachuu</a></div>|
   
   |안수연|윤수진|박종훈|
   |---|---|---|
-  |<img src="https://github.com/user-attachments/assets/65b6752f-c6cf-4ba9-912f-48515b2e900a">|<img src="https://github.com/user-attachments/assets/579e1e81-0907-425c-a70c-ee0a29787039">|<img src="https://github.com/user-attachments/assets/9fd9b0f6-7069-4560-b900-1fd5f8eb6c1b">|
+  |<img src="https://github.com/user-attachments/assets/65b6752f-c6cf-4ba9-912f-48515b2e900a" width="200" height="200"/>|<img src="https://github.com/user-attachments/assets/579e1e81-0907-425c-a70c-ee0a29787039" width="200" height="200"/>|<img src="https://github.com/user-attachments/assets/9fd9b0f6-7069-4560-b900-1fd5f8eb6c1b" width="200" height="200"/>|
   |<div align="center"><a href="https://github.com/wave-rec">@wave-rec</a></div>|<div align="center"><a href="https://github.com/sujinnn">@sujinnn</a></div>|<div align="center"><a href="https://github.com/brtjonghun">@brtjongjun</a></div>|
 
 </div>
