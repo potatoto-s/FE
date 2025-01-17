@@ -163,44 +163,90 @@ Prettier를 사용하여 코드 포맷팅을 관리합니다. 아래와 같이 `
 아래는 프로젝트의 파일 및 폴더 구조입니다.
 
 ```bash
-── src
-│   ├── App.css
-│   ├── App.tsx
-│   ├── api
-│   │   ├── Api.tsx
-│   │   ├── AuthApi.tsx
-│   │   ├── CategoryApi.tsx
-│   │   ├── CommunityApi.tsx
-│   │   ├── ContactApi.tsx
-│   │   ├── PostApi.tsx
-│   │   └── UserApi.tsx
-│   ├── assets
-│   │   └── react.svg
-│   ├── components
-│   │   ├── category
-│   │   │   └── Category.tsx
-│   │   ├── comment
-│   │   │   └── Comment.tsx
-│   │   ├── communitycard
-│   │   │   └── CommunityCard.tsx
-│   │   ├── footer
-│   │   │   └── Footer.tsx
-│   │   └── header
-│   │       └── Header.tsx
-│   ├── index.css
-│   ├── main.tsx
-│   ├── pages
-│   │   ├── community
-│   │   │   ├── Community.tsx
-│   │   │   ├── CommunityDetail.tsx
-│   │   │   └── CommunityPost.tsx
-│   │   ├── contact
-│   │   │   ├── Contact.tsx
-│   │   │   └── ContactPost.tsx
-│   │   ├── main
-│   │   │   └── Main.tsx
-│   │   ├── mypage
-│   │   │   ├── MyPage.tsx
-│
+src
+├── App.css
+├── App.tsx
+├── api
+│   ├── CategoryApi.ts
+│   ├── CategoryApi.tsx
+│   ├── CommunityApi.tsx
+│   ├── CommunityDetailAPI.ts
+│   ├── ContactApi.tsx
+│   ├── PostApi.tsx
+│   ├── PostList.ts
+│   ├── ProfileGetApi.ts
+│   ├── ProfilePatchApi.ts
+│   ├── authApi.tsx
+│   ├── axiosAuthInstance.ts
+│   └── axiosInstance.ts
+├── components
+│   ├── MyPageEditor
+│   │   └── EditorInput.tsx
+│   ├── category
+│   │   └── Category.tsx
+│   ├── comment
+│   │   ├── CommentInput.tsx
+│   │   ├── CommentList.tsx
+│   │   └── CommentModal.tsx
+│   ├── communitycard
+│   │   └── CommunityCard.tsx
+│   ├── contact
+│   │   ├── contactInputContent.tsx
+│   │   ├── contactInputEmail.tsx
+│   │   ├── contactInputName.tsx
+│   │   ├── contactInputOrganizationName.tsx
+│   │   ├── contactInputPhone.tsx
+│   │   ├── contactInputPreferredReply.tsx
+│   │   └── contactType.tsx
+│   ├── footer
+│   │   └── Footer.tsx
+│   ├── header
+│   │   └── Header.tsx
+│   ├── modal
+│   │   ├── ConfirmModal.tsx
+│   │   └── MainModal.tsx
+│   └── search
+│       └── Search.tsx
+├── hooks
+│   └── useDebounce.ts
+├── index.css
+├── layout
+│   ├── CategoryLayout.tsx
+│   ├── Layout.tsx
+│   └── ProtectedRoute.tsx
+├── main.tsx
+├── pages
+│   ├── community
+│   │   ├── Community.tsx
+│   │   ├── CommunityDetail.tsx
+│   │   ├── CommunityPost.tsx
+│   │   ├── CommunityPostConst.ts
+│   │   ├── CommunityPostTypes.ts
+│   │   ├── usePostHook.tsx
+│   │   └── usePostState.tsx
+│   ├── contact
+│   │   ├── Contact.tsx
+│   │   ├── ContactForm.tsx
+│   │   └── ContactPost.tsx
+│   ├── login
+│   │   └── LogIn.tsx
+│   ├── main
+│   │   └── Main.tsx
+│   ├── mypage
+│   │   ├── MyPage.tsx
+│   │   └── MyPageEditor.tsx
+│   ├── notfound
+│   │   └── NotFound.tsx
+│   └── signup
+│       ├── SignUp.tsx
+│       └── SignUpInput.tsx
+├── schemas
+│   └── signUpSchemas.ts
+├── stores
+│   ├── authStore.ts
+│   └── userStore.ts
+├── types
+│   └── CommunityDetailTypes.ts
+└── vite-env.d.ts
 ```
 </div>
