@@ -60,7 +60,7 @@ const CommunityDetail = () => {
       }
     };
     loadPostDetails();
-  }, [id, user]); // 의존성 배열 id, user 변경될때마다 useEffect 실행 ㄱㄱ
+  }, [id, user]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value);
