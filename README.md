@@ -25,6 +25,7 @@
   <img src="https://img.shields.io/badge/Zustand-B0BEC5?style=for-the-badge&logoColor=black" alt="Zustand" />
   <img src="https://img.shields.io/badge/ESLint-4B9CD3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint" />
   <img src="https://img.shields.io/badge/Prettier-F7B93C?style=for-the-badge&logo=prettier&logoColor=black" alt="Prettier" />
+  <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Figma" />
   <img src="https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt=VisualStudioCode />
   <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   <img src="https://img.shields.io/badge/Zep-2C2F33?style=for-the-badge&logoColor=white" alt="Zep" />
