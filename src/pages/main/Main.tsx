@@ -259,7 +259,7 @@ const Main: React.FC = () => {
                         <span
                           className="text-gray-600 truncate"
                           style={{
-                            maxWidth: '120px',
+                            maxWidth: '200px',
                             display: 'inline-block',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
