@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import dayjs from 'dayjs';
 import axiosInstance from '../../api/axiosInstance';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useUserStore from '../../stores/userStore';
@@ -127,7 +128,10 @@ const Community: React.FC = () => {
                 </div>
                 <div className="flex flex-col md:flex-row items-center text-sm text-gray-500">
                   <span className="mr-0 md:mr-4">{post.author.nickname}</span>
-                  <span className="mr-0 md:mr-4">{post.created_at}</span>
+                  <span>
+                    {dayjs(post.created_at).format('YYYY. MM. DD. HH:mm')}{' '}
+                    {/* dayjs 포맷팅 */}
+                  </span>
                   <span>{post.view_count} 조회</span>
                 </div>
               </Link>
