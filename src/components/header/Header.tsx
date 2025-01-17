@@ -86,6 +86,7 @@ const Header = () => {
       <div className="flex justify-between items-center h-[6.25rem] px-4 sm:px-8 max-w-[81.25rem] mx-auto">
         <Link to="/" className="flex-shrink-0">
           <img
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             src="/logo.png"
             alt="로고"
             className="h-[2rem] sm:h-[2.5rem] object-contain"
