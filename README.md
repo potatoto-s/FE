@@ -19,6 +19,8 @@
 
 ## 💻 FRONTEND STACK 💻
 
+<br>
+
 
   <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
@@ -40,6 +42,8 @@
 
 ---
 
+<br>
+
 ## Team Potatoto - FE
 
 <br>
@@ -58,6 +62,11 @@
 
 </div>
 
+<br>
+
+---
+
+<br>
 
 ## 네이밍 컨벤션
 
