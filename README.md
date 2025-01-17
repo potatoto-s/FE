@@ -4,15 +4,16 @@
 
 # 공방 사장님과 기업이 참여하는 커뮤니티 플랫폼
 
-#### 핸즈윗은 단순히 공방 사장님들을 위한 커뮤니티를 넘어, 공방의 성장을 이끌고 공예 문화를 발전시키는 데 기여하는 플랫폼으로 성장할 것이라는 목표를 지닌 커뮤니티입니다.
+#### 핸즈윗은 단순히 공방 사장님들을 위한 커뮤니티를 넘어, 공방의 성장을 이끌고 공예 문화를 발전시키는 데 기여하는 플랫폼으로 
+#### 성장할 것이라는 목표를 지닌 커뮤니티입니다.
 
 <a href="https://d2n47kcw369sq8.cloudfront.net/">
   <img src="https://img.shields.io/badge/배포링크-FF9E0F?style=for-the-badge&logoColor=white" alt=배포링크/>
 </a>
 
-# STACK
+---
 
-## FRONTEND
+## 💻 FRONTEND STACK 💻
 
 
   <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
@@ -30,6 +31,21 @@
   <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
   <img src="https://img.shields.io/badge/Zep-2C2F33?style=for-the-badge&logoColor=white" alt="Zep" />
 </div>
+
+---
+
+## Team Potatoto
+
+---
+
+<div align="center">
+  <p>Frontend</p>
+  |김호선|정찬희|추서령|
+  |---|---|---|
+  |<img src="https://github.com/user-attachments/assets/ff9cc8b0-d3cb-4277-9ddc-56287c081e72">|<img src="https://github.com/user-attachments/assets/866412a8-4fad-472b-bd02-a7ac7771a7fd">|<img src="https://github.com/user-attachments/assets/84fcaa9a-366e-46d1-aa12-e48b3d64c758">|
+  |<a href="https://github.com/kim-ho-seon">@kim-ho-seon</a>|<a href="https://github.com/pinkchanhee">@pinkchanhee</a>|<a href="https://github.com/jennachuu">@jennachuu</a>|
+</div>
+
 
 ## 네이밍 컨벤션
 
