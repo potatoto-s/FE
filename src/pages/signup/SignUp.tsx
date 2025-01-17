@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { signUpSchema } from '@schemas/signUpSchemas';
 import axiosInstance from '@api/axiosInstance';
 import SignUpInput from '@pages/signup/SignUpInput';
+import PhoneNumberInput from '@pages/signup/PhoneNumberInput';
 
 const SignUp = () => {
   const {
@@ -14,6 +15,7 @@ const SignUp = () => {
     setError,
     clearErrors,
     trigger,
+    control,
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(signUpSchema),
@@ -206,13 +208,11 @@ const SignUp = () => {
           </SignUpInput>
 
           {/* 전화번호 */}
-          <SignUpInput
+          <PhoneNumberInput
             label="전화번호*"
-            inputType="tel"
-            attribute={register('phone', {
-              onBlur: () => trigger('phone'),
-            })}
-            message={errors.phone ? errors.phone.message : ''}
+            name="phone"
+            control={control}
+            messageColor="red"
             placeholder="010-1234-5678"
           />
 
