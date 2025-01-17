@@ -43,6 +43,7 @@
   
   |김호선|정찬희|추서령|
   |---|---|---|
+  |<img src="https://github.com/user-attachments/assets/ff9cc8b0-d3cb-4277-9ddc-56287c081e72">|<img src="https://github.com/user-attachments/assets/866412a8-4fad-472b-bd02-a7ac7771a7fd">|<img src="https://github.com/user-attachments/assets/84fcaa9a-366e-46d1-aa12-e48b3d64c758">|
   |<a href="https://github.com/kim-ho-seon">@kim-ho-seon</a>|<a href="https://github.com/pinkchanhee">@pinkchanhee</a>|<a href="https://github.com/jennachuu">@jennachuu</a>|
 
 </div>
