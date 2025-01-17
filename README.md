@@ -2,6 +2,10 @@
   <div align = "center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=Hands_with&fontSize=90" />
 
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&width=435&lines=%EA%B3%B5%EB%B0%A9+%EC%82%AC%EC%9E%A5%EB%8B%98%EA%B3%BC+%EA%B8%B0%EC%97%85%EC%9D%B4+%EC%B0%B8%EC%97%AC%ED%95%98%EB%8A%94+%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0+%ED%94%8C%EB%9E%AB%ED%8F%BC%2C+%ED%95%B8%EC%A6%88%EC%9C%97.)](https://git.io/typing-svg)
+
+##핸즈윗은 단순히 공방 사장님들을 위한 커뮤니티를 넘어, 공방의 성장을 이끌고 공예 문화를 발전시키는 데 기여하는 플랫폼으로 성장할 것이라는 목표를 지닌 커뮤니티입니다.
+
 # STACK
 
 ## FRONTEND
@@ -15,7 +19,6 @@
   <img src="https://img.shields.io/badge/Axios-5A29E3?style=for-the-badge&logo=axios&logoColor=white" alt="Axios" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/Zustand-B0BEC5?style=for-the-badge&logoColor=black" alt="Zustand" />
-  <img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="React Query" />
   <img src="https://img.shields.io/badge/ESLint-4B9CD3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint" />
   <img src="https://img.shields.io/badge/Prettier-F7B93C?style=for-the-badge&logo=prettier&logoColor=black" alt="Prettier" />
   <img src="https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt=VisualStudioCode />
